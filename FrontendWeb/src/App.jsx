@@ -5,7 +5,7 @@ function App() {
 
   return (
     <MantineProvider>
-      <Dashboard />
+      <Dashboard/>
     </MantineProvider>
   );
 }
