@@ -1,4 +1,4 @@
-.login_div {
+.signup_div {
     background-color: #7889da;
     width: 70vh;
     height: 80vh;
@@ -9,10 +9,12 @@
     font-size: 2rem;
 }
 
-.login_div h1 {
+.signup_div h1 {
     color: black;
 }
 
+.name_input,
+.surname_input,
 .email_input,
 .password_input {
     width: 100%;
@@ -23,6 +25,8 @@
     margin-left: 0px;
 }
 
+.name_input input,
+.surname_input input,
 .email_input input,
 .password_input input {
     padding: 5px 20px;
@@ -33,26 +37,20 @@
     border-radius: 50px;
 }
 
-.forgot_password a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 0.8rem;
-}
-
-.sign_in {
+.create_account {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.sign_in a {
+.create_account a {
     color: #ffffff;
     text-decoration: none;
     font-size: 0.8rem;
 }
 
-.sign_in p {
+.create_account p {
     color: #ffffff;
     text-decoration: none;
     font-size: 0.8rem;

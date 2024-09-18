@@ -27,7 +27,7 @@ function Login() {
             </div>
             <div className="sign_in">
                 <p>New here?</p>
-                <a href="https://www.codeur.com">Sign in</a>
+                <a href="https://www.codeur.com">Sign up</a>
             </div>
         </div>
     )
