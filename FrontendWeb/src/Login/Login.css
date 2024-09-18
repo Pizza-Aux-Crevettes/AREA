@@ -1,0 +1,58 @@
+.login_div {
+    background-color: #7889da;
+    width: 70vh;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
+}
+
+.login_div h1 {
+    color: black;
+}
+
+.email_input,
+.password_input {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-left: 0px;
+}
+
+.email_input input,
+.password_input input {
+    padding: 5px 20px;
+    border: none;
+    margin-left: 10px;
+    border-radius: 10px;
+    font-size: 35px;
+}
+
+.forgot_password a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.sign_in {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign_in a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.sign_in p {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
