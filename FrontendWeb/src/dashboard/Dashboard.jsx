@@ -3,12 +3,31 @@ import { Button } from '@mantine/core';
 import Title from '../Title'
 import './Dashboard.css'
 
+function RectangleDashboard () {
+  return (
+      <div className='rectangle'>
+        <p>Hehe</p>
+      </div>
+  )
+}
+
 function Dashboard() {
   return (
-    <div>
+    <div className='all-container'>
       <Title title="Dashboard"/>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '98vh', width: '100%' }}>
-        <Button>Violet ?</Button>
+      <div className='container'>
+        <div className='back-rectangle'>
+          <div className='column-container'>
+            <RectangleDashboard />
+            <RectangleDashboard />
+            <RectangleDashboard />
+          </div>
+          <div className='column-container'>
+            <RectangleDashboard />
+            <RectangleDashboard />
+            <RectangleDashboard />
+          </div>
+        </div>
       </div>
     </div>
   )
