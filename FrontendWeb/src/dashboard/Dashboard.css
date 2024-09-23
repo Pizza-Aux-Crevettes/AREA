@@ -15,9 +15,12 @@ button:hover {
 }
 
 .all-container {
+  background-color: #B5CEFF;
   display: grid;
   grid-template-rows: 0px 100vh;
   grid-gap: 4%;
+  overflow: hidden;
+
 }
 
 .container {
@@ -46,11 +49,13 @@ button:hover {
 
 .rectangle {
   background-color: #7289DA;
-  border-color: black;
+  border: 1px solid black;
   width: 40vh;
   height: 15vh;
   border-radius: 15px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  padding: 15%;
+  box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
 }
