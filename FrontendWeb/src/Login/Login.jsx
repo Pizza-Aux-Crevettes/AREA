@@ -1,9 +1,9 @@
 import { useState } from "react";
-import "./Login.css"
+import "./Login.css";
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     return (
         <div className="login_div">
@@ -23,14 +23,16 @@ function Login() {
                 />
             </div>
             <div className="forgot_password">
-                <a href="https://www.amoursucre.com/s1/city">forgot your password?</a>
+                <a href="https://www.amoursucre.com/s1/city">
+                    forgot your password?
+                </a>
             </div>
             <div className="sign_in">
                 <p>New here?</p>
-                <a href="https://www.codeur.com">Sign up</a>
+                <a href="http://localhost:5173/">Sign up</a>
             </div>
         </div>
-    )
+    );
 }
 
 export default Login;
