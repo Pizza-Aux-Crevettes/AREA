@@ -3,6 +3,7 @@ import { Express } from "express";
 import {} from "./middlewares/insertDatas";
 import { newsApi } from "./API/News";
 
+
 const app: Express = require("express")();
 const port = 3000;
 const bodyParser = require("body-parser");
@@ -24,6 +25,8 @@ app.use(function (req, res, next) {
 
     next();
 });
+
+require("./routes/users/users")(app);
 
 newsApi();
 app.listen(port, () => {});
