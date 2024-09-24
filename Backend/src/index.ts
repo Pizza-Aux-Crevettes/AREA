@@ -1,6 +1,5 @@
 require("dotenv").config();
 import { Express } from "express";
-import {} from "./middlewares/insertDatas";
 
 const app: Express = require("express")();
 const port = 3000;
@@ -23,5 +22,7 @@ app.use(function (req, res, next) {
 
     next();
 });
+
+require("./routes/users/users")(app);
 
 app.listen(port, () => {});
