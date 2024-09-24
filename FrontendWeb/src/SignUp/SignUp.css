@@ -15,6 +15,7 @@
 
 .name_input,
 .surname_input,
+.username_input,
 .email_input,
 .password_input {
     width: 100%;
@@ -27,6 +28,7 @@
 
 .name_input input,
 .surname_input input,
+.username_input input,
 .email_input input,
 .password_input input {
     padding: 5px 20px;
@@ -35,9 +37,17 @@
     border-radius: 10px;
     font-size: 35px;
     border-radius: 50px;
+    width: 500px;
+    height: 70px;
 }
 
-.create_account {
+.button_create {
+    margin-top: 50px;
+    border-radius: 50px;
+}
+
+.login {
+    padding-top: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
