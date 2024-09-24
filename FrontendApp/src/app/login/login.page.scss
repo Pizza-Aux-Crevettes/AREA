@@ -1,0 +1,41 @@
+ion-item {
+    --background: transparent;
+    margin-bottom: 20px;
+}
+
+ion-input {
+    padding: 5px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+}
+
+.forgot_password {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgot_password a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.sign_in {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign_in a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.sign_in p {
+    color: #ffffff;
+    font-size: 0.8rem;
+}
