@@ -2,22 +2,19 @@ import { useState } from 'react';
 import { Switch, useMantineTheme, rem, Tooltip } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import Title from '../Title'
-import logo_info from '../assets/information.png'
+import logo_info from '../assets/info.png'
 import './Dashboard.css'
 
-function TooltipInfo() {
+function TooltipInfo({ information }) {
   return (
     <Tooltip
-      label="More informations"
-      position="bottom"
-      placement="end"
+      label={information}
       withArrow
-      offset={10} // Ajuste cette valeur selon tes besoins
     >
       <img
         src={logo_info}
         alt="Logo Info"
-        style={{ width: '10%', height: 'auto', cursor: 'pointer' }}
+        style={{ width: '20px', height: 'auto', cursor: 'pointer' }}  // Ajustement de la taille
       />
     </Tooltip>
   );
@@ -52,12 +49,14 @@ function Toggle() {
   );
 }
 
-function RectangleDashboard() {
+function RectangleDashboard({text, information}) {
   return (
     <div className='rectangle'>
-      <p>Hehe</p>
-      <Toggle />
-      <TooltipInfo />
+        <p>{text}</p>
+        <Toggle />
+      <div className='cont-rect'>
+        <TooltipInfo information={information}/>
+      </div>
     </div>
   );
 }
@@ -69,14 +68,14 @@ function Dashboard() {
       <div className='container'>
         <div className='back-rectangle'>
           <div className='column-container'>
-            <RectangleDashboard />
-            <RectangleDashboard />
-            <RectangleDashboard />
+            <RectangleDashboard text="Pluie" information="Pluie"/>
+            <RectangleDashboard text="Tempête" information="Tempête"/>
+            <RectangleDashboard text="Actualité" information="Actualité"/>
           </div>
           <div className='column-container'>
-            <RectangleDashboard />
-            <RectangleDashboard />
-            <RectangleDashboard />
+            <RectangleDashboard text="Mail" information="Mail"/>
+            <RectangleDashboard text="Discord" information="Discord"/>
+            <RectangleDashboard text="Tweet" information="Tweet"/>
           </div>
         </div>
       </div>

@@ -58,4 +58,13 @@ button:hover {
   align-items: center;
   padding: 15%;
   box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+  position: relative;
+}
+
+.cont-rect {
+  display: flex;
+  position: absolute;
+  justify-content: end;
+  bottom: 15px;
+  right: 15px;
 }
