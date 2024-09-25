@@ -1,9 +1,9 @@
 import Title from '../Title'
-import './ServiceConnection.css'
 import logo_discord from '../assets/discord.png'
 import logo_X from '../assets/X.png'
 import logo_spotify from '../assets/spotify.png'
 import logo_google from '../assets/google.png'
+import './ServiceConnection.css'
 
 function RectangleService({text, logo}) {
   return (

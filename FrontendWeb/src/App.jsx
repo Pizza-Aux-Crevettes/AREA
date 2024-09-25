@@ -7,22 +7,21 @@ import Login from "./Login/Login";
 import Signup from "./SignUp/SignUp";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import '@mantine/core/styles.css';
-import Service from './ServiceConnection/ServiceConnection';
+// import Service from './ServiceConnection/ServiceConnection';
 
 const App = () => {
     return (
         <div>
-            <MantineProvider withGlobalStyles withNormalizeCSS>
+            {/* <MantineProvider withGlobalStyles withNormalizeCSS>
                 <Service/>
-            </MantineProvider>
-
-            {/* <Router>
+            </MantineProvider> */}
+            <Router>
                 <Routes>
                     <Route path="/" element={<Signup />} />
                     <Route path="/Login" element={<Login />} />
                 </Routes>
             </Router>
-            <></> */}
+            <></>
         </div>
     );
 };
