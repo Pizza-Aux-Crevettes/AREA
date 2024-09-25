@@ -63,19 +63,21 @@ function RectangleDashboard({text, information}) {
 
 function Dashboard() {
   return (
-    <div className='all-container'>
-      <Title title="Dashboard"/>
-      <div className='container'>
-        <div className='back-rectangle'>
-          <div className='column-container'>
-            <RectangleDashboard text="Pluie" information="Pluie"/>
-            <RectangleDashboard text="Tempête" information="Tempête"/>
-            <RectangleDashboard text="Actualité" information="Actualité"/>
-          </div>
-          <div className='column-container'>
-            <RectangleDashboard text="Mail" information="Mail"/>
-            <RectangleDashboard text="Discord" information="Discord"/>
-            <RectangleDashboard text="Tweet" information="Tweet"/>
+    <div className='dashboard'>
+      <div className='all-container'>
+        <Title title="Dashboard"/>
+        <div className='container'>
+          <div className='back-rectangle'>
+            <div className='column-container'>
+              <RectangleDashboard text="Pluie" information="Pluie"/>
+              <RectangleDashboard text="Tempête" information="Tempête"/>
+              <RectangleDashboard text="Actualité" information="Actualité"/>
+            </div>
+            <div className='column-container'>
+              <RectangleDashboard text="Mail" information="Mail"/>
+              <RectangleDashboard text="Discord" information="Discord"/>
+              <RectangleDashboard text="Tweet" information="Tweet"/>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,54 @@
+.dashboard .all-container {
+  background-color: #B5CEFF;
+  display: grid;
+  grid-template-rows: 0px 100vh;
+  grid-gap: 4%;
+  overflow: hidden;
+
+}
+
+.dashboard .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard .back-rectangle {
+  background-color: #8CB3FF;
+  width: 80%;
+  height: 80%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard .column-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 18vh;
+  gap: 8vh;
+}
+
+.dashboard .rectangle {
+  background-color: #7289DA;
+  border: 1px solid black;
+  width: 40vh;
+  height: 15vh;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15%;
+  box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+  position: relative;
+}
+
+.dashboard .cont-rect {
+  display: flex;
+  position: absolute;
+  justify-content: end;
+  bottom: 15px;
+  right: 15px;
+}
