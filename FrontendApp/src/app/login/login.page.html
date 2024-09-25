@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login_div">
+  <div>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input [(ngModel)]="email" type="email"></ion-input>
+    </ion-item>
+  </div>
+
+  <div>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input [(ngModel)]="password" type="password"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="forgot_password">
+    <a href="https://www.amoursucre.com/s1/city">Forgot your password?</a>
+  </div>
+
+  <div class="sign_in">
+    <p>New here?</p>
+    <a href="https://www.codeur.com">Sign up</a>
+  </div>
+
+  <div>
+    <ion-button expand="full" (click)="onLogin()">Login</ion-button>
+  </div>
+</ion-content>
