@@ -6,9 +6,12 @@ logs
 
 node_modules
 bower_components
+.angular
+.env
 
 *.sublime*
 
 psd
 thumb
 sketch
+build/
