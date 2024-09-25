@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { Express } from "express";
-import {} from "./middlewares/insertDatas";
 import { newsApi } from "./API/News";
+import { getWeather } from "./API/openWeather";
 
 
 const app: Express = require("express")();
@@ -29,4 +29,5 @@ app.use(function (req, res, next) {
 require("./routes/users/users")(app);
 
 newsApi();
+getWeather();
 app.listen(port, () => {});
