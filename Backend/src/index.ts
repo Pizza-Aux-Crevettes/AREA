@@ -3,7 +3,6 @@ import { Express } from "express";
 import { newsApi } from "./API/News";
 import { getWeather } from "./API/openWeather";
 
-
 const app: Express = require("express")();
 const port = 3000;
 const bodyParser = require("body-parser");
@@ -28,6 +27,6 @@ app.use(function (req, res, next) {
 
 require("./routes/users/users")(app);
 
-newsApi();
+//newsApi();
 getWeather();
 app.listen(port, () => {});

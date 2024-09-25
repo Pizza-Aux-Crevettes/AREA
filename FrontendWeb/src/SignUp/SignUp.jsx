@@ -88,7 +88,7 @@ function SignUp() {
             </div>
             <div className="login">
                 <p>Already have an account ? </p>
-                <a href="http://localhost:5173/Login">Sign up</a>
+                <a href="http://localhost:5173/Login">Login</a>
             </div>
         </div>
     );
