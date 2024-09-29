@@ -15,7 +15,7 @@ module.exports = (app: Express) => {
             bcrypt.hashSync(user_infos.password, 10),
             user_infos.email
         );
-        if (result == null) {
+        if (result === null) {
             res.status(500).json({
                 msg: "Error when setting new user",
             });
