@@ -26,7 +26,6 @@ app.use(function (req, res, next) {
 });
 
 require("./routes/users/users")(app);
-
 //newsApi();
-getWeather();
+//getWeather();
 app.listen(port, () => {});

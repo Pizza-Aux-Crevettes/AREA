@@ -29,7 +29,7 @@ function Login() {
             </div>
             <div className="sign_in">
                 <p>New here?</p>
-                <a href="http://localhost:5173/">Sign up</a>
+                <a href="http://localhost:5173/">Register</a>
             </div>
         </div>
     );

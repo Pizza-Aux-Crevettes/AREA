@@ -1,4 +1,9 @@
-.signup_div {
+.main_div {
+    display: flex;
+    flex-direction: row;
+}
+
+.register_div {
     background-color: #7889da;
     width: 70vh;
     height: 80vh;
@@ -9,7 +14,7 @@
     font-size: 2rem;
 }
 
-.signup_div h1 {
+.register_div h1 {
     color: black;
 }
 
@@ -65,4 +70,33 @@
     color: #ffffff;
     text-decoration: none;
     font-size: 0.8rem;
+}
+
+.errorMsg_div {
+    background-color: #ff6242;
+    border: 1px solid black;
+    width: 30vh;
+    height: 5vh;
+    text-align: center;
+    padding: 10px;
+    margin-left: 90px;
+}
+
+.correctMsg_div {
+    display: flex;
+    flex-direction: column;
+    background-color: #9ec46e;
+    border: 1px solid black;
+    width: 30vh;
+    height: 10vh;
+    text-align: center;
+    padding: 10px;
+    margin-left: 90px;
+}
+
+.ok_button {
+    width: 60px;
+    text-align: center;
+    margin-left: 100px;
+    margin-top: 8px;
 }
