@@ -13,6 +13,11 @@
     color: black;
 }
 
+.button_create {
+    margin-top: 50px;
+    border-radius: 50px;
+}
+
 .email_input,
 .password_input {
     width: 100%;
