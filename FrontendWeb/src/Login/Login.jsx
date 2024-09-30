@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
+import Cookies from "cookies-js";
 import { resolvePath, useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
@@ -34,12 +35,15 @@ function Login() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate("/Dashboard");
-                    location.pathname === "/Dashboard";
+                    return response.json();
                 } else {
                     console.log("pas ok ...");
                     setNotLogin(true);
                 }
+            })
+            .then((json) => {
+                Cookies.set("token", json.own_token);
+                location.reload();
             })
             .then(() => {});
     }
