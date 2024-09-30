@@ -1,9 +1,31 @@
 import { useState } from "react";
 import "./Login.css";
+import { resolvePath } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    function LoginUser() {
+        fetch("http://localhost:3000/api/getUsers", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log("tu es connecté !");
+                } else {
+                    console.log("pas ok ...");
+                }
+            })
+            .then(() => {});
+    }
 
     return (
         <div className="login_div">
@@ -21,6 +43,11 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+            </div>
+            <div>
+                <button className="button_create" onClick={LoginUser}>
+                    Login
+                </button>
             </div>
             <div className="forgot_password">
                 <a href="https://www.amoursucre.com/s1/city">
