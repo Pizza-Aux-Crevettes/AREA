@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./Login.css";
-import { resolvePath } from "react-router-dom";
+import { resolvePath, useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [notLogin, setNotLogin] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -32,9 +34,9 @@ function Login() {
         })
             .then((response) => {
                 if (response.ok) {
-                    window.location.href = "/Dashboard";
-                    // navigate("/Dashboard");
-                    // location.pathname === "/Dashboard";
+                    //window.location.href = "/Dashboard";
+                    navigate("/Dashboard");
+                    location.pathname === "/Dashboard";
                 } else {
                     console.log("pas ok ...");
                     setNotLogin(true);
