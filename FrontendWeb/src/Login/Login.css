@@ -63,3 +63,13 @@
     text-decoration: none;
     font-size: 0.8rem;
 }
+
+.errorMsg_div {
+    background-color: #ff6242;
+    border: 1px solid black;
+    width: 30vh;
+    height: 5vh;
+    text-align: center;
+    padding: 10px;
+    margin-left: 90px;
+}

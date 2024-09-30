@@ -37,6 +37,9 @@ export async function loginUsers(user_email: string): Promise<any> {
         console.error(error);
         return null;
     }
+    if (user_info.length === 0) {
+        return null;
+    }
     return user_info;
 }
 
