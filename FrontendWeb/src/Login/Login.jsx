@@ -34,7 +34,6 @@ function Login() {
         })
             .then((response) => {
                 if (response.ok) {
-                    //window.location.href = "/Dashboard";
                     navigate("/Dashboard");
                     location.pathname === "/Dashboard";
                 } else {
