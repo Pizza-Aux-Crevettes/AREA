@@ -1,4 +1,5 @@
 import supabase from "../../config/db";
+import bcrypt from "bcryptjs";
 
 export async function createUsers(
     user_name: string,
@@ -24,5 +25,26 @@ export async function createUsers(
         return null;
     } else {
         return data;
+    }
+}
+
+export async function loginUsers(user_email: string): Promise<any> {
+    const { data, error } = await supabase
+        .from("User")
+        .select("password, email")
+        .eq("email", user_email);
+    if (error) {
+        console.error(error);
+        return null;
+    }
+    return data;
+}
+
+export async function verifyPwd(pwd: string, hashedPwd: string) {
+    const samePwd = await bcrypt.compare(pwd, hashedPwd);
+    if (samePwd) {
+        return true;
+    } else {
+        return false;
     }
 }
