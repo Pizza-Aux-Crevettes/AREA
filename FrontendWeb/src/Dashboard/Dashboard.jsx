@@ -1,88 +1,226 @@
-import { useState } from 'react';
-import { Switch, useMantineTheme, rem, Tooltip } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
-import Title from '../Title'
-import logo_info from '../assets/info.png'
-import './Dashboard.css'
+import { useState, useRef, useEffect } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { Menu, Button, TextInput, Tooltip, Modal } from "@mantine/core";
+import Title from "../Title";
+import "./Dashboard.css";
+import logo_plus from "../assets/plus.png";
+import logo_cross from "../assets/cross.png";
 
-function TooltipInfo({ information }) {
-  return (
-    <Tooltip
-      label={information}
-      withArrow
-    >
-      <img
-        src={logo_info}
-        alt="Logo Info"
-        style={{ width: '20px', height: 'auto', cursor: 'pointer' }}  // Ajustement de la taille
-      />
-    </Tooltip>
-  );
+function TextInputDash() {
+    return <TextInput placeholder="Input" radius="md" size="lg" />;
 }
 
-function Toggle() {
-  const theme = useMantineTheme();
-  const [checked, setChecked] = useState(false);
+function MenuDashReaction({ title }) {
+    const [selectedItem, setSelectedItem] = useState(title);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const buttonRef = useRef(null);
 
-  return (
-    <Switch
-      checked={checked}
-      onChange={(event) => setChecked(event.currentTarget.checked)}
-      color="teal"
-      size="md"
-      thumbIcon={
-        checked ? (
-          <IconCheck
-            style={{ width: rem(12), height: rem(12) }}
-            color={theme.colors.teal[8]}
-            stroke={3}
-          />
-        ) : (
-          <IconX
-            style={{ width: rem(12), height: rem(12) }}
-            color={theme.colors.red[6]}
-            stroke={3}
-          />
-        )
-      }
-    />
-  );
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (buttonRef.current) {
+                const span = document.createElement("span");
+                span.style.visibility = "hidden";
+                span.style.whiteSpace = "nowrap";
+                span.style.font = window.getComputedStyle(
+                    buttonRef.current
+                ).font;
+                span.textContent = selectedItem;
+
+                document.body.appendChild(span);
+                const textWidth = span.scrollWidth;
+                document.body.removeChild(span);
+
+                const buttonWidth = buttonRef.current.clientWidth;
+                const isOverflowing = textWidth > buttonWidth;
+
+                setIsOverflowing(isOverflowing);
+            }
+        };
+        checkOverflow();
+    }, [selectedItem]);
+
+    return (
+        <Menu width={200} shadow="md">
+            <Menu.Target>
+                <Tooltip
+                    label={selectedItem}
+                    disabled={!isOverflowing}
+                    position="bottom"
+                    withArrow
+                >
+                    <Button className="button-menu" size="lg" ref={buttonRef}>
+                        {selectedItem}
+                    </Button>
+                </Tooltip>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+                <Menu.Item
+                    onClick={() => setSelectedItem("Reaction du feu de dieu")}
+                >
+                    Reaction du feu de dieu
+                </Menu.Item>
+                <Menu.Item
+                    onClick={() =>
+                        setSelectedItem("Reaction numero deux pour Perrine")
+                    }
+                >
+                    Reaction numero deux pour Perrine
+                </Menu.Item>
+                <Menu.Item onClick={() => setSelectedItem("Reaction courte")}>
+                    Reaction courte
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    );
 }
 
-function RectangleDashboard({text, information}) {
-  return (
-    <div className='rectangle'>
-        <p>{text}</p>
-        <Toggle />
-      <div className='cont-rect'>
-        <TooltipInfo information={information}/>
-      </div>
-    </div>
-  );
+function MenuDashAction({ title }) {
+    const [selectedItem, setSelectedItem] = useState(title);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const buttonRef = useRef(null);
+
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (buttonRef.current) {
+                const span = document.createElement("span");
+                span.style.visibility = "hidden";
+                span.style.whiteSpace = "nowrap";
+                span.style.font = window.getComputedStyle(
+                    buttonRef.current
+                ).font;
+                span.textContent = selectedItem;
+
+                document.body.appendChild(span);
+                const textWidth = span.scrollWidth;
+                document.body.removeChild(span);
+
+                const buttonWidth = buttonRef.current.clientWidth;
+                const isOverflowing = textWidth > buttonWidth;
+
+                setIsOverflowing(isOverflowing);
+            }
+        };
+        checkOverflow();
+    }, [selectedItem]);
+
+    return (
+        <Menu width={200} shadow="md">
+            <Menu.Target>
+                <Tooltip
+                    label={selectedItem}
+                    disabled={!isOverflowing}
+                    position="bottom"
+                    withArrow
+                >
+                    <Button className="button-menu" size="lg" ref={buttonRef}>
+                        {selectedItem}
+                    </Button>
+                </Tooltip>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+                <Menu.Item
+                    onClick={() =>
+                        setSelectedItem("Action magnifiquement incroyable omg")
+                    }
+                >
+                    Action magnifiquement incroyable omg
+                </Menu.Item>
+                <Menu.Item
+                    onClick={() =>
+                        setSelectedItem(
+                            "Action numero deux un peu incroyable mais pas trop"
+                        )
+                    }
+                >
+                    Action numero deux un peu incroyable mais pas trop
+                </Menu.Item>
+                <Menu.Item onClick={() => setSelectedItem("Action courte")}>
+                    Action courte
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    );
+}
+
+function RectangleDashboard({ id, onRemove }) {
+    const [opened, { open, close }] = useDisclosure(false);
+
+    const handleRemove = () => {
+        onRemove(id);
+        close();
+    };
+
+    return (
+        <div className="rectangle">
+            <Modal
+                opened={opened}
+                onClose={close}
+                title="Closing area"
+                centered
+            >
+                <p>Are you sure you want to close this area?</p>
+                <Button onClick={handleRemove}>Yes</Button>
+            </Modal>
+            <div className="cont-rect">
+                <MenuDashAction title="Action ▼" />
+                <TextInputDash />
+                <MenuDashReaction title="Reaction ▼" />
+            </div>
+            <Button className="button-cross" onClick={open}>
+                <img src={logo_cross} width={35} height={35}></img>
+            </Button>
+        </div>
+    );
+}
+
+function AddRectangle({ addNewArea }) {
+    return (
+        <div>
+            <Button className="rectangle-add" onClick={addNewArea}>
+                <img src={logo_plus} alt="Add new area" width={50} />
+            </Button>
+        </div>
+    );
 }
 
 function Dashboard() {
-  return (
-    <div className='dashboard'>
-      <div className='all-container'>
-        <Title title="Dashboard"/>
-        <div className='container'>
-          <div className='back-rectangle'>
-            <div className='column-container'>
-              <RectangleDashboard text="Pluie" information="Pluie"/>
-              <RectangleDashboard text="Tempête" information="Tempête"/>
-              <RectangleDashboard text="Actualité" information="Actualité"/>
+    const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+
+    const addNewArea = () => {
+        const newArea = {
+            id: areas.length + 1,
+        };
+        setAreas([...areas, newArea]);
+    };
+
+    const removeArea = (id) => {
+        setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
+    };
+
+    return (
+        <div className="dashboard">
+            <div className="all-container">
+                <Title title="Dashboard" />
+                <div className="container">
+                    <div className="back-rectangle">
+                        <div className="column-container">
+                            {areas.map((area) => (
+                                <div key={area.id}>
+                                    <RectangleDashboard
+                                        id={area.id}
+                                        onRemove={removeArea}
+                                    />
+                                </div>
+                            ))}
+                            <AddRectangle addNewArea={addNewArea} />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className='column-container'>
-              <RectangleDashboard text="Mail" information="Mail"/>
-              <RectangleDashboard text="Discord" information="Discord"/>
-              <RectangleDashboard text="Tweet" information="Tweet"/>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  )
+    );
 }
 
 export default Dashboard;
