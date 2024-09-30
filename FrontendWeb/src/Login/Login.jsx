@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "./Login.css";
-import { resolvePath } from "react-router-dom";
 import Cookies from "cookies-js";
+import { resolvePath, useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [notLogin, setNotLogin] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -33,7 +35,6 @@ function Login() {
         })
             .then((response) => {
                 if (response.ok) {
-                    console.log("cookies =", response);
                     return response.json();
                 } else {
                     console.log("pas ok ...");
@@ -41,7 +42,6 @@ function Login() {
                 }
             })
             .then((json) => {
-                console.log("JSON= ", json);
                 Cookies.set("token", json.own_token);
                 location.reload();
             })

@@ -39,11 +39,11 @@ function Register() {
     function registerDatas() {
         setAlreadyUse("");
         if (
-            email !== null &&
-            password !== null &&
-            name !== null &&
-            surname !== null &&
-            username !== null
+            email !== "" &&
+            password !== "" &&
+            name !== "" &&
+            surname !== "" &&
+            username !== ""
         ) {
             fetch("http://localhost:3000/api/setUsers", {
                 method: "POST",
@@ -68,6 +68,8 @@ function Register() {
                     }
                 })
                 .then(() => {});
+        } else {
+            console.log("Un champ n'est pas rempli");
         }
     }
 
