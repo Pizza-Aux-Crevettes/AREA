@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 import { resolvePath } from "react-router-dom";
+import Cookies from "cookies-js";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -32,13 +33,17 @@ function Login() {
         })
             .then((response) => {
                 if (response.ok) {
-                    window.location.href = "/Dashboard";
-                    // navigate("/Dashboard");
-                    // location.pathname === "/Dashboard";
+                    console.log("cookies =", response);
+                    return response.json();
                 } else {
                     console.log("pas ok ...");
                     setNotLogin(true);
                 }
+            })
+            .then((json) => {
+                console.log("JSON= ", json);
+                Cookies.set("token", json.own_token);
+                location.reload();
             })
             .then(() => {});
     }
