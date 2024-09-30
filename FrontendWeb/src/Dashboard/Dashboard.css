@@ -1,10 +1,18 @@
+.dashboard .button-menu {
+  background-color: #B5CEFF;
+  color: rgb(0, 0, 0);
+  border-radius: 8px;
+  width: 30vh;
+  padding: 10px;
+  overflow: hidden;
+}
+
 .dashboard .all-container {
   background-color: #B5CEFF;
   display: grid;
   grid-template-rows: 0px 100vh;
   grid-gap: 4%;
   overflow: hidden;
-
 }
 
 .dashboard .container {
@@ -20,35 +28,62 @@
   border-radius: 8px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  overflow-y: auto;
 }
 
 .dashboard .column-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin: 18vh;
-  gap: 8vh;
+  border-color: red 10px solid;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  gap: 2vh;
 }
 
 .dashboard .rectangle {
   background-color: #7289DA;
   border: 1px solid black;
-  width: 40vh;
-  height: 15vh;
+  width: 120vh;
+  height: 10vh;
   border-radius: 15px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15%;
+  padding: 2%;
   box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
   position: relative;
 }
 
 .dashboard .cont-rect {
   display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 2%;
+}
+
+.dashboard .rectangle-add {
+  background-color: #7289DA;
+  border: 1px solid black;
+  width: 120vh;
+  height: 10vh;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2%;
+  box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+  position: relative;
+  color : black;
+}
+
+.dashboard .button-cross {
+  background-color: transparent;
   position: absolute;
-  justify-content: end;
-  bottom: 15px;
-  right: 15px;
+  top: -1px;
+  right: -3vh;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  border-radius: 8px;
+  width: 10vh;
+  overflow: hidden;
 }
