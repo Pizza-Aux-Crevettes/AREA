@@ -7,8 +7,6 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [notLogin, setNotLogin] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -43,7 +41,7 @@ function Login() {
             })
             .then((json) => {
                 Cookies.set("token", json.own_token);
-                location.reload();
+                window.location.reload();
             })
             .then(() => {});
     }
