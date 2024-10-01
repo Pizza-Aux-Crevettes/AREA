@@ -40,7 +40,7 @@ module.exports = (app: Express) => {
 
             console.log(access_token);
 
-            res.redirect(`http://localhost:5173?access_token=${access_token}`);
+            res.redirect(`http://localhost:5173/Service?access_token=${access_token}`);
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
