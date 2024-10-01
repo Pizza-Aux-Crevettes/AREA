@@ -2,10 +2,16 @@ services:
   frontend-web:
     build: FrontendWeb
     ports:
-      - "3000:3000"
+      - "3000:5173"
     volumes:
       - ./FrontendWeb:/app
     command: npm run dev
+
+  frontend-app:
+    build: FrontendApp
+    volumes:
+      - ./FrontendApp:/app
+    command: ionic capacitor build android
 
   backend:
     build: Backend
