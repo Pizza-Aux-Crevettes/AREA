@@ -1,23 +1,62 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
-export async function getWeather() {
-    const apiKey= '05bb45c7c82501ed6d87ec923cd90257';
-    const url = `http://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid=${apiKey}&units=metric&lang=fr`;
+export async function getWeather(userCity: string) {
+    interface cities {
+        city: string;
+        position: string;
+    }
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erreur: ${response.status}`);
+    let Cities: cities[] = [
+        { city: "Paris", position: "lat=48.85&lon=2.35" },
+        { city: "Marseille", position: "lat=43.29&lon=5.36" },
+        { city: "Lyon", position: "lat=45.760&lon=4.83" },
+        { city: "Toulouse", position: "lat=43.60&lon=1.44" },
+        { city: "Nice", position: "lat=43.71&lon=7.26" },
+        { city: "Nantes", position: "lat=47.21&lon=-1.55" },
+        { city: "Montpellier", position: "lat=43.61&lon=3.87" },
+        { city: "Strasbourg", position: "lat=48.57&lon=7.75" },
+        { city: "Bordeaux", position: "lat=44.83&lon=-0.57" },
+        { city: "Lille", position: "lat=50.62&lon=3.05" },
+    ];
+
+    let userPosition = "";
+
+    for (let i = 0; i < Cities.length; i++) {
+        if (Cities[i].city === userCity) {
+            userPosition = Cities[i].position;
         }
+    }
 
-        const data = await response.json();
-        console.log(`Description: ${data.weather[0].description}`);
-        console.log(`Température: ${data.main.temp}°C`);
-        console.log(`Humidité: ${data.main.humidity}%`);
-        console.log(`Vent: ${data.wind.speed} m/s`);
-    } catch (error) {
-        console.error("Erreur lors de la récupération des données météo : ", error);
+    if (userPosition !== "") {
+        const apiKey = process.env.OPENWHEATER_KEY as string;
+        const url = `http://api.openweathermap.org/data/2.5/weather?${userPosition}9&appid=${apiKey}&units=metric&lang=fr`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Erreur: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(`Description: ${data.weather[0].description}`);
+            console.log(`Température: ${data.main.temp}°C`);
+            console.log(`Humidité: ${data.main.humidity}%`);
+            console.log(`Vent: ${data.wind.speed} m/s`);
+
+            let firstWord = data.weather[0].description.split(" ")[0];
+            if (firstWord === "pluie") {
+                console.log("c'est la pluie !");
+            } else {
+                console.log("il pleut pas");
+            }
+        } catch (error) {
+            console.error(
+                "Erreur lors de la récupération des données météo : ",
+                error
+            );
+        }
+    } else {
+        console.error("No data found");
     }
 }
