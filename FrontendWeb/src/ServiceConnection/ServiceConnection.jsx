@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Title from '../Title'
 import logo_discord from '../assets/discord.png'
 import logo_X from '../assets/X.png'
@@ -17,6 +16,7 @@ function RectangleService({ text, logo, Click }) {
     </div>
   );
 }
+
 
 function Service() {
   const [token, setToken] = useState(null);
@@ -36,22 +36,30 @@ function Service() {
   }, []);
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:3000/login";
+    if (!token)
+      window.location.href = "http://localhost:3000/spotify/login";
   };
 
-  const fetchSpotifyData = async () => {
-    if (token) {
-      try {
-        const { data } = await axios.get("https://api.spotify.com/v1/me", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        console.log('Spotify Data:', data);
-      } catch (error) {
-        console.error("Error fetching Spotify data", error);
+  const playPreview = async (accessToken) => {
+    const response = await fetch(`https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
       }
+    });
+    const data = await response.json();
+    const previewUrl = data.preview_url;
+
+    if (previewUrl) {
+      const audio = new Audio(previewUrl);
+      audio.play();
+    } else {
+      console.log("Pas de prévisualisation disponible pour ce morceau.");
     }
+  }
+
+  
+  const fetchSpotifyData = async () => {
+    playPreview(token);
   };
 
   return (
@@ -61,12 +69,12 @@ function Service() {
         <div className='container'>
           <div className='back-rectangle'>
             <div className='column-container'>
-              <RectangleService text="<b>Connect to<br />discord<b\>" logo={logo_discord} Click={null}/>
-              <RectangleService text="<b>Connect to<br />Google<b\>" logo={logo_google} Click={null}/>
+              <RectangleService text="<b>Connect to<br />discord<b\>" logo={logo_discord} Click={null} />
+              <RectangleService text="<b>Connect to<br />Google<b\>" logo={logo_google} Click={null} />
             </div>
             <div className='column-container'>
-              <RectangleService text="<b>Connect to<br />Twitter (X)<b\>" logo={logo_X} Click={null}/>
-              <RectangleService text="<b>Connect to<br />Spotify<b\>" logo={logo_spotify} Click={!token ? handleLogin : fetchSpotifyData}/>
+              <RectangleService text="<b>Connect to<br />Twitter (X)<b\>" logo={logo_X} Click={null} />
+              <RectangleService text="<b>Connect to<br />Spotify<b\>" logo={logo_spotify} Click={!token ? handleLogin : fetchSpotifyData} />
             </div>
           </div>
         </div>

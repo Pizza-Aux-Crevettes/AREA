@@ -4,16 +4,16 @@ import axios from 'axios';
 
 const client_id = process.env.SPOTIFY_CLIENT_ID!;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
-const redirect_uri = 'http://localhost:3000/callback';
+const redirect_uri = 'http://localhost:3000/spotify/callback';
 
 module.exports = (app: Express) => {
-    app.get('/login', (req, res) => {
+    app.get('/spotify/login', (req, res) => {
         const scope = 'user-read-private user-read-email';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
         res.redirect(authUrl);
     });
 
-    app.get('/callback', async (req, res) => {
+    app.get('/spotify/callback', async (req, res) => {
         const code = req.query.code || null;
 
         const authOptions = {
