@@ -7,6 +7,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import Service from "./ServiceConnection/ServiceConnection";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import "@mantine/core/styles.css";
+import Cookies from "cookies-js";
 
 const App = () => {
     return (
@@ -18,6 +19,19 @@ const App = () => {
                         <Route path="/Login" element={<Login />} />
                         <Route path="/Dashboard" element={<Dashboard />} />
                         <Route path="/Service" element={<Service />}/>
+                        {Cookies.get("token") ? (
+                            <>
+                                <Route path="/" element={<Dashboard />} />
+                            </>
+                        ) : (
+                            <>
+                                <Route path="/" element={<Login />} />
+                                <Route
+                                    path="/Register"
+                                    element={<Register />}
+                                />
+                            </>
+                        )}
                     </Routes>
                 </Router>
                 <></>

@@ -6,6 +6,11 @@ import {
     lowercaseFirstLetter,
 } from "./users.query";
 import bcrypt from "bcryptjs";
+const jwt = require("jsonwebtoken");
+
+function generateToken(email: string): string {
+    return jwt.sign({ email: email }, process.env.SECRET);
+}
 
 module.exports = (app: Express) => {
     app.post("/api/setUsers", async (req: Request, res: Response) => {
@@ -47,6 +52,8 @@ module.exports = (app: Express) => {
             });
             return;
         }
-        res.status(200).json(result);
+        res.status(200).json({
+            own_token: generateToken(user_infos.email),
+        });
     });
 };
