@@ -6,15 +6,18 @@ function ConnectionServiceSpotify() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("access_token");
+    const search = window.location.search;
+    let token = window.localStorage.getItem("access_token=");
 
-    if (!token && hash) {
-      token = new URLSearchParams(window.location.hash).get('access_token');
-      window.location.hash = "";
-      window.localStorage.setItem("access_token", token);
+    if (!token && search) {
+      const params = new URLSearchParams(search);
+      token = params.get('access_token');
+      if (token) {
+        setToken(token);
+      }
+      window.history.replaceState(null, '', window.location.pathname);
     }
-    setToken(token);
+    // console.log(token);
   }, []);
 
   const handleLogin = () => {
