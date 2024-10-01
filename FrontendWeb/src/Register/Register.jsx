@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Button, LoadingOverlay } from '@mantine/core';
 import "./Register.css";
 
 function Register() {
@@ -12,6 +13,7 @@ function Register() {
     const location = useLocation();
     const [alreadyUse, setAlreadyUse] = useState("");
     const [accountCreated, setAccountCreated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     function goToLogin() {
         navigate("/Login");
@@ -22,13 +24,10 @@ function Register() {
         if (alreadyUse !== "") {
             return <div className="errorMsg_div">{alreadyUse} </div>;
         } else if (accountCreated) {
+            setTimeout(goToLogin, 3000);
             return (
                 <div className="correctMsg_div">
-                    {" "}
                     {correctMsg}
-                    <button className="ok_button" onClick={goToLogin}>
-                        Ok
-                    </button>
                 </div>
             );
         } else {
@@ -45,6 +44,7 @@ function Register() {
             surname !== "" &&
             username !== ""
         ) {
+            setLoading(true);
             fetch("http://localhost:3000/api/setUsers", {
                 method: "POST",
                 headers: {
@@ -59,6 +59,7 @@ function Register() {
                 }),
             })
                 .then((response) => {
+                    setLoading(false);
                     if (response.ok) {
                         setAccountCreated(true);
                     } else {
@@ -76,29 +77,30 @@ function Register() {
     return (
         <div className="main_div">
             <div className="register_div">
-                <h1>Register</h1>
-                <div className="name_input">
+                <LoadingOverlay visible={loading} overlayBlur={2} className="loading"/>
+                <b style={{fontSize: '8vh', color:'black'}}>Register</b>
+                <div className="global-input">
                     <input
                         placeholder="Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
                 </div>
-                <div className="surname_input">
+                <div className="global-input">
                     <input
                         placeholder="Surname"
                         value={surname}
                         onChange={(e) => setSurname(e.target.value)}
                     />
                 </div>
-                <div className="username_input">
+                <div className="global-input">
                     <input
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-                <div className="email_input">
+                <div className="global-input">
                     <input
                         placeholder="Email"
                         value={email}
@@ -106,7 +108,7 @@ function Register() {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-                <div className="password_input">
+                <div className="global-input">
                     <input
                         placeholder="Password"
                         value={password}
@@ -114,19 +116,17 @@ function Register() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div>
-                    <button className="button_create" onClick={registerDatas}>
+                <CreationMsg correctMsg={"Your account has been created. You will be redirected to login"} />
+                <div className="button-create">
+                    <Button size='xl' onClick={registerDatas}>
                         Create account
-                    </button>
+                    </Button>
                 </div>
                 <div className="login">
                     <p>Already have an account ? </p>
                     <a href="http://localhost:5173/Login">Login</a>
                 </div>
             </div>
-            <CreationMsg
-                correctMsg={"Your account has been created. Please login"}
-            ></CreationMsg>
         </div>
     );
 }
