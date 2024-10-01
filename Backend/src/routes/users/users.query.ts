@@ -29,7 +29,7 @@ export async function createUsers(
 }
 
 export async function loginUsers(user_email: string): Promise<any> {
-    const { data, error } = await supabase
+    const { data: user_info, error } = await supabase
         .from("User")
         .select("password, email")
         .eq("email", user_email);
@@ -37,14 +37,23 @@ export async function loginUsers(user_email: string): Promise<any> {
         console.error(error);
         return null;
     }
-    return data;
+    if (user_info.length === 0) {
+        return null;
+    }
+    return user_info;
 }
 
-export async function verifyPwd(pwd: string, hashedPwd: string) {
+export function lowercaseFirstLetter(str: string): string {
+    if (!str) return "";
+    return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+export async function verifyPwd(pwd: string, hashedPwd: string): Promise<any> {
     const samePwd = await bcrypt.compare(pwd, hashedPwd);
     if (samePwd) {
         return true;
     } else {
+        console.log("bad password");
         return false;
     }
 }

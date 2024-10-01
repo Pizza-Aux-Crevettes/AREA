@@ -1,11 +1,19 @@
 import { Express, Request, Response, Router } from "express";
-import { createUsers, loginUsers, verifyPwd } from "./users.query";
+import {
+    createUsers,
+    loginUsers,
+    verifyPwd,
+    lowercaseFirstLetter,
+} from "./users.query";
 import bcrypt from "bcryptjs";
+const jwt = require("jsonwebtoken");
+
+function generateToken(email: string): string {
+    return jwt.sign({ email: email }, process.env.SECRET);
+}
 
 module.exports = (app: Express) => {
     app.post("/api/setUsers", async (req: Request, res: Response) => {
-        console.log(req.body);
-
         res.setHeader("Content-Type", "application/json");
         const user_infos = req.body;
         const result = await createUsers(
@@ -25,24 +33,27 @@ module.exports = (app: Express) => {
     });
 
     app.post("/api/getUsers", async (req: Request, res: Response) => {
-        console.log(req.body);
-
         res.setHeader("Content-Type", "application/json");
         const user_infos = req.body;
-        const result = await loginUsers(user_infos.email);
+        const result = await loginUsers(lowercaseFirstLetter(user_infos.email));
         if (result === null) {
             res.status(500).json({
                 msg: "Error when getting user",
             });
             return;
         }
-        const samePwd = verifyPwd(user_infos.password, result.password);
+        const samePwd = await verifyPwd(
+            user_infos.password,
+            result[0].password
+        );
         if (!samePwd) {
             res.status(500).json({
                 msg: "Error when getting user",
             });
             return;
         }
-        res.status(200).json(result);
+        res.status(200).json({
+            own_token: generateToken(user_infos.email),
+        });
     });
 };

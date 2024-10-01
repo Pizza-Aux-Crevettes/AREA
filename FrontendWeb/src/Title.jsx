@@ -1,17 +1,35 @@
-import logo_menu from './assets/menu.png'
-import logo_exit from './assets/exit.png'
-import './Title.css'
+import logo_menu from "./assets/menu.png";
+import logo_exit from "./assets/exit.png";
+import "./Title.css";
+import Cookies from "cookies-js";
 
-function Title ({title}) {
+function Title({ title }) {
+    function deleteCookies() {
+        console.log("oui");
+        Cookies.set("token", "", { expires: -1 });
+        window.location.reload();
+    }
     return (
-      <div>
-        <div className='top-part'>
-          <img src={logo_menu} className="logo menu" alt="Menu logo" height='30vh' />
-          <h1>{title}</h1>
-          <img src={logo_exit} className="logo exit" alt="Exit logo" height='35vh' />
+        <div>
+            <div className="top-part">
+                <img
+                    src={logo_menu}
+                    className="logo menu"
+                    alt="Menu logo"
+                    height="30vh"
+                />
+                <h1>{title}</h1>
+                <button onClick={deleteCookies}>
+                    <img
+                        src={logo_exit}
+                        className="logo exit"
+                        alt="Exit logo"
+                        height="35vh"
+                    />
+                </button>
+            </div>
         </div>
-      </div>
-    )
-  }
+    );
+}
 
 export default Title;
