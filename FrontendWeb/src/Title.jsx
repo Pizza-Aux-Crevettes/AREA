@@ -12,14 +12,16 @@ function Title({ title }) {
     return (
         <div>
             <div className="top-part">
-                <img
-                    src={logo_menu}
-                    className="logo menu"
-                    alt="Menu logo"
-                    height="30vh"
-                />
+                <button className="button-style">
+                    <img
+                        src={logo_menu}
+                        className="logo menu"
+                        alt="Menu logo"
+                        height="30vh"
+                    />
+                </button>
                 <h1>{title}</h1>
-                <button onClick={deleteCookies}>
+                <button className="button-style" onClick={deleteCookies}>
                     <img
                         src={logo_exit}
                         className="logo exit"
