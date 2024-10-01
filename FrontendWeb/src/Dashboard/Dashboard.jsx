@@ -6,141 +6,232 @@ import "./Dashboard.css";
 import logo_plus from "../assets/plus.png";
 import logo_cross from "../assets/cross.png";
 
-function TextInputDash() {
-    return <TextInput placeholder="Input" radius="md" size="lg" />;
-}
+function ActionReaction() {
+    const [selectedActionItem, setSelectedActionItem] = useState("Action ▼");
+    const [selectedCity, setSelectedCity] = useState("City ▼");
+    const cities = [
+        { name: "Paris" },
+        { name: "Marseille" },
+        { name: "Lyon" },
+        { name: "Toulouse" },
+        { name: "Nice" },
+        { name: "Nantes" },
+        { name: "Montpellier" },
+        { name: "Strasbourg" },
+        { name: "Bordeaux" },
+        { name: "Lille" },
+    ];
 
-function MenuDashReaction({ title }) {
-    const [selectedItem, setSelectedItem] = useState(title);
-    const [isOverflowing, setIsOverflowing] = useState(false);
-    const buttonRef = useRef(null);
+    function TextInputDash() {
+        const [isOverflowing, setIsOverflowing] = useState(false);
+        const buttonRef = useRef(null);
 
-    useEffect(() => {
-        const checkOverflow = () => {
-            if (buttonRef.current) {
-                const span = document.createElement("span");
-                span.style.visibility = "hidden";
-                span.style.whiteSpace = "nowrap";
-                span.style.font = window.getComputedStyle(
-                    buttonRef.current
-                ).font;
-                span.textContent = selectedItem;
+        useEffect(() => {
+            const checkOverflow = () => {
+                if (buttonRef.current) {
+                    const span = document.createElement("span");
+                    span.style.visibility = "hidden";
+                    span.style.whiteSpace = "nowrap";
+                    span.style.font = window.getComputedStyle(
+                        buttonRef.current
+                    ).font;
+                    span.textContent = selectedActionItem;
 
-                document.body.appendChild(span);
-                const textWidth = span.scrollWidth;
-                document.body.removeChild(span);
+                    document.body.appendChild(span);
+                    const textWidth = span.scrollWidth;
+                    document.body.removeChild(span);
 
-                const buttonWidth = buttonRef.current.clientWidth;
-                const isOverflowing = textWidth > buttonWidth;
+                    const buttonWidth = buttonRef.current.clientWidth;
+                    const isOverflowing = textWidth > buttonWidth;
 
-                setIsOverflowing(isOverflowing);
-            }
-        };
-        checkOverflow();
-    }, [selectedItem]);
+                    setIsOverflowing(isOverflowing);
+                }
+            };
+            checkOverflow();
+        }, [selectedCity]);
+        return selectedActionItem === "When it rains" ? (
+            <Menu>
+                <Menu.Target>
+                    <Tooltip
+                        label={selectedCity}
+                        disabled={!isOverflowing}
+                        position="bottom"
+                        withArrow
+                    >
+                        <Button
+                            className="button-menu"
+                            size="lg"
+                            ref={buttonRef}
+                        >
+                            {selectedCity}
+                        </Button>
+                    </Tooltip>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    {cities.map((city, index) => (
+                        <div key={index}>
+                            <Menu.Item
+                                onClick={() => setSelectedCity(city.name)}
+                            >
+                                {city.name}
+                            </Menu.Item>
+                        </div>
+                    ))}
+                </Menu.Dropdown>
+            </Menu>
+        ) : (
+            <TextInput placeholder="Input" radius="md" size="lg" />
+        );
+    }
+
+    function MenuDashAction({ title }) {
+        const [isOverflowing, setIsOverflowing] = useState(false);
+        const buttonRef = useRef(null);
+
+        useEffect(() => {
+            const checkOverflow = () => {
+                if (buttonRef.current) {
+                    const span = document.createElement("span");
+                    span.style.visibility = "hidden";
+                    span.style.whiteSpace = "nowrap";
+                    span.style.font = window.getComputedStyle(
+                        buttonRef.current
+                    ).font;
+                    span.textContent = selectedActionItem;
+
+                    document.body.appendChild(span);
+                    const textWidth = span.scrollWidth;
+                    document.body.removeChild(span);
+
+                    const buttonWidth = buttonRef.current.clientWidth;
+                    const isOverflowing = textWidth > buttonWidth;
+
+                    setIsOverflowing(isOverflowing);
+                }
+            };
+            checkOverflow();
+        }, [selectedActionItem]);
+
+        return (
+            <Menu width={200} shadow="md">
+                <Menu.Target>
+                    <Tooltip
+                        label={selectedActionItem}
+                        disabled={!isOverflowing}
+                        position="bottom"
+                        withArrow
+                    >
+                        <Button
+                            className="button-menu"
+                            size="lg"
+                            ref={buttonRef}
+                        >
+                            {selectedActionItem}
+                        </Button>
+                    </Tooltip>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                    <Menu.Item
+                        onClick={() => setSelectedActionItem("When it rains")}
+                    >
+                        When it rains
+                    </Menu.Item>
+                    <Menu.Item
+                        onClick={() =>
+                            setSelectedActionItem(
+                                "Action numero deux un peu incroyable mais pas trop"
+                            )
+                        }
+                    >
+                        Action numero deux un peu incroyable mais pas trop
+                    </Menu.Item>
+                    <Menu.Item
+                        onClick={() => setSelectedActionItem("Action courte")}
+                    >
+                        Action courte
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        );
+    }
+    function MenuDashReaction({ title }) {
+        const [selectedItem, setSelectedItem] = useState(title);
+        const [isOverflowing, setIsOverflowing] = useState(false);
+        const buttonRef = useRef(null);
+
+        useEffect(() => {
+            const checkOverflow = () => {
+                if (buttonRef.current) {
+                    const span = document.createElement("span");
+                    span.style.visibility = "hidden";
+                    span.style.whiteSpace = "nowrap";
+                    span.style.font = window.getComputedStyle(
+                        buttonRef.current
+                    ).font;
+                    span.textContent = selectedItem;
+
+                    document.body.appendChild(span);
+                    const textWidth = span.scrollWidth;
+                    document.body.removeChild(span);
+
+                    const buttonWidth = buttonRef.current.clientWidth;
+                    const isOverflowing = textWidth > buttonWidth;
+
+                    setIsOverflowing(isOverflowing);
+                }
+            };
+            checkOverflow();
+        }, [selectedItem]);
+
+        return (
+            <Menu width={200} shadow="md">
+                <Menu.Target>
+                    <Tooltip
+                        label={selectedItem}
+                        disabled={!isOverflowing}
+                        position="bottom"
+                        withArrow
+                    >
+                        <Button
+                            className="button-menu"
+                            size="lg"
+                            ref={buttonRef}
+                        >
+                            {selectedItem}
+                        </Button>
+                    </Tooltip>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                    <Menu.Item
+                        onClick={() => setSelectedItem("sad music is played")}
+                    >
+                        sad music is played
+                    </Menu.Item>
+                    <Menu.Item
+                        onClick={() =>
+                            setSelectedItem("Reaction numero deux pour Perrine")
+                        }
+                    >
+                        Reaction numero deux pour Perrine
+                    </Menu.Item>
+                    <Menu.Item
+                        onClick={() => setSelectedItem("Reaction courte")}
+                    >
+                        Reaction courte
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        );
+    }
 
     return (
-        <Menu width={200} shadow="md">
-            <Menu.Target>
-                <Tooltip
-                    label={selectedItem}
-                    disabled={!isOverflowing}
-                    position="bottom"
-                    withArrow
-                >
-                    <Button className="button-menu" size="lg" ref={buttonRef}>
-                        {selectedItem}
-                    </Button>
-                </Tooltip>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-                <Menu.Item
-                    onClick={() => setSelectedItem("Reaction du feu de dieu")}
-                >
-                    Reaction du feu de dieu
-                </Menu.Item>
-                <Menu.Item
-                    onClick={() =>
-                        setSelectedItem("Reaction numero deux pour Perrine")
-                    }
-                >
-                    Reaction numero deux pour Perrine
-                </Menu.Item>
-                <Menu.Item onClick={() => setSelectedItem("Reaction courte")}>
-                    Reaction courte
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
-    );
-}
-
-function MenuDashAction({ title }) {
-    const [selectedItem, setSelectedItem] = useState(title);
-    const [isOverflowing, setIsOverflowing] = useState(false);
-    const buttonRef = useRef(null);
-
-    useEffect(() => {
-        const checkOverflow = () => {
-            if (buttonRef.current) {
-                const span = document.createElement("span");
-                span.style.visibility = "hidden";
-                span.style.whiteSpace = "nowrap";
-                span.style.font = window.getComputedStyle(
-                    buttonRef.current
-                ).font;
-                span.textContent = selectedItem;
-
-                document.body.appendChild(span);
-                const textWidth = span.scrollWidth;
-                document.body.removeChild(span);
-
-                const buttonWidth = buttonRef.current.clientWidth;
-                const isOverflowing = textWidth > buttonWidth;
-
-                setIsOverflowing(isOverflowing);
-            }
-        };
-        checkOverflow();
-    }, [selectedItem]);
-
-    return (
-        <Menu width={200} shadow="md">
-            <Menu.Target>
-                <Tooltip
-                    label={selectedItem}
-                    disabled={!isOverflowing}
-                    position="bottom"
-                    withArrow
-                >
-                    <Button className="button-menu" size="lg" ref={buttonRef}>
-                        {selectedItem}
-                    </Button>
-                </Tooltip>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-                <Menu.Item
-                    onClick={() =>
-                        setSelectedItem("Action magnifiquement incroyable omg")
-                    }
-                >
-                    Action magnifiquement incroyable omg
-                </Menu.Item>
-                <Menu.Item
-                    onClick={() =>
-                        setSelectedItem(
-                            "Action numero deux un peu incroyable mais pas trop"
-                        )
-                    }
-                >
-                    Action numero deux un peu incroyable mais pas trop
-                </Menu.Item>
-                <Menu.Item onClick={() => setSelectedItem("Action courte")}>
-                    Action courte
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
+        <div className="cont-rect">
+            <MenuDashAction title="Action ▼" />
+            <TextInputDash />
+            <MenuDashReaction title="Reaction ▼" />
+        </div>
     );
 }
 
@@ -163,11 +254,7 @@ function RectangleDashboard({ id, onRemove }) {
                 <p>Are you sure you want to close this area?</p>
                 <Button onClick={handleRemove}>Yes</Button>
             </Modal>
-            <div className="cont-rect">
-                <MenuDashAction title="Action ▼" />
-                <TextInputDash />
-                <MenuDashReaction title="Reaction ▼" />
-            </div>
+            <ActionReaction />
             <Button className="button-cross" onClick={open}>
                 <img src={logo_cross} width={35} height={35}></img>
             </Button>
