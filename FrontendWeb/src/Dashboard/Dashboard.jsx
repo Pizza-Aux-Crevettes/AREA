@@ -255,9 +255,9 @@ function RectangleDashboard({ id, onRemove }) {
                 <Button onClick={handleRemove}>Yes</Button>
             </Modal>
             <ActionReaction />
-            <Button className="button-cross" onClick={open}>
+            <button className="button-cross" onClick={open}>
                 <img src={logo_cross} width={35} height={35}></img>
-            </Button>
+            </button>
         </div>
     );
 }

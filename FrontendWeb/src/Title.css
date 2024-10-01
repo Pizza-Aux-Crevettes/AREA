@@ -11,3 +11,13 @@
 .top-part h1 {
     color: black;
   }
+
+.top-part .button-style {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.top-part .button-style:hover {
+  background: transparent;
+}

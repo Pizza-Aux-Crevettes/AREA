@@ -7,6 +7,11 @@
   overflow: hidden;
 }
 
+.dashboard .button-menu:hover {
+  background-color: #a9c2f3;
+  color: rgb(0, 0, 0);
+}
+
 .dashboard .all-container {
   background-color: #B5CEFF;
   display: grid;
@@ -76,14 +81,16 @@
   color : black;
 }
 
+.dashboard .rectangle-add:hover {
+  background-color: #6a7fcc;
+}
+
 .dashboard .button-cross {
   background-color: transparent;
+  border: none;
   position: absolute;
-  top: -1px;
-  right: -3vh;
+  top: 0px;
+  right: -5px;
   cursor: pointer;
-  color: rgb(0, 0, 0);
-  border-radius: 8px;
-  width: 10vh;
-  overflow: hidden;
+  height: 4vh;
 }
