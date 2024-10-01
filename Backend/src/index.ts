@@ -26,6 +26,7 @@ app.use(function (req, res, next) {
 });
 
 require("./routes/users/users")(app);
+require("./API/Spotify")(app);
 //newsApi();
 //getWeather();
 app.listen(port, () => {});
