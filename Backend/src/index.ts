@@ -27,5 +27,5 @@ app.use(function (req, res, next) {
 
 require("./routes/users/users")(app);
 //newsApi();
-getWeather("Strasbourg");
+getWeather("Paris");
 app.listen(port, () => {});

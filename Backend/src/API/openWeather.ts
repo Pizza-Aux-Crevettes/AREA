@@ -43,6 +43,13 @@ export async function getWeather(userCity: string) {
             console.log(`Température: ${data.main.temp}°C`);
             console.log(`Humidité: ${data.main.humidity}%`);
             console.log(`Vent: ${data.wind.speed} m/s`);
+
+            let firstWord = data.weather[0].description.split(" ")[0];
+            if (firstWord === "pluie") {
+                console.log("c'est la pluie !");
+            } else {
+                console.log("il pleut pas");
+            }
         } catch (error) {
             console.error(
                 "Erreur lors de la récupération des données météo : ",
