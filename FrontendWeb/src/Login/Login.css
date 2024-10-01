@@ -1,8 +1,19 @@
+.login-main-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #B5CEFF;
+}
+
 .login_div {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
     background-color: #7889da;
     width: 70vh;
     height: 80vh;
-    align-items: center;
     justify-content: center;
     border-radius: 50px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
@@ -10,12 +21,19 @@
 }
 
 .login_div h1 {
-    color: black;
+    color: rgb(255, 255, 255);
+    margin: 6vh;
 }
 
-.button_create {
-    margin-top: 50px;
+.button-login Button{
+    margin-top: 2vh;
+    background-color: #33478f;
     border-radius: 50px;
+    width: 25vh;
+}
+
+.button-login Button:hover {
+    background-color: #4359ac;
 }
 
 .email_input,
@@ -24,18 +42,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 5vh;
     margin-left: 0px;
 }
 
 .email_input input,
 .password_input input {
+    background-color: #94acec;
     padding: 5px 20px;
     border: none;
-    margin-left: 10px;
-    border-radius: 10px;
     font-size: 35px;
     border-radius: 50px;
+    width: 500px;
+    height: 70px;
+}
+
+.forgot_password {
+    display: flex;
+    justify-content: center;
+    margin-top: 2vh;
 }
 
 .forgot_password a {
@@ -44,11 +69,16 @@
     font-size: 0.8rem;
 }
 
+.forgot_password a:hover {
+    text-decoration: underline;
+}
+
 .sign_in {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5vh;
 }
 
 .sign_in a {
@@ -58,18 +88,12 @@
     margin-left: 5px;
 }
 
+.sign_in a:hover {
+    text-decoration: underline;
+}
+
 .sign_in p {
     color: #ffffff;
     text-decoration: none;
     font-size: 0.8rem;
-}
-
-.errorMsg_div {
-    background-color: #ff6242;
-    border: 1px solid black;
-    width: 30vh;
-    height: 5vh;
-    text-align: center;
-    padding: 10px;
-    margin-left: 90px;
 }

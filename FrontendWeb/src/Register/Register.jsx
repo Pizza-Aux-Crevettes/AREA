@@ -16,8 +16,8 @@ function Register() {
     const [loading, setLoading] = useState(false);
 
     function goToLogin() {
-        navigate("/Login");
-        location.pathname === "/Login";
+        navigate("/");
+        location.pathname === "/";
     }
 
     function CreationMsg({ correctMsg }) {
@@ -37,6 +37,7 @@ function Register() {
 
     function registerDatas() {
         setAlreadyUse("");
+        setLoading(true);
         if (
             email !== "" &&
             password !== "" &&
@@ -44,7 +45,6 @@ function Register() {
             surname !== "" &&
             username !== ""
         ) {
-            setLoading(true);
             fetch("http://localhost:3000/api/setUsers", {
                 method: "POST",
                 headers: {
@@ -64,13 +64,16 @@ function Register() {
                         setAccountCreated(true);
                     } else {
                         setAlreadyUse(
-                            "Username or email is already use, please change and retry"
+                            "Username or email already use, please change and retry"
                         );
                     }
                 })
                 .then(() => {});
         } else {
-            console.log("Un champ n'est pas rempli");
+            setTimeout(() => {
+                setLoading(false);
+                setAlreadyUse("Please enter your information.");
+            }, 300);
         }
     }
 
@@ -78,7 +81,7 @@ function Register() {
         <div className="main_div">
             <div className="register_div">
                 <LoadingOverlay visible={loading} overlayBlur={2} className="loading"/>
-                <b style={{fontSize: '8vh', color:'black'}}>Register</b>
+                <b style={{fontSize: '8vh', color:'white'}}>Register</b>
                 <div className="global-input">
                     <input
                         placeholder="Name"
@@ -124,7 +127,7 @@ function Register() {
                 </div>
                 <div className="login">
                     <p>Already have an account ? </p>
-                    <a href="http://localhost:5173/Login">Login</a>
+                    <a href="http://localhost:5173/">Login</a>
                 </div>
             </div>
         </div>
