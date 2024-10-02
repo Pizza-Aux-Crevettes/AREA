@@ -1,7 +1,6 @@
 require("dotenv").config();
 import { Express } from "express";
 import { newsApi } from "./API/News";
-import { getWeather } from "./API/openWeather";
 
 const app: Express = require("express")();
 const port = 3000;
@@ -27,6 +26,6 @@ app.use(function (req, res, next) {
 
 require("./routes/users/users")(app);
 require("./API/Spotify")(app);
+require("./API/openWeather/openWeather")(app);
 //newsApi();
-getWeather("Paris");
 app.listen(port, () => {});
