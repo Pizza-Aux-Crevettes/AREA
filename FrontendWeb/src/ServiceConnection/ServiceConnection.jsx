@@ -1,22 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from "react";
 import Cookies from "cookies-js";
-import Title from '../Title/Title'
-import logo_discord from '../assets/discord.png'
-import logo_X from '../assets/X.png'
-import logo_spotify from '../assets/spotify.png'
-import logo_google from '../assets/google.png'
-import './ServiceConnection.css'
+import Title from "../Title/Title";
+import logo_discord from "../assets/discord.png";
+import logo_X from "../assets/X.png";
+import logo_spotify from "../assets/spotify.png";
+import logo_google from "../assets/google.png";
+import "./ServiceConnection.css";
 
 function RectangleService({ text, logo, Click }) {
-  return (
-    <div className='rectangle'>
-      <button onClick={Click} className='button-style'>
-        <h3 dangerouslySetInnerHTML={{ __html: text }} />
-      </button>
-      <img src={logo} className="logo-rect" />
-    </div>
-  );
+    return (
+        <div className="rectangle">
+            <button onClick={Click} className="button-style">
+                <h3 dangerouslySetInnerHTML={{ __html: text }} />
+            </button>
+            <img src={logo} className="logo-rect" />
+        </div>
+    );
 }
+
+// export const playPreview = async () => {
+//     const response = await fetch(
+//         `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
+//         {
+//             headers: {
+//                 Authorization: `Bearer ${Cookies.get("spotify_token")}`,
+//             },
+//         }
+//     );
+//     const data = await response.json();
+//     const previewUrl = data.preview_url;
+
+//     if (previewUrl) {
+//         const audio = new Audio(previewUrl);
+//         audio.play();
+//     } else {
+//         console.log("No preview available for this song.");
+//     }
+// };
 
 function Service() {
     useEffect(() => {
@@ -36,30 +56,6 @@ function Service() {
     const handleLogin = () => {
         window.location.href = "http://localhost:3000/spotify/login";
     };
-
-    const playPreview = async (accessToken) => {
-        const response = await fetch(
-            `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
-        const data = await response.json();
-        const previewUrl = data.preview_url;
-
-        if (previewUrl) {
-            const audio = new Audio(previewUrl);
-            audio.play();
-        } else {
-            console.log("Pas de prévisualisation disponible pour ce morceau.");
-        }
-    };
-
-    // const fetchSpotifyData = async () => {
-    //     playPreview(token);
-    // };
 
     return (
         <div className="service">
