@@ -7,12 +7,6 @@ services:
       - ./FrontendWeb:/app
     command: npm run dev
 
-  frontend-app:
-    build: FrontendApp
-    volumes:
-      - ./FrontendApp:/app
-    command: ionic capacitor build android
-
   backend:
     build: Backend
     ports:
