@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "cookies-js";
-
 import Title from "../Title/Title";
 import logo_discord from "../assets/discord.png";
 import logo_X from "../assets/X.png";
