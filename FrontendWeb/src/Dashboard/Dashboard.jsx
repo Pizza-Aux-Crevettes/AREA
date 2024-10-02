@@ -6,6 +6,7 @@ import Title from "../Title/Title";
 import "./Dashboard.css";
 import logo_plus from "../assets/plus.png";
 import logo_cross from "../assets/cross.png";
+import logo_correct from "../assets/correct.png";
 
 function ActionReaction() {
     const [selectedActionItem, setSelectedActionItem] = useState("Action");
@@ -265,6 +266,9 @@ function RectangleDashboard({ id, onRemove }) {
             <ActionReaction />
             <button className="button-cross" onClick={open}>
                 <img src={logo_cross} width={35} height={35}></img>
+            </button>
+            <button className="button-correct" onClick={open}>
+                <img src={logo_correct} width={35} height={35}></img>
             </button>
         </div>
     );
