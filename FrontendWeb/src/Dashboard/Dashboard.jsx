@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Menu, Button, TextInput, Tooltip, Modal } from "@mantine/core";
-import Title from "../Title";
+import { Menu, Button, TextInput, Tooltip, Modal, MenuDivider } from "@mantine/core";
+import { IconChevronDown } from '@tabler/icons-react';
+import Title from "../Title/Title";
 import "./Dashboard.css";
 import logo_plus from "../assets/plus.png";
 import logo_cross from "../assets/cross.png";
 import logo_correct from "../assets/correct.png";
 
 function ActionReaction() {
-    const [selectedActionItem, setSelectedActionItem] = useState("Action ▼");
-    const [selectedCity, setSelectedCity] = useState("City ▼");
+    const [selectedActionItem, setSelectedActionItem] = useState("Action");
+    const [selectedCity, setSelectedCity] = useState("City");
     const cities = [
         { name: "Paris" },
         { name: "Marseille" },
@@ -65,6 +66,7 @@ function ActionReaction() {
                             ref={buttonRef}
                         >
                             {selectedCity}
+                            <IconChevronDown size={16} />
                         </Button>
                     </Tooltip>
                 </Menu.Target>
@@ -128,6 +130,7 @@ function ActionReaction() {
                             ref={buttonRef}
                         >
                             {selectedActionItem}
+                            <IconChevronDown size={16} />
                         </Button>
                     </Tooltip>
                 </Menu.Target>
@@ -138,6 +141,7 @@ function ActionReaction() {
                     >
                         When it rains
                     </Menu.Item>
+                    <MenuDivider />
                     <Menu.Item
                         onClick={() =>
                             setSelectedActionItem(
@@ -147,6 +151,7 @@ function ActionReaction() {
                     >
                         Action numero deux un peu incroyable mais pas trop
                     </Menu.Item>
+                    <MenuDivider />
                     <Menu.Item
                         onClick={() => setSelectedActionItem("Action courte")}
                     >
@@ -200,6 +205,7 @@ function ActionReaction() {
                             ref={buttonRef}
                         >
                             {selectedItem}
+                            <IconChevronDown size={16} />
                         </Button>
                     </Tooltip>
                 </Menu.Target>
@@ -210,6 +216,7 @@ function ActionReaction() {
                     >
                         sad music is played
                     </Menu.Item>
+                    <MenuDivider />
                     <Menu.Item
                         onClick={() =>
                             setSelectedItem("Reaction numero deux pour Perrine")
@@ -217,6 +224,7 @@ function ActionReaction() {
                     >
                         Reaction numero deux pour Perrine
                     </Menu.Item>
+                    <MenuDivider />
                     <Menu.Item
                         onClick={() => setSelectedItem("Reaction courte")}
                     >
@@ -229,9 +237,9 @@ function ActionReaction() {
 
     return (
         <div className="cont-rect">
-            <MenuDashAction title="Action ▼" />
+            <MenuDashAction title="Action" />
             <TextInputDash />
-            <MenuDashReaction title="Reaction ▼" />
+            <MenuDashReaction title="Reaction" />
         </div>
     );
 }
