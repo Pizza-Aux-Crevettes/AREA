@@ -45,7 +45,8 @@
   box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
   position: relative;
 }
-.service button {
+
+.service .rectangle .button-style {
   border-radius: 20px;
   border: 1px solid black;
   padding: 0em 4em;
@@ -54,7 +55,7 @@
   transition: border-color 0.3s;
 }
 
-.service button:hover {
+.service .rectangle .button-style:hover {
   border-color: #0e1631;
   background-color: #2b3c79;
 }
