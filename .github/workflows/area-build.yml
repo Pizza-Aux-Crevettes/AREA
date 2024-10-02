@@ -42,3 +42,36 @@ jobs:
               run: |
                   cd Backend/
                   npm run build
+    android-compile-test:
+        name: Build Mobile (Android)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/Checkout@v4
+            - name: Setup Java SDK
+              uses: actions/setup-java@v4
+              with:
+                  java-version: "21"
+                  distribution: "zulu"
+            - name: NodeJS Setup
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Install Ionic and Angular
+              run: npm i -g @ionic/cli @angular/cli
+            - name: Install node_modules
+              run: |
+                  cd FrontendApp/
+                  npm i
+            - name: Export ionic to android app
+              run: |
+                  cd FrontendApp/
+                  ionic capacitor build android
+            - name: Grant permission gradle
+              run: |
+                  cd FrontendApp/android/
+                  chmod +x gradlew
+            - name: Build android app
+              run: |
+                  cd FrontendApp/android/
+                  ./gradlew assembleDebug
