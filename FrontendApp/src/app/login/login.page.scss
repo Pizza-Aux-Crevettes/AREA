@@ -1,13 +1,5 @@
-ion-item {
-    --background: transparent;
-    margin-bottom: 20px;
-}
-
-ion-input {
-    padding: 5px 20px;
-    border: none;
-    border-radius: 50px;
-    font-size: 15px;
+.info-container {
+    margin: 10px;
 }
 
 .forgot_password {
@@ -19,6 +11,10 @@ ion-input {
     color: #ffffff;
     text-decoration: none;
     font-size: 0.8rem;
+}
+
+.forgot_password a:hover {
+    text-decoration: underline;
 }
 
 .sign_in {
@@ -35,7 +31,16 @@ ion-input {
     margin-left: 5px;
 }
 
+.sign_in a:hover {
+    text-decoration: underline;
+}
+
 .sign_in p {
     color: #ffffff;
     font-size: 0.8rem;
+}
+
+.login-div {
+    width: 50vw;
+    height: 100vh;
 }
