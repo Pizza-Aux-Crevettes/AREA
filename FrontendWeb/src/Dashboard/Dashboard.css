@@ -1,9 +1,12 @@
 .dashboard .button-menu {
+  display: flex;
+  justify-content: space-between;
   background-color: #B5CEFF;
   color: rgb(0, 0, 0);
   border-radius: 8px;
   width: 30vh;
   padding: 10px;
+  gap: 8px; /* Ajoute un espace entre le texte et l'icône */
   overflow: hidden;
 }
 

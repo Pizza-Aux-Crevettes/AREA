@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import Cookies from "cookies-js";
-import Title from "../Title";
-import logo_discord from "../assets/discord.png";
-import logo_X from "../assets/X.png";
-import logo_spotify from "../assets/spotify.png";
-import logo_google from "../assets/google.png";
-import "./ServiceConnection.css";
+import Title from '../Title/Title'
+import logo_discord from '../assets/discord.png'
+import logo_X from '../assets/X.png'
+import logo_spotify from '../assets/spotify.png'
+import logo_google from '../assets/google.png'
+import './ServiceConnection.css'
 
 function RectangleService({ text, logo, Click }) {
-    return (
-        <div className="rectangle">
-            <button onClick={Click}>
-                <h3 dangerouslySetInnerHTML={{ __html: text }} />
-            </button>
-            <img src={logo} className="logo-rect" />
-        </div>
-    );
+  return (
+    <div className='rectangle'>
+      <button onClick={Click} className='button-style'>
+        <h3 dangerouslySetInnerHTML={{ __html: text }} />
+      </button>
+      <img src={logo} className="logo-rect" />
+    </div>
+  );
 }
 
 function Service() {
