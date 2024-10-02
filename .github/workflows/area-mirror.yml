@@ -1,4 +1,4 @@
-name: AREA
+name: Epitech - Deploy to repo
 
 on:
     push:
