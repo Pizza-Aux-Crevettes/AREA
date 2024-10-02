@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Cookies from "cookies-js";
-import Title from '../Title'
+import Title from '../Title/Title'
 import logo_discord from '../assets/discord.png'
 import logo_X from '../assets/X.png'
 import logo_spotify from '../assets/spotify.png'
@@ -87,24 +87,24 @@ function Service() {
               <RectangleService
                 text="<b>Connect to<br />discord<b\>"
                 logo={logo_discord}
-                Click={handleClick("discord")}
+                Click={() => handleClick("discord")}
               />
               <RectangleService
                 text="<b>Connect to<br />Google<b\>"
                 logo={logo_google}
-                Click={handleClick("google")}
+                Click={() => handleClick("google")}
               />
             </div>
             <div className="column-container">
               <RectangleService
                 text="<b>Connect to<br />Twitter (X)<b\>"
                 logo={logo_X}
-                Click={handleClick("twitter")}
+                Click={() => handleClick("twitter")}
               />
               <RectangleService
                 text="<b>Connect to<br />Spotify<b\>"
                 logo={logo_spotify}
-                Click={handleClick("spotify")}
+                Click={() => handleClick("spotify")}
               />
             </div>
           </div>
