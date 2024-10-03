@@ -15,6 +15,13 @@ function generateToken(email: string): string {
 module.exports = (app: Express) => {
     app.post("/api/setUsers", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
+        const { name, surname, username, password, email } = req.body;
+        if (!name || !surname || !username || !password || !email) {
+            res.status(500).json({
+                msg: "Error when setting new user",
+            });
+            return;
+        }
         const user_infos = req.body;
         const result = await createUsers(
             user_infos.name,
@@ -34,7 +41,14 @@ module.exports = (app: Express) => {
 
     app.post("/api/getUsers", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
-        const user_infos = req.body;
+        const { email, password } = req.body;
+        if (!email || !password) {
+            res.status(500).json({
+                msg: "Error when getting user",
+            });
+            return;
+        }
+        const user_infos = { email: email, password: password };
         const result = await loginUsers(lowercaseFirstLetter(user_infos.email));
         if (result === null) {
             res.status(500).json({
