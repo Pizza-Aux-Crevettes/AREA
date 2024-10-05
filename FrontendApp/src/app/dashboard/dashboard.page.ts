@@ -1,8 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { TokenService } from "src/app/services/token/token.service";
 import { SpotifyService } from "src/app/services/spotify/spotify.service";
-import { UserService } from "src/app/services/user/user.service";
+import { RegisterService } from "src/app/services/register/register.service";
 import { WeatherService } from "src/app/services/weather/weather.service";
+import { LocalStorageService } from "../services/localStorage/localStorage.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-dashboard",
@@ -17,8 +19,10 @@ export class DashboardPage {
     constructor(
         private tokenService: TokenService,
         private spotifyService: SpotifyService,
-        private userService: UserService,
-        private weatherService: WeatherService
+        private registerService: RegisterService,
+        private weatherService: WeatherService,
+        private localStorage: LocalStorageService,
+        private router: Router
     ) {
         this.selectedAction = "";
         this.selectedReaction = "";
@@ -63,6 +67,12 @@ export class DashboardPage {
 
     DelArea(id: number) {
         this.areas = this.areas.filter((area) => area.id !== id);
+    }
+
+    deleteCookies() {
+        console.log("test");
+        this.localStorage.removeItem("token");
+        this.router.navigate(["/login"]);
     }
 
     AddArea() {

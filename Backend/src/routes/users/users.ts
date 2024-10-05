@@ -16,6 +16,7 @@ module.exports = (app: Express) => {
     app.post("/api/setUsers", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
         const user_infos = req.body;
+        console.log(user_infos);
         const result = await createUsers(
             user_infos.name,
             user_infos.surname,
@@ -37,6 +38,7 @@ module.exports = (app: Express) => {
         const user_infos = req.body;
         const result = await loginUsers(lowercaseFirstLetter(user_infos.email));
         if (result === null) {
+            console.log("test");
             res.status(500).json({
                 msg: "Error when getting user",
             });

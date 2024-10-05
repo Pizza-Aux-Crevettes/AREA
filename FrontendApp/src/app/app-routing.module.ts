@@ -1,9 +1,18 @@
 // app-routing.module.ts
 import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
+import { AuthGuard } from "./app.canActivate";
+import { RedirectGuard } from "./app.redirectGard";
+import { EmptyComponent } from "./empty.component"; // Un composant temporaire
 
 const routes: Routes = [
-    { path: "", redirectTo: "dashboard", pathMatch: "full" },
+    {
+        path: "",
+        //redirectTo: "dashboard",
+        component: EmptyComponent,
+        pathMatch: "full",
+        canActivate: [RedirectGuard],
+    },
     {
         path: "login",
         loadChildren: () =>
@@ -22,6 +31,7 @@ const routes: Routes = [
             import("./dashboard/dashboard.module").then(
                 (m) => m.DashboardPageModule
             ),
+        canActivate: [AuthGuard],
     },
 ];
 
