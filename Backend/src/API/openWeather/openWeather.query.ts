@@ -52,6 +52,7 @@ export async function getWeather(userCity: string): Promise<any> {
                     return true;
                 }
             }
+            return false;
         } catch (error) {
             console.error(
                 "Erreur lors de la récupération des données météo : ",

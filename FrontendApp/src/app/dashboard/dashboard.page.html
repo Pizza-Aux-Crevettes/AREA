@@ -15,10 +15,11 @@
                                 interface="popover"
                                 placeholder="Action"
                                 (ionChange)="onSelectAction($event)"
+                                [(ngModel)]="selectedAction"
                             >
                                 <ion-select-option
                                     class="text-list"
-                                    value="Wheather"
+                                    value="Weather"
                                     >When it rains</ion-select-option
                                 >
                                 <ion-select-option value="oranges"
@@ -31,7 +32,7 @@
                         </ion-item>
                     </ion-list>
                     <div
-                        *ngIf="selectedActionValue === 'Wheather'"
+                        *ngIf="selectedActionValue === 'Weather'"
                         class="city-div"
                     >
                         <ion-list class="city-list">
@@ -41,6 +42,7 @@
                                     interface="popover"
                                     placeholder="City"
                                     (ionChange)="onSelectCity($event)"
+                                    [(ngModel)]="selectedCity"
                                 >
                                     <ion-select-option
                                         *ngFor="let city of cities"
@@ -70,6 +72,7 @@
                                 interface="popover"
                                 placeholder="Reaction"
                                 (ionChange)="onSelectReaction($event)"
+                                [(ngModel)]="selectedReaction"
                             >
                                 <ion-select-option
                                     class="text-list"
@@ -85,7 +88,11 @@
                             </ion-select>
                         </ion-item>
                     </ion-list>
-                    <ion-button size="small" fill="solid" class="apply-button"
+                    <ion-button
+                        size="small"
+                        fill="solid"
+                        class="apply-button"
+                        (click)="ApplyArea(selectedAction, selectedReaction, selectedCity)"
                         >Apply</ion-button
                     >
                 </div>

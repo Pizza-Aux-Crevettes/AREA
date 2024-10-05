@@ -1,4 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { TokenService } from "src/app/services/token/token.service";
+import { SpotifyService } from "src/app/services/spotify/spotify.service";
+import { UserService } from "src/app/services/user/user.service";
+import { WeatherService } from "src/app/services/weather/weather.service";
 
 @Component({
     selector: "app-dashboard",
@@ -6,7 +10,20 @@ import { Component, OnInit } from "@angular/core";
     styleUrls: ["./dashboard.page.scss"],
 })
 export class DashboardPage {
-    constructor() {}
+    selectedAction: string;
+    selectedReaction: string;
+    selectedCity: string;
+
+    constructor(
+        private tokenService: TokenService,
+        private spotifyService: SpotifyService,
+        private userService: UserService,
+        private weatherService: WeatherService
+    ) {
+        this.selectedAction = "";
+        this.selectedReaction = "";
+        this.selectedCity = "";
+    }
     areas = [{ id: 1 }, { id: 2 }, { id: 3 }];
     selectedActionValue: string = "";
     selectedReactionValue: string = "";
@@ -34,17 +51,14 @@ export class DashboardPage {
 
     onSelectAction(event: any) {
         this.selectedActionValue = event.detail.value;
-        console.log(this.selectedActionValue);
     }
 
     onSelectReaction(event: any) {
         this.selectedReactionValue = event.detail.value;
-        console.log(this.selectedReactionValue);
     }
 
     onSelectCity(event: any) {
         this.selectedCityValue = event.detail.value;
-        console.log(this.selectedCityValue);
     }
 
     DelArea(id: number) {
@@ -58,6 +72,62 @@ export class DashboardPage {
         );
         const newArea = { id: maxId + 1 };
         this.areas.push(newArea);
-        console.log(this.areas);
+    }
+
+    playPreview(trackId: string, token_spotify: string) {
+        this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
+            (data) => {
+                const previewUrl = data.preview_url;
+
+                if (previewUrl) {
+                    const audio = new Audio(previewUrl);
+                    audio.play();
+                } else {
+                    console.log("No preview available for this song.");
+                }
+            },
+            (error) => {
+                console.error("Error fetching track preview:", error);
+            }
+        );
+    }
+
+    ApplyArea(action: string, reaction: string, city: string) {
+        let actionOk = false;
+        let userEmail = "";
+        let token_spotify = "";
+        // this.apiService.getUserData("api/user/me").subscribe(
+        //     (response) => {
+        //         console.log("Réponse backend:", response);
+        //         userEmail = response;
+        //     },
+        //     (error) => {
+        //         console.error("Erreur lors de l'appel:", error);
+        //     }
+        // );
+
+        if (action === "Weather") {
+            this.weatherService
+                .getServicesWeather(this.selectedCity)
+                .subscribe((response) => {
+                    if (response) {
+                        actionOk = true;
+                    }
+                });
+        }
+
+        if (reaction === "Spotify" && actionOk) {
+            this.tokenService
+                .getServicesTokens("anast.bouby@icloud.com")
+                .subscribe((response) => {
+                    token_spotify = response[0].token_spotify;
+                    if (token_spotify !== "") {
+                        this.playPreview(
+                            "1Fid2jjqsHViMX6xNH70hE",
+                            token_spotify
+                        );
+                    }
+                });
+        }
     }
 }
