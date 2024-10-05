@@ -47,7 +47,17 @@ export class DashboardPage {
         console.log(this.selectedCityValue);
     }
 
-    // get areasRange() {
-    //     return this.areas;
-    // }
+    DelArea(id: number) {
+        this.areas = this.areas.filter((area) => area.id !== id);
+    }
+
+    AddArea() {
+        const maxId = this.areas.reduce(
+            (max, area) => (area.id > max ? area.id : max),
+            0
+        );
+        const newArea = { id: maxId + 1 };
+        this.areas.push(newArea);
+        console.log(this.areas);
+    }
 }

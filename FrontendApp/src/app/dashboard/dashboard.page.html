@@ -89,8 +89,15 @@
                         >Apply</ion-button
                     >
                 </div>
+                <ion-button
+                    size="small"
+                    class="close-button"
+                    (click)="DelArea(area.id)"
+                >
+                    <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                </ion-button>
             </div>
         </div>
-        <ion-button class="add-button">+</ion-button>
+        <ion-button class="add-button" (click)="AddArea()">+</ion-button>
     </div>
 </ion-content>
