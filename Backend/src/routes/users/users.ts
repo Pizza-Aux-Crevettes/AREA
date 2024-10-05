@@ -56,4 +56,22 @@ module.exports = (app: Express) => {
             own_token: generateToken(user_infos.email),
         });
     });
+
+    app.get("/api/user/me", async (req: Request, res: Response) => {
+        const token = req.header("Authorization");
+        res.header("Response-Type", "application/json");
+        if (!token) {
+            res.status(401).json();
+            return;
+        } else {
+            let webToken = token.toString().split(" ")[1];
+            try {
+                const decoded: any = jwt.verify(webToken, process.env.SECRET);
+                res.status(200).json({ email: decoded.email });
+            } catch (error) {
+                console.error("JWT verification failed:", error);
+                res.status(401).json({ msg: "Invalid or expired token" });
+            }
+        }
+    });
 };
