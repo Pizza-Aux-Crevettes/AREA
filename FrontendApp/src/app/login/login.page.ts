@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { LoginService } from "../services/login/login.service";
+import { LocalStorageService } from "../services/localStorage/localStorage.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-login",
@@ -6,15 +9,31 @@ import { Component, OnInit } from "@angular/core";
     styleUrls: ["./login.page.scss"],
 })
 export class LoginPage implements OnInit {
-    email: string = "";
-    password: string = "";
+    inputEmail: string = "";
+    inputPassword: string = "";
 
-    constructor() {}
+    constructor(
+        private loginService: LoginService,
+        private localStorage: LocalStorageService,
+        private router: Router
+    ) {
+        this.inputEmail = "";
+        this.inputPassword = "";
+    }
 
     ngOnInit() {}
 
     onLogin() {
-        console.log("Email:", this.email);
-        console.log("Password:", this.password);
+        this.loginService
+            .login(this.inputEmail, this.inputPassword)
+            .subscribe((response) => {
+                if (!response) {
+                    console.error("Email or password is incorrect");
+                } else {
+                    console.log(response);
+                    this.localStorage.setItem("token", response.own_token);
+                    this.router.navigate(["/dashboard"]);
+                }
+            });
     }
 }

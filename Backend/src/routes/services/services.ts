@@ -19,6 +19,7 @@ module.exports = (app: Express) => {
     });
 
     app.post("/api/setNewUSer", async (req: Request, res: Response) => {
+        console.log("JE PASSE");
         res.setHeader("Content-Type", "application/json");
         const service_infos = req.body;
         const result = await createService(service_infos.userEmail);
