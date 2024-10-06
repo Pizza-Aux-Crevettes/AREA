@@ -1,0 +1,110 @@
+.Dashboard-div {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Dashboard-title {
+    margin-left: 20%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.Dashboard-title-bar {
+    background-color: #8cb3ff;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.flex-rectangle {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-rectangle {
+    background-color: #8cb3ff;
+    height: 80%;
+    width: 85%;
+    margin-top: 10%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.actionReaction-rect {
+    background-color: #7289da;
+    width: 80%;
+    height: 50%;
+    border-radius: 10px;
+    margin-top: 7%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 7%;
+    margin-left: 12%;
+}
+
+.input-div {
+    background-color: #ffff;
+    height: 20%;
+    width: 60%;
+    margin-top: 5%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.input-balise {
+    font-size: 75%;
+    margin-left: 3px;
+}
+
+.action-list {
+    margin-top: 15%;
+    border-radius: 10px;
+    height: 20%;
+    width: 60%;
+}
+
+.reaction-list {
+    margin-top: 5%;
+    border-radius: 10px;
+    height: 20%;
+    width: 60%;
+}
+
+.city-div {
+    display: flex;
+    justify-content: center;
+    height: 20%;
+    width: 100%;
+}
+
+.city-list {
+    margin-top: 5%;
+    border-radius: 10px;
+    height: 20%;
+    width: 60%;
+}
+
+.apply-button {
+    margin-top: 5%;
+}
+
+.add-button {
+    width: 60%;
+    --background: #7289da;
+}
+
+.close-button {
+    height: 5%;
+}

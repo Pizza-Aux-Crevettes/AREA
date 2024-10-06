@@ -24,7 +24,7 @@ function Login() {
 
     function LoginUser() {
         setLoading(true);
-        fetch("http://localhost:3000/api/getUsers", {
+        fetch("http://localhost:3000/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -85,11 +85,6 @@ function Login() {
                     </div>
                 </div>
                 <div className="login-second-container">
-                    <div className="forgot_password">
-                        <a href="https://www.amoursucre.com/s1/city">
-                            Forgot your password?
-                        </a>
-                    </div>
                     <div className="sign_in">
                         <p>New here?</p>
                         <a href="http://localhost:5173/Register">Register</a>

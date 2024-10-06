@@ -1,6 +1,8 @@
 require("dotenv").config();
 import { Express } from "express";
 import { newsApi } from "./API/News";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
 
 const app: Express = require("express")();
 const port = 3000;
@@ -25,7 +27,38 @@ app.use(function (req, res, next) {
 });
 
 require("./routes/users/users")(app);
+require("./routes/services/services")(app);
+require("./routes/login/login")(app);
+require("./routes/register/register")(app);
+
 require("./API/Spotify")(app);
+require("./API/Google")(app);
 require("./API/openWeather/openWeather")(app);
+
+const swaggerOptions: swaggerJsDoc.Options = {
+    swaggerDefinition: {
+        openapi: "3.0.0",
+        info: {
+            title: "API Documentation",
+            version: "1.0.0",
+            description: "API Documentation",
+        },
+        servers: [
+            {
+                url: "http://localhost:3000",
+            },
+        ],
+    },
+    apis: [
+        "./src/routes/**/*.ts",
+        "./src/API/google/*.ts",
+        "./src/API/openWeather/*.ts",
+        "./src/API/*.ts",
+    ],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 //newsApi();
 app.listen(port, () => {});
