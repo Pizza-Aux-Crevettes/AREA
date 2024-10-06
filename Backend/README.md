@@ -38,19 +38,20 @@ To install and run the backend locally:
 
 ## Starting the project
 
-To start the project, use the following command:
-
+1. To start the project, use the following command:
     ```bash
     npm run dev
     ```
 
-The server will run by default on port 3000.
+2. The server will run by default on port 3000.
 
 ---
 
 ## Environnement variables
 
-The project requires certain environment variables to function correctly. Create a .env file at the root of the project with the following content:
+The project requires certain environment variables to function correctly. 
+
+1. Create a .env file at the root of the project with the following content:
 
     ```bash
     REACT_APP_SUPABASE_URL="https://qkqqhtvrxplbxmvikcdy.supabase.co"
