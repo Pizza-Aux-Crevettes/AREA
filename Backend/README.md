@@ -39,9 +39,9 @@ To install and run the backend locally:
 ## Starting the project
 
 To start the project, use the following command:
-`bash
+    ```bash
     npm run dev
-    `
+    ```
 
 The server will run by default on port 3000.
 
@@ -50,7 +50,7 @@ The server will run by default on port 3000.
 ## Environnement variables
 
 The project requires certain environment variables to function correctly. Create a .env file at the root of the project with the following content:
-`bash
+    ```bash
     REACT_APP_SUPABASE_URL="https://qkqqhtvrxplbxmvikcdy.supabase.co"
     REACT_APP_SUPABASE_ANON_KEY="your-supabase-anon-key"
     GOOGLE_API_KEY="your-google-api-key"
@@ -59,7 +59,7 @@ The project requires certain environment variables to function correctly. Create
     SPOTIFY_CLIENT_ID="your-spotify-client-id"
     SPOTIFY_CLIENT_SECRET="your-spotify-client-secret"
     SECRET=AREA
-    `
+    ```
 
 ---
 
@@ -73,7 +73,6 @@ The complete API documentation can be accessed via Swagger. Once the server is r
 
 Here is the structure of the project:
 
-`bash
     src
     ├── API
     │   ├── News.ts
@@ -94,7 +93,6 @@ Here is the structure of the project:
         └── users
             ├── users.query.ts
             └── users.ts
-    `
 
 ---
 
