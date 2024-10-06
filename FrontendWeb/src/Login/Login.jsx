@@ -85,11 +85,6 @@ function Login() {
                     </div>
                 </div>
                 <div className="login-second-container">
-                    <div className="forgot_password">
-                        <a href="https://www.amoursucre.com/s1/city">
-                            Forgot your password?
-                        </a>
-                    </div>
                     <div className="sign_in">
                         <p>New here?</p>
                         <a href="http://localhost:5173/Register">Register</a>
