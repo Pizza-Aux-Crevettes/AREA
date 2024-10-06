@@ -1,4 +1,4 @@
-name: AREA - Build
+name: FrontendApp
 
 on:
     push:
@@ -6,42 +6,6 @@ on:
             - "ga-ignore-*"
 
 jobs:
-    react-compile-test:
-        name: Build Front (React)
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/Checkout@v4
-            - name: NodeJS Setup
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-            - name: Install node_modules
-              run: |
-                  cd FrontendWeb/
-                  npm i
-            - name: Build
-              run: |
-                  cd FrontendWeb/
-                  npm run build
-    backend-compile-test:
-        name: Build API
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/Checkout@v4
-            - name: NodeJS Setup
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-            - name: Install node_modules
-              run: |
-                  cd Backend/
-                  npm i
-            - name: Build
-              run: |
-                  cd Backend/
-                  npm run build
     android-compile-test:
         name: Build Mobile (Android)
         runs-on: ubuntu-latest
