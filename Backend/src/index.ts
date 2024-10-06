@@ -28,6 +28,7 @@ require("./routes/users/users")(app);
 require("./routes/services/services")(app);
 
 require("./API/Spotify")(app);
+require("./API/Google")(app);
 require("./API/openWeather/openWeather")(app);
 //newsApi();
 app.listen(port, () => {});
