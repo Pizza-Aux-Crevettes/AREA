@@ -106,15 +106,7 @@ export class DashboardPage {
         let actionOk = false;
         let userEmail = "";
         let token_spotify = "";
-        // this.apiService.getUserData("api/user/me").subscribe(
-        //     (response) => {
-        //         console.log("Réponse backend:", response);
-        //         userEmail = response;
-        //     },
-        //     (error) => {
-        //         console.error("Erreur lors de l'appel:", error);
-        //     }
-        // );
+        let token = this.localStorage.getItem("token");
 
         if (action === "Weather") {
             this.weatherService
@@ -122,24 +114,33 @@ export class DashboardPage {
                 .subscribe((response) => {
                     if (response) {
                         actionOk = true;
-
-                        console.log(reaction, " ", actionOk);
-                
-                        if (reaction === "Spotify" && actionOk) {
-                            console.log("test");
-                
-                            this.tokenService
-                                .getServicesTokens("anast.bouby@icloud.com")
-                                .subscribe((response) => {
-                                    token_spotify = response[0].token_spotify;
-                                    if (token_spotify !== "") {
-                                        this.playPreview(
-                                            "1Fid2jjqsHViMX6xNH70hE",
-                                            token_spotify
-                                        );
+                        if (token !== null) {
+                            this.tokenService.getUserData(token).subscribe(
+                                (response) => {
+                                    userEmail = response;
+                                    if (reaction === "Spotify" && actionOk && userEmail !== "") { 
+                                        console.log(userEmail);               
+                                        this.tokenService
+                                            .getServicesTokens(userEmail)
+                                            .subscribe((response) => {
+                                                console.log("response = ", response[0].token_spotify);
+                                                token_spotify = response[0].token_spotify;
+                                                if (token_spotify !== "") {
+                                                    this.playPreview(
+                                                        "1Fid2jjqsHViMX6xNH70hE",
+                                                        token_spotify
+                                                    );
+                                                }
+                                            });
                                     }
-                                });
+                                },
+                                (error) => {
+                                    console.error("Erreur lors de l'appel:", error);
+                                }
+                            );
                         }
+
+
                     }
                 });
         }
