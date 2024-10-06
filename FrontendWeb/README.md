@@ -11,10 +11,8 @@ This project is the Frontend part of the AREA project. It provides a user interf
 -   [Installation](#installation)
 -   [Starting the Project](#starting-the-project)
 -   [Environment Variables](#environment-variables)
--   [API Documentation](#api-documentation)
 -   [Project Structure](#project-structure)
 -   [Dependencies](#dependencies)
--   [Useful Commands](#useful-commands)
 
 ---
 
@@ -26,8 +24,8 @@ To install and run the frontend web locally:
 
     Before getting started, make sure you have the following installed on your machine:
 
-    Node.js (version 14.18+ or 16+ recommended)
-    npm (comes with Node.js) or yarn.
+    -   Node.js (version 14.18+ or 16+ recommended)
+    -   npm (comes with Node.js) or yarn.
 
 2. Clone the repository:
 
@@ -60,7 +58,8 @@ To install and run the frontend web locally:
     yarn dev
     ```
 
-The server will run by default on port 5173.
+**The server will run by default on port 5173.**
+
 
 2. If you want build the project and after start it independently:
     ```bash
@@ -81,12 +80,6 @@ The server will run by default on port 5173.
     ```bash
     yarn preview
     ```
-
----
-
-## API Documentation
-
-The complete API documentation can be accessed via Swagger. Once the server is running, navigate to http://localhost:3000/api-docs to explore the available endpoints and their usage.
 
 ---
 
