@@ -41,7 +41,7 @@ function Register() {
             surname !== "" &&
             username !== ""
         ) {
-            fetch("http://localhost:3000/api/setUsers", {
+            fetch("http://localhost:3000/api/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -28,6 +28,8 @@ app.use(function (req, res, next) {
 
 require("./routes/users/users")(app);
 require("./routes/services/services")(app);
+require("./routes/login/login")(app);
+require("./routes/register/register")(app);
 
 require("./API/Spotify")(app);
 require("./API/Google")(app);

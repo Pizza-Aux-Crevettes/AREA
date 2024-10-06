@@ -51,6 +51,10 @@ export async function getWeather(userCity: string): Promise<any> {
                     console.log("pluie");
                     return true;
                 }
+                if (Word === "bruine") {
+                    console.log("pluie");
+                    return true;
+                }
             }
             return false;
         } catch (error) {

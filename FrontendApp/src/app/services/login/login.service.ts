@@ -17,7 +17,7 @@ export class LoginService {
 
         try {
             return this.http.post<any>(
-                `${this.API_URL}/api/getUsers`,
+                `${this.API_URL}/api/login`,
                 JSON.stringify({
                     email: email,
                     password: password,

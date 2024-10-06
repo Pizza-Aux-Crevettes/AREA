@@ -25,7 +25,7 @@ export class RegisterService {
         });
         return this.http
             .post<any>(
-                `${this.API_URL}/api/setUsers`,
+                `${this.API_URL}/api/register`,
                 JSON.stringify({
                     email: email,
                     name: name,
