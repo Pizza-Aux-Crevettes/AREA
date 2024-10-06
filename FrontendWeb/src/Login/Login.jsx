@@ -24,7 +24,7 @@ function Login() {
 
     function LoginUser() {
         setLoading(true);
-        fetch("http://localhost:3000/api/getUsers", {
+        fetch("http://localhost:3000/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

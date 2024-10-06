@@ -122,20 +122,24 @@ export class DashboardPage {
                 .subscribe((response) => {
                     if (response) {
                         actionOk = true;
-                    }
-                });
-        }
 
-        if (reaction === "Spotify" && actionOk) {
-            this.tokenService
-                .getServicesTokens("anast.bouby@icloud.com")
-                .subscribe((response) => {
-                    token_spotify = response[0].token_spotify;
-                    if (token_spotify !== "") {
-                        this.playPreview(
-                            "1Fid2jjqsHViMX6xNH70hE",
-                            token_spotify
-                        );
+                        console.log(reaction, " ", actionOk);
+                
+                        if (reaction === "Spotify" && actionOk) {
+                            console.log("test");
+                
+                            this.tokenService
+                                .getServicesTokens("anast.bouby@icloud.com")
+                                .subscribe((response) => {
+                                    token_spotify = response[0].token_spotify;
+                                    if (token_spotify !== "") {
+                                        this.playPreview(
+                                            "1Fid2jjqsHViMX6xNH70hE",
+                                            token_spotify
+                                        );
+                                    }
+                                });
+                        }
                     }
                 });
         }
