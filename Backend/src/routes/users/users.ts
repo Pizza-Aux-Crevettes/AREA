@@ -13,6 +13,42 @@ function generateToken(email: string): string {
 }
 
 module.exports = (app: Express) => {
+    /**
+     * @swagger
+     * /api/setUsers:
+     *   post:
+     *     summary: Creation of a new user in data base
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *               surname:
+     *                 type: string
+     *               username:
+     *                 type: string
+     *               email:
+     *                 type: string
+     *               password:
+     *                 type: string
+     *     responses:
+     *       201:
+     *         description: The user has been created
+     *       409:
+     *         description: Conflict - Email or username already exists
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: "Email or username already exists"
+     */
     app.post("/api/setUsers", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
         const user_infos = req.body;
@@ -25,13 +61,64 @@ module.exports = (app: Express) => {
             user_infos.email
         );
         if (result === null) {
-            res.status(500).json({
-                msg: "Error when setting new user",
+            res.status(409).json({
+                msg: "Email or username already exists",
             });
             return;
         }
-        res.status(200).json(result);
+        res.status(201).json(result);
     });
+
+    /**
+     * @swagger
+     * /api/getUsers:
+     *   post:
+     *     summary: Login route
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 description: Email of the user
+     *               password:
+     *                 type: string
+     *                 description: User password
+     *     responses:
+     *       200:
+     *         description: Returns a JWT token
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 own_token:
+     *                   type: string
+     *                   description: The JWT token for authentication
+     *       400:
+     *         description: Bad Request - Missing or invalid email/password
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: "Missing email or password"
+     *       401:
+     *         description: Unauthorized - Incorrect email or password
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: "Incorrect email or password"
+     */
 
     app.post("/api/getUsers", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
@@ -39,8 +126,8 @@ module.exports = (app: Express) => {
         const result = await loginUsers(lowercaseFirstLetter(user_infos.email));
         if (result === null) {
             console.log("test");
-            res.status(500).json({
-                msg: "Error when getting user",
+            res.status(400).json({
+                msg: "Missing email or password",
             });
             return;
         }
@@ -49,8 +136,8 @@ module.exports = (app: Express) => {
             result[0].password
         );
         if (!samePwd) {
-            res.status(500).json({
-                msg: "Error when getting user",
+            res.status(401).json({
+                msg: "Incorrect email or password",
             });
             return;
         }
@@ -58,6 +145,21 @@ module.exports = (app: Express) => {
             own_token: generateToken(user_infos.email),
         });
     });
+
+    /**
+     * @swagger
+     * /api/user/me:
+     *   get:
+     *     summary: Get user data
+     *     responses:
+     *       200:
+     *         description: Get the email of user who is actually connected
+     *         content:
+     *           application/json:
+     *             schema:
+     *               items:
+     *                 type: string
+     */
 
     app.get("/api/user/me", async (req: Request, res: Response) => {
         const token = req.header("Authorization");
