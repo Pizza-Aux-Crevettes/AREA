@@ -48,7 +48,12 @@
         >
         </ion-input>
     </div>
-
+    <div class="bad-entry" *ngIf="this.emptyField">
+        <p>Please complete all fields</p>
+    </div>
+    <div class="bad-entry" *ngIf="this.alreadyUse">
+        <p>Email or username is already use, please change</p>
+    </div>
     <div class="register">
         <p>Already have an account ?</p>
         <a class="button-hover" routerLink="/login">Login</a>
