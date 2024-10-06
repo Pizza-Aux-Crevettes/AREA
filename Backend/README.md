@@ -39,6 +39,7 @@ To install and run the backend locally:
 ## Starting the project
 
 To start the project, use the following command:
+
     ```bash
     npm run dev
     ```
@@ -50,6 +51,7 @@ The server will run by default on port 3000.
 ## Environnement variables
 
 The project requires certain environment variables to function correctly. Create a .env file at the root of the project with the following content:
+
     ```bash
     REACT_APP_SUPABASE_URL="https://qkqqhtvrxplbxmvikcdy.supabase.co"
     REACT_APP_SUPABASE_ANON_KEY="your-supabase-anon-key"
@@ -122,8 +124,8 @@ The following dependencies are required for the project:
 
 ## Useful Commands
 
-Build the project: `npm run build`
-Start the server: `npm run start`
-Run the project in development mode: `npm run dev`
-Lint the code: `npm run lint`
-Generate Swagger Documentation: Swagger documentation will be updated automatically if you follow the right format in your route comments.
+-   Build the project: `npm run build`
+-   Start the server: `npm run start`
+-   Run the project in development mode: `npm run dev`
+-   Lint the code: `npm run lint`
+-   Generate Swagger Documentation: Swagger documentation will be updated automatically if you follow the right format in your route comments.
