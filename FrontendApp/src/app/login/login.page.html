@@ -17,6 +17,10 @@
         </ion-input>
     </div>
 
+    <div class="bad-entry" *ngIf="this.invalidField">
+        <p>Invalid email or password</p>
+    </div>
+
     <div class="forgot_password">
         <a href="https://www.amoursucre.com/s1/city">Forgot your password?</a>
     </div>
