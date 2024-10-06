@@ -1,9 +1,10 @@
+import bodyParser from "body-parser";
+
 require("dotenv").config();
 import { Express } from "express";
 
 export default function createTestServer() {
     const app: Express = require("express")();
-
     const bodyParser = require("body-parser");
 
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,7 +26,12 @@ export default function createTestServer() {
     });
 
     require("../routes/users/users")(app);
+    require("../routes/services/services")(app);
+    require("../routes/login/login")(app);
+    require("../routes/register/register")(app);
+
     require("../API/Spotify")(app);
+    require("../API/google/Google")(app);
     require("../API/openWeather/openWeather")(app);
     return app;
 }

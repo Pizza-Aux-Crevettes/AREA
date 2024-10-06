@@ -1,16 +1,12 @@
-import { Express, Request, Response, Router } from "express";
-import {
-    loginUsers,
-    verifyPwd,
-    lowercaseFirstLetter,
-} from "./login.query";
-import bcrypt from "bcryptjs";
-const jwt = require("jsonwebtoken");
+import { Express, Request, Response, Router } from 'express';
+import { loginUsers, verifyPwd, lowercaseFirstLetter } from './login.query';
+import bcrypt from 'bcryptjs';
+const jwt = require('jsonwebtoken');
 
 function generateToken(email: string): string {
     return jwt.sign({ email: email }, process.env.SECRET);
 }
-    
+
 module.exports = (app: Express) => {
     /**
      * @swagger
@@ -63,14 +59,13 @@ module.exports = (app: Express) => {
      *                   example: "Incorrect email or password"
      */
 
-    app.post("/api/login", async (req: Request, res: Response) => {
-        res.setHeader("Content-Type", "application/json");
+    app.post('/api/login', async (req: Request, res: Response) => {
+        res.setHeader('Content-Type', 'application/json');
         const user_infos = req.body;
         const result = await loginUsers(lowercaseFirstLetter(user_infos.email));
         if (result === null) {
-            console.log("test");
             res.status(400).json({
-                msg: "Missing email or password",
+                msg: 'Missing email or password',
             });
             return;
         }
@@ -80,7 +75,7 @@ module.exports = (app: Express) => {
         );
         if (!samePwd) {
             res.status(401).json({
-                msg: "Incorrect email or password",
+                msg: 'Incorrect email or password',
             });
             return;
         }
@@ -88,4 +83,4 @@ module.exports = (app: Express) => {
             own_token: generateToken(user_infos.email),
         });
     });
-}
+};
