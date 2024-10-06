@@ -1,0 +1,34 @@
+FROM node:20 AS ionic-build
+
+RUN apt-get update && apt-get install -y default-jdk wget unzip
+
+RUN mkdir -p /opt/android-sdk && \
+    cd /opt/android-sdk && \
+    wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip && \
+    unzip commandlinetools-linux-9477386_latest.zip -d cmdline-tools && \
+    rm commandlinetools-linux-9477386_latest.zip && \
+    mv cmdline-tools/cmdline-tools cmdline-tools/tools
+
+ENV ANDROID_HOME /opt/android-sdk
+ENV PATH="${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+RUN npm install -g @ionic/cli
+
+WORKDIR /app
+COPY ./ /app
+
+RUN npm install @capacitor/android
+RUN npm install
+
+RUN ionic capacitor build android
+
+WORKDIR /app/android
+COPY build_apk.sh /app/build_apk.sh
+
+USER root
+RUN mkdir /output
+
+CMD ["bash", "/app/build_apk.sh"]
