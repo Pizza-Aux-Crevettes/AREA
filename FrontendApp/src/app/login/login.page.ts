@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { LoginService } from "../services/login/login.service";
 import { LocalStorageService } from "../services/localStorage/localStorage.service";
 import { Router } from "@angular/router";
+import { catchError, of } from "rxjs";
 
 @Component({
     selector: "app-login",
@@ -11,6 +12,7 @@ import { Router } from "@angular/router";
 export class LoginPage implements OnInit {
     inputEmail: string = "";
     inputPassword: string = "";
+    invalidField: boolean = false;
 
     constructor(
         private loginService: LoginService,
@@ -26,14 +28,16 @@ export class LoginPage implements OnInit {
     onLogin() {
         this.loginService
             .login(this.inputEmail, this.inputPassword)
-            .subscribe((response) => {
-                if (!response) {
+            .pipe(
+                catchError((error) => {
                     console.error("Email or password is incorrect");
-                } else {
-                    console.log(response);
-                    this.localStorage.setItem("token", response.own_token);
-                    this.router.navigate(["/dashboard"]);
-                }
+                    this.invalidField = true;
+                    return of(null);
+                })
+            )
+            .subscribe((response) => {
+                this.localStorage.setItem("token", response.own_token);
+                this.router.navigate(["/dashboard"]);
             });
     }
 }
