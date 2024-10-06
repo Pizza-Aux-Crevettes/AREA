@@ -1,6 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { of } from "rxjs";
+import {
+    HttpClient,
+    HttpErrorResponse,
+    HttpHeaders,
+} from "@angular/common/http";
+import { catchError, of, throwError } from "rxjs";
 
 @Injectable({
     providedIn: "root",
@@ -19,9 +23,8 @@ export class RegisterService {
         const headers = new HttpHeaders({
             "Content-Type": "application/json",
         });
-
-        try {
-            return this.http.post<any>(
+        return this.http
+            .post<any>(
                 `${this.API_URL}/api/setUsers`,
                 JSON.stringify({
                     email: email,
@@ -33,16 +36,13 @@ export class RegisterService {
                 {
                     headers: headers,
                 }
+            )
+            .pipe(
+                catchError((error: HttpErrorResponse) => {
+                    console.error("request error : ", error);
+                    return throwError(error);
+                })
             );
-        } catch (error) {
-            console.error("Error :", error);
-            return of({
-                status: 500,
-                error: true,
-                message: "Error",
-                data: {},
-            });
-        }
     }
 
     setNewUser(email: string) {
