@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button, LoadingOverlay } from '@mantine/core';
+import { Button, LoadingOverlay } from "@mantine/core";
 import "./Register.css";
 
 function Register() {
@@ -25,11 +25,7 @@ function Register() {
             return <div className="errorMsg_div">{alreadyUse} </div>;
         } else if (accountCreated) {
             setTimeout(goToLogin, 3000);
-            return (
-                <div className="correctMsg_div">
-                    {correctMsg}
-                </div>
-            );
+            return <div className="correctMsg_div">{correctMsg}</div>;
         } else {
             return <></>;
         }
@@ -61,6 +57,15 @@ function Register() {
                 .then((response) => {
                     setLoading(false);
                     if (response.ok) {
+                        fetch("http://localhost:3000/api/setNewUSer", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                userEmail: email,
+                            }),
+                        }).then(() => {});
                         setAccountCreated(true);
                     } else {
                         setAlreadyUse(
@@ -80,8 +85,12 @@ function Register() {
     return (
         <div className="main_div">
             <div className="register_div">
-                <LoadingOverlay visible={loading} overlayBlur={2} className="loading"/>
-                <b style={{fontSize: '8vh', color:'white'}}>Register</b>
+                <LoadingOverlay
+                    visible={loading}
+                    overlayBlur={2}
+                    className="loading"
+                />
+                <b style={{ fontSize: "8vh", color: "white" }}>Register</b>
                 <div className="global-input">
                     <input
                         placeholder="Name"
@@ -119,9 +128,13 @@ function Register() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <CreationMsg correctMsg={"Your account has been created. You will be redirected to login"} />
+                <CreationMsg
+                    correctMsg={
+                        "Your account has been created. You will be redirected to login"
+                    }
+                />
                 <div className="button-create">
-                    <Button size='xl' onClick={registerDatas}>
+                    <Button size="xl" onClick={registerDatas}>
                         Create account
                     </Button>
                 </div>

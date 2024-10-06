@@ -1,34 +1,32 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="login-div" [fullscreen]="true">
+    <div class="info-container">
+        <ion-input
+            type="email"
+            label="Email"
+            labelPlacement="floating"
+            errorText="Invalid email"
+            [(ngModel)]="inputEmail"
+        ></ion-input>
+        <ion-input
+            type="password"
+            label="Password"
+            labelPlacement="floating"
+            errorText="Incorrect password"
+            [(ngModel)]="inputPassword"
+        >
+        </ion-input>
+    </div>
 
-<ion-content class="login_div">
-  <div>
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input [(ngModel)]="email" type="email"></ion-input>
-    </ion-item>
-  </div>
+    <div class="forgot_password">
+        <a href="https://www.amoursucre.com/s1/city">Forgot your password?</a>
+    </div>
 
-  <div>
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input [(ngModel)]="password" type="password"></ion-input>
-    </ion-item>
-  </div>
+    <div class="sign_in">
+        <p>New here?</p>
+        <a class="button-hover" routerLink="/register">Register</a>
+    </div>
 
-  <div class="forgot_password">
-    <a href="https://www.amoursucre.com/s1/city">Forgot your password?</a>
-  </div>
-
-  <div class="sign_in">
-    <p>New here?</p>
-    <a href="https://www.codeur.com">Sign up</a>
-  </div>
-
-  <div>
-    <ion-button expand="full" (click)="onLogin()">Login</ion-button>
-  </div>
+    <div>
+        <ion-button expand="full" (click)="onLogin()">Login</ion-button>
+    </div>
 </ion-content>

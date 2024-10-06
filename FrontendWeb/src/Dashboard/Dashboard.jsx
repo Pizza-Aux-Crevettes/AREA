@@ -1,16 +1,44 @@
 import { useState, useRef, useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Menu, Button, TextInput, Tooltip, Modal, MenuDivider } from "@mantine/core";
-import { IconChevronDown } from '@tabler/icons-react';
+import {
+    Menu,
+    Button,
+    TextInput,
+    Tooltip,
+    Modal,
+    MenuDivider,
+} from "@mantine/core";
+import { IconChevronDown } from "@tabler/icons-react";
 import Title from "../Title/Title";
+//import playPreview from "../ServiceConnection/ServiceConnection";
 import "./Dashboard.css";
 import logo_plus from "../assets/plus.png";
 import logo_cross from "../assets/cross.png";
-import logo_correct from "../assets/correct.png";
+import Cookies from "cookies-js";
 
-function ActionReaction() {
+const playPreview = async () => {
+    const response = await fetch(
+        `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
+        {
+            headers: {
+                Authorization: `Bearer ${Cookies.get("spotify_token")}`,
+            },
+        }
+    );
+    const data = await response.json();
+    const previewUrl = data.preview_url;
+
+    if (previewUrl) {
+        const audio = new Audio(previewUrl);
+        audio.play();
+    } else {
+        console.log("No preview available for this song.");
+    }
+};
+
+function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState("Action");
-    const [selectedCity, setSelectedCity] = useState("City");
+    const [selectedReactionItem, setSelectedReactionItem] = useState("Action");
     const cities = [
         { name: "Paris" },
         { name: "Marseille" },
@@ -91,6 +119,14 @@ function ActionReaction() {
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
 
+        const handleClick = (action) => {
+            setSelectedActionItem("When it rains");
+            setActionReaction((prevState) => ({
+                ...prevState,
+                action: action,
+            }));
+        };
+
         useEffect(() => {
             const checkOverflow = () => {
                 if (buttonRef.current) {
@@ -136,9 +172,7 @@ function ActionReaction() {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item
-                        onClick={() => setSelectedActionItem("When it rains")}
-                    >
+                    <Menu.Item onClick={() => handleClick("Weather")}>
                         When it rains
                     </Menu.Item>
                     <MenuDivider />
@@ -165,6 +199,14 @@ function ActionReaction() {
         const [selectedItem, setSelectedItem] = useState(title);
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
+
+        const handleClick = (reaction) => {
+            setSelectedReactionItem("sad music is played");
+            setActionReaction((prevState) => ({
+                ...prevState,
+                reaction: reaction,
+            }));
+        };
 
         useEffect(() => {
             const checkOverflow = () => {
@@ -194,7 +236,7 @@ function ActionReaction() {
             <Menu width={200} shadow="md">
                 <Menu.Target>
                     <Tooltip
-                        label={selectedItem}
+                        label={selectedReactionItem}
                         disabled={!isOverflowing}
                         position="bottom"
                         withArrow
@@ -204,29 +246,31 @@ function ActionReaction() {
                             size="lg"
                             ref={buttonRef}
                         >
-                            {selectedItem}
+                            {selectedReactionItem}
                             <IconChevronDown size={16} />
                         </Button>
                     </Tooltip>
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item
-                        onClick={() => setSelectedItem("sad music is played")}
-                    >
+                    <Menu.Item onClick={() => handleClick("Spotify")}>
                         sad music is played
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
                         onClick={() =>
-                            setSelectedItem("Reaction numero deux pour Perrine")
+                            setSelectedReactionItem(
+                                "Reaction numero deux pour Perrine"
+                            )
                         }
                     >
                         Reaction numero deux pour Perrine
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() => setSelectedItem("Reaction courte")}
+                        onClick={() =>
+                            setSelectedReactionItem("Reaction courte")
+                        }
                     >
                         Reaction courte
                     </Menu.Item>
@@ -244,7 +288,47 @@ function ActionReaction() {
     );
 }
 
-function RectangleDashboard({ id, onRemove }) {
+const applyAcRea = (actionReaction, selectedCity) => {
+    console.log("TEST =", actionReaction);
+    let res = false;
+    const forJson = selectedCity;
+
+    fetch("http://localhost:3000/api/" + actionReaction.action, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            forJson,
+        }),
+    })
+        .then((response) => {
+            if (response.ok) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .then((res) => {
+            if (res === true) {
+                if (actionReaction.reaction === "Spotify") {
+                    console.log("c'est ok");
+                    playPreview();
+                }
+            }
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la requête :", error);
+        });
+};
+
+function RectangleDashboard({
+    id,
+    onRemove,
+    setActionReaction,
+    selectedCity,
+    setSelectedCity,
+}) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const handleRemove = () => {
@@ -263,12 +347,13 @@ function RectangleDashboard({ id, onRemove }) {
                 <p>Are you sure you want to close this area?</p>
                 <Button onClick={handleRemove}>Yes</Button>
             </Modal>
-            <ActionReaction />
+            <ActionReaction
+                setActionReaction={setActionReaction}
+                selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
+            />
             <button className="button-cross" onClick={open}>
                 <img src={logo_cross} width={35} height={35}></img>
-            </button>
-            <button className="button-correct" onClick={open}>
-                <img src={logo_correct} width={35} height={35}></img>
             </button>
         </div>
     );
@@ -286,6 +371,11 @@ function AddRectangle({ addNewArea }) {
 
 function Dashboard() {
     const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+    const [actionReaction, setActionReaction] = useState(
+        { action: "" },
+        { reaction: "" }
+    );
+    const [selectedCity, setSelectedCity] = useState("City");
 
     const addNewArea = () => {
         const newArea = {
@@ -306,11 +396,26 @@ function Dashboard() {
                     <div className="back-rectangle">
                         <div className="column-container">
                             {areas.map((area) => (
-                                <div key={area.id}>
+                                <div key={area.id} className="row_container">
                                     <RectangleDashboard
                                         id={area.id}
                                         onRemove={removeArea}
+                                        setActionReaction={setActionReaction}
+                                        selectedCity={selectedCity}
+                                        setSelectedCity={setSelectedCity}
                                     />
+                                    <button
+                                        className="button-correct"
+                                        onClick={() =>
+                                            applyAcRea(
+                                                actionReaction,
+                                                selectedCity
+                                            )
+                                        }
+                                    >
+                                        {" "}
+                                        Apply
+                                    </button>
                                 </div>
                             ))}
                             <AddRectangle addNewArea={addNewArea} />

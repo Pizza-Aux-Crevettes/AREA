@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export async function getWeather(userCity: string) {
+export async function getWeather(userCity: string): Promise<any> {
     interface cities {
         city: string;
         position: string;
@@ -44,12 +44,15 @@ export async function getWeather(userCity: string) {
             console.log(`Humidité: ${data.main.humidity}%`);
             console.log(`Vent: ${data.wind.speed} m/s`);
 
-            let firstWord = data.weather[0].description.split(" ")[0];
-            if (firstWord === "pluie") {
-                console.log("c'est la pluie !");
-            } else {
-                console.log("il pleut pas");
+            let Word;
+            for (let i = 0; i <= data.weather.length; i++) {
+                Word = data.weather[0].description.split(" ")[i];
+                if (Word === "pluie") {
+                    console.log("pluie");
+                    return true;
+                }
             }
+            return false;
         } catch (error) {
             console.error(
                 "Erreur lors de la récupération des données météo : ",
