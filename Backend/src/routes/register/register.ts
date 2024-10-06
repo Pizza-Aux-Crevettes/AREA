@@ -46,7 +46,14 @@ module.exports = (app: Express) => {
     app.post("/api/register", async (req: Request, res: Response) => {
         res.setHeader("Content-Type", "application/json");
         const user_infos = req.body;
-        console.log(user_infos);
+        if (!user_infos.name
+            || !user_infos.surname
+            || !user_infos.username
+            || !user_infos.email
+            || !user_infos.password) {
+            res.status(400).json({ msg: "No field must be empty",});
+            return;
+        }
         const result = await register(
             user_infos.name,
             user_infos.surname,

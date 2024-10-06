@@ -39,7 +39,11 @@ jobs:
               run: |
                   cd Backend/
                   npm i
-            - name: Build
+            - name: Create .env file
+              run: |
+                cd Backend/
+                echo "${{secrets.ENV_FILE}}" > .env
+            - name: Run units tests
               run: |
                   cd Backend/
                   npm test

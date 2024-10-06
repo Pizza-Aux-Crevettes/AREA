@@ -26,7 +26,7 @@ export async function verifyPwd(pwd: string, hashedPwd: string): Promise<any> {
     if (samePwd) {
         return true;
     } else {
-        console.log("bad password");
+        console.error("bad password");
         return false;
     }
 }
