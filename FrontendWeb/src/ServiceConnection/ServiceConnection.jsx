@@ -91,45 +91,45 @@ function Service() {
         };
         fetchUserData();
     }, []);
-  const handleClick = (service) => {
-    window.location.href = "http://localhost:3000/" + service + "/login";
-  }
+    const handleClick = (service) => {
+        window.location.href = "http://localhost:3000/" + service + "/login";
+    };
 
-  return (
-    <div className="service">
-      <div className="all-container">
-        <Title title="Service Connection" />
-        <div className="container">
-          <div className="back-rectangle">
-            <div className="column-container">
-              <RectangleService
-                text="<b>Connect to<br />discord<b\>"
-                logo={logo_discord}
-                Click={handleClick("discord")}
-              />
-              <RectangleService
-                text="<b>Connect to<br />Google<b\>"
-                logo={logo_google}
-                Click={handleClick("google")}
-              />
+    return (
+        <div className="service">
+            <div className="all-container">
+                <Title title="Service Connection" />
+                <div className="container">
+                    <div className="back-rectangle">
+                        <div className="column-container">
+                            <RectangleService
+                                text="<b>Connect to<br />discord<b\>"
+                                logo={logo_discord}
+                                Click={() => handleClick("discord")}
+                            />
+                            <RectangleService
+                                text="<b>Connect to<br />Google<b\>"
+                                logo={logo_google}
+                                Click={() => handleClick("google")}
+                            />
+                        </div>
+                        <div className="column-container">
+                            <RectangleService
+                                text="<b>Connect to<br />Twitter (X)<b\>"
+                                logo={logo_X}
+                                Click={() => handleClick("twitter")}
+                            />
+                            <RectangleService
+                                text="<b>Connect to<br />Spotify<b\>"
+                                logo={logo_spotify}
+                                Click={() => handleClick("spotify")}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="column-container">
-              <RectangleService
-                text="<b>Connect to<br />Twitter (X)<b\>"
-                logo={logo_X}
-                Click={handleClick("twitter")}
-              />
-              <RectangleService
-                text="<b>Connect to<br />Spotify<b\>"
-                logo={logo_spotify}
-                Click={handleClick("spotify")}
-              />
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default Service;
