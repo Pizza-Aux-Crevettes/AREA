@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { useDisclosure } from "@mantine/hooks";
+import { useState, useRef, useEffect } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 import {
     Menu,
     Button,
@@ -7,21 +7,40 @@ import {
     Tooltip,
     Modal,
     MenuDivider,
-} from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
-import Title from "../Title/Title";
+} from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
+import Title from '../Title/Title';
 //import playPreview from "../ServiceConnection/ServiceConnection";
-import "./Dashboard.css";
-import logo_plus from "../assets/plus.png";
-import logo_cross from "../assets/cross.png";
-import Cookies from "cookies-js";
+import './Dashboard.css';
+import logo_plus from '../assets/plus.png';
+import logo_cross from '../assets/cross.png';
+import Cookies from 'cookies-js';
+
+const getGmailMsg = async (token) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/gmail/msg', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+            }),
+        });
+        const data = await response.json();
+        console.log('data =', data);
+    } catch (error) {
+        console.log('BLOUP');
+        console.log(error);
+    }
+};
 
 const playPreview = async () => {
     const response = await fetch(
         `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
         {
             headers: {
-                Authorization: `Bearer ${Cookies.get("spotify_token")}`,
+                Authorization: `Bearer ${Cookies.get('spotify_token')}`,
             },
         }
     );
@@ -32,24 +51,24 @@ const playPreview = async () => {
         const audio = new Audio(previewUrl);
         audio.play();
     } else {
-        console.log("No preview available for this song.");
+        console.log('No preview available for this song.');
     }
 };
 
 function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
-    const [selectedActionItem, setSelectedActionItem] = useState("Action");
-    const [selectedReactionItem, setSelectedReactionItem] = useState("Action");
+    const [selectedActionItem, setSelectedActionItem] = useState('Action');
+    const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
     const cities = [
-        { name: "Paris" },
-        { name: "Marseille" },
-        { name: "Lyon" },
-        { name: "Toulouse" },
-        { name: "Nice" },
-        { name: "Nantes" },
-        { name: "Montpellier" },
-        { name: "Strasbourg" },
-        { name: "Bordeaux" },
-        { name: "Lille" },
+        { name: 'Paris' },
+        { name: 'Marseille' },
+        { name: 'Lyon' },
+        { name: 'Toulouse' },
+        { name: 'Nice' },
+        { name: 'Nantes' },
+        { name: 'Montpellier' },
+        { name: 'Strasbourg' },
+        { name: 'Bordeaux' },
+        { name: 'Lille' },
     ];
 
     function TextInputDash() {
@@ -59,9 +78,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         useEffect(() => {
             const checkOverflow = () => {
                 if (buttonRef.current) {
-                    const span = document.createElement("span");
-                    span.style.visibility = "hidden";
-                    span.style.whiteSpace = "nowrap";
+                    const span = document.createElement('span');
+                    span.style.visibility = 'hidden';
+                    span.style.whiteSpace = 'nowrap';
                     span.style.font = window.getComputedStyle(
                         buttonRef.current
                     ).font;
@@ -79,7 +98,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
             };
             checkOverflow();
         }, [selectedCity]);
-        return selectedActionItem === "Weather" ? (
+        return selectedActionItem === 'Weather' ? (
             <Menu>
                 <Menu.Target>
                     <Tooltip
@@ -130,9 +149,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         useEffect(() => {
             const checkOverflow = () => {
                 if (buttonRef.current) {
-                    const span = document.createElement("span");
-                    span.style.visibility = "hidden";
-                    span.style.whiteSpace = "nowrap";
+                    const span = document.createElement('span');
+                    span.style.visibility = 'hidden';
+                    span.style.whiteSpace = 'nowrap';
                     span.style.font = window.getComputedStyle(
                         buttonRef.current
                     ).font;
@@ -172,22 +191,16 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item onClick={() => handleClick("Weather")}>
+                    <Menu.Item onClick={() => handleClick('Weather')}>
                         When it rains
                     </Menu.Item>
                     <MenuDivider />
-                    <Menu.Item
-                        onClick={() =>
-                            handleClick(
-                                "email"
-                            )
-                        }
-                    >
+                    <Menu.Item onClick={() => handleClick('email')}>
                         When I recieve is recieve
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() => setSelectedActionItem("Action courte")}
+                        onClick={() => setSelectedActionItem('Action courte')}
                     >
                         Action courte
                     </Menu.Item>
@@ -201,7 +214,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         const buttonRef = useRef(null);
 
         const handleClick = (reaction) => {
-            setSelectedReactionItem("sad music is played");
+            setSelectedReactionItem('sad music is played');
             setActionReaction((prevState) => ({
                 ...prevState,
                 reaction: reaction,
@@ -211,9 +224,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         useEffect(() => {
             const checkOverflow = () => {
                 if (buttonRef.current) {
-                    const span = document.createElement("span");
-                    span.style.visibility = "hidden";
-                    span.style.whiteSpace = "nowrap";
+                    const span = document.createElement('span');
+                    span.style.visibility = 'hidden';
+                    span.style.whiteSpace = 'nowrap';
                     span.style.font = window.getComputedStyle(
                         buttonRef.current
                     ).font;
@@ -253,14 +266,14 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item onClick={() => handleClick("Spotify")}>
+                    <Menu.Item onClick={() => handleClick('Spotify')}>
                         sad music is played
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
                         onClick={() =>
                             setSelectedReactionItem(
-                                "Reaction numero deux pour Perrine"
+                                'Reaction numero deux pour Perrine'
                             )
                         }
                     >
@@ -269,7 +282,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     <MenuDivider />
                     <Menu.Item
                         onClick={() =>
-                            setSelectedReactionItem("Reaction courte")
+                            setSelectedReactionItem('Reaction courte')
                         }
                     >
                         Reaction courte
@@ -289,14 +302,22 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 }
 
 const applyAcRea = (actionReaction, selectedCity) => {
-    console.log("TEST =", actionReaction);
+    console.log('TEST =', actionReaction);
     let res = false;
     const forJson = selectedCity;
+    const google_token = Cookies.get('google_token');
 
-    fetch("http://localhost:3000/api/" + actionReaction.action, {
-        method: "POST",
+    console.log(google_token);
+
+    if (actionReaction.action === 'email' && google_token !== '') {
+        console.log('ouiiiiii');
+        getGmailMsg(google_token);
+    }
+
+    /*fetch('http://localhost:3000/api/' + actionReaction.action, {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             forJson,
@@ -311,15 +332,15 @@ const applyAcRea = (actionReaction, selectedCity) => {
         })
         .then((res) => {
             if (res === true) {
-                if (actionReaction.reaction === "Spotify") {
+                if (actionReaction.reaction === 'Spotify') {
                     console.log("c'est ok");
                     playPreview();
                 }
             }
         })
         .catch((error) => {
-            console.error("Erreur lors de la requête :", error);
-        });
+            console.error('Erreur lors de la requête :', error);
+        });*/
 };
 
 function RectangleDashboard({
@@ -372,10 +393,10 @@ function AddRectangle({ addNewArea }) {
 function Dashboard() {
     const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
     const [actionReaction, setActionReaction] = useState(
-        { action: "" },
-        { reaction: "" }
+        { action: '' },
+        { reaction: '' }
     );
-    const [selectedCity, setSelectedCity] = useState("City");
+    const [selectedCity, setSelectedCity] = useState('City');
 
     const addNewArea = () => {
         const newArea = {
@@ -413,7 +434,7 @@ function Dashboard() {
                                             )
                                         }
                                     >
-                                        {" "}
+                                        {' '}
                                         Apply
                                     </button>
                                 </div>
