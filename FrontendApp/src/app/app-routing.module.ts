@@ -33,6 +33,10 @@ const routes: Routes = [
             ),
         canActivate: [AuthGuard],
     },
+  {
+    path: 'service',
+    loadChildren: () => import('./service/service.module').then( m => m.ServicePageModule)
+  },
 ];
 
 @NgModule({

@@ -73,10 +73,14 @@ export class DashboardPage {
     }
 
     deleteCookies() {
-        console.log("test");
         this.localStorage.removeItem("token");
         this.router.navigate(["/login"]);
     }
+
+    moveToService() {
+        console.log("move to service");
+        this.router.navigate(["/service"]);
+      }
 
     playPreview(trackId: string, token_spotify: string) {
         this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
@@ -112,7 +116,6 @@ export class DashboardPage {
                                 (response) => {
                                     userEmail = response;
                                     if (area.selectedReaction === "Spotify" && actionOk && userEmail !== "") { 
-                                        console.log(userEmail);               
                                         this.tokenService
                                             .getServicesTokens(userEmail)
                                             .subscribe((response) => {

@@ -1,0 +1,52 @@
+<ion-content>
+  <div class="Service-div">
+    <div class="Service-title-bar">
+      <div>
+        <img
+            src="assets/menu.png"
+            style="
+                width: 24px;
+                height: 24px;
+                margin-top: 100%;
+            "
+            (click)="moveToDashboard()"
+        />
+      </div>
+      <ion-text><h1>Service</h1> </ion-text>
+      <div>
+        <img
+            src="assets/exit.png"
+            style="
+                width: 24px;
+                height: 24px;
+                margin-top: 100%;
+            "
+            (click)="deleteCookies()"
+        />
+      </div>
+    </div>
+    <div class="flex-rectangle">
+      <div class="main-rectangle">
+          <img src="assets/discord.png" class="icon-container" />
+          <ion-text class="connection-rect"
+          (click)="connectService('discord')"><h3>Connect to Discord</h3></ion-text>
+      </div>
+      <div class="main-rectangle">
+        <img src="assets/X.png" class="icon-container" />
+        <ion-text class="connection-rect"
+        (click)="connectService('X')"><h3>Connect to X</h3></ion-text>
+      </div>
+      <div class="main-rectangle">
+        <img src="assets/google.png" class="icon-container" />
+        <ion-text class="connection-rect"
+        (click)="connectService('google')"><h3>Connect to Google</h3></ion-text>
+      </div>
+      <div class="main-rectangle">
+        <img src="assets/spotify.png" class="icon-container" />
+        <ion-text class="connection-rect"
+        (click)="connectService('spotify')"><h3>Connect to Spotify</h3></ion-text>
+      </div>
+  </div>
+  
+  </div>
+</ion-content>

@@ -1,17 +1,25 @@
 <ion-content>
     <div class="Dashboard-div">
         <div class="Dashboard-title-bar">
-            <div class="Dashboard-title">
-                <ion-text color="dark"><h1>Dashboard</h1> </ion-text>
-            </div>
+            <div>
+                <img
+                    src="assets/menu.png"
+                    style="
+                        width: 24px;
+                        height: 24px;
+                        margin-top: 100%;
+                    "
+                    (click)="moveToService()"
+                />
+              </div>
+            <ion-text color="dark"><h1>Dashboard</h1> </ion-text>
             <div>
                 <img
                     src="assets/exit.png"
                     style="
                         width: 24px;
                         height: 24px;
-                        margin-left: 100%;
-                        margin-top: 85%;
+                        margin-top: 100%;
                     "
                     (click)="deleteCookies()"
                 />

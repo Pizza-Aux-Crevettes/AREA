@@ -39,7 +39,6 @@ function Login() {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    console.log("pas ok ...");
                     setNotLogin(true);
                 }
             })
