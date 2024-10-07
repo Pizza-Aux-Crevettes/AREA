@@ -1,129 +1,96 @@
 <ion-content>
     <div class="Dashboard-div">
-        <div class="Dashboard-title-bar">
-            <div>
-                <img
-                    src="assets/menu.png"
-                    style="
-                        width: 24px;
-                        height: 24px;
-                        margin-top: 100%;
-                    "
-                    (click)="moveToService()"
-                />
-              </div>
-            <ion-text color="dark"><h1>Dashboard</h1> </ion-text>
-            <div>
-                <img
-                    src="assets/exit.png"
-                    style="
-                        width: 24px;
-                        height: 24px;
-                        margin-top: 100%;
-                    "
-                    (click)="deleteCookies()"
-                />
-            </div>
+      <div class="Dashboard-title-bar">
+        <div>
+          <img
+            src="assets/menu.png"
+            style="width: 24px; height: 24px; margin-top: 100%;"
+            (click)="moveToService()"
+          />
         </div>
-        <div class="flex-rectangle" *ngFor="let area of areas">
-            <div class="main-rectangle">
-                <div class="actionReaction-rect">
-                    <ion-list class="action-list">
-                        <ion-item>
-                            <ion-select
-                            aria-label="Action"
-                            interface="popover"
-                            placeholder="Action"
-                            (ionChange)="onSelectAction($event, area)"
-                            [(ngModel)]="area.selectedAction"
-                            >
-                                <ion-select-option
-                                    class="text-list"
-                                    value="Weather"
-                                    >When it rains</ion-select-option
-                                >
-                                <ion-select-option value="oranges"
-                                    >Oranges</ion-select-option
-                                >
-                                <ion-select-option value="bananas"
-                                    >Bananas</ion-select-option
-                                >
-                            </ion-select>
-                        </ion-item>
-                    </ion-list>
-                    <div
-                        *ngIf="area.selectedAction === 'Weather'"
-                        class="city-div"
-                    >
-                        <ion-list class="city-list">
-                            <ion-item>
-                                <ion-select
-                                aria-label="City"
-                                interface="popover"
-                                placeholder="City"
-                                (ionChange)="onSelectCity($event, area)"
-                                [(ngModel)]="area.selectedCity"
-                                >
-                                    <ion-select-option
-                                        *ngFor="let city of cities"
-                                        value="{{city.name}}"
-                                        >{{city.name}}</ion-select-option
-                                    >
-                                </ion-select>
-                            </ion-item>
-                        </ion-list>
-                    </div>
-                    <div
-                        *ngIf="area.selectedAction !== 'Weather'"
-                        class="input-div"
-                    >
-                        <ion-input
-                            class="input-balise"
-                            size="small"
-                            placeholder="Enter a texts"
-                        ></ion-input>
-                    </div>
-
-                    <ion-list class="reaction-list">
-                        <ion-item>
-                            <ion-select
-                            aria-label="Reaction"
-                            interface="popover"
-                            placeholder="Reaction"
-                            (ionChange)="onSelectReaction($event, area)"
-                            [(ngModel)]="area.selectedReaction"
-                            >
-                                <ion-select-option
-                                    class="text-list"
-                                    value="Spotify"
-                                    >sad music is played</ion-select-option
-                                >
-                                <ion-select-option value="oranges"
-                                    >Oranges</ion-select-option
-                                >
-                                <ion-select-option value="bananas"
-                                    >Bananas</ion-select-option
-                                >
-                            </ion-select>
-                        </ion-item>
-                    </ion-list>
-                    <ion-button
-                    size="small"
-                    fill="solid"
-                    class="apply-button"
-                    (click)="ApplyArea(area)"
-                        >Apply</ion-button
-                    >
-                </div>
-                <ion-button
-                    size="small"
-                    class="close-button"
-                    (click)="DelArea(area.id)"
+        <ion-text color="dark">
+          <h1>Dashboard</h1>
+        </ion-text>
+        <div>
+          <img
+            src="assets/exit.png"
+            style="width: 24px; height: 24px; margin-top: 100%;"
+            (click)="deleteCookies()"
+          />
+        </div>
+      </div>
+  
+      <div class="flex-rectangle" *ngFor="let area of areas">
+        <div class="main-rectangle">
+          <div class="actionReaction-rect">
+            <ion-list class="action-list">
+              <ion-item>
+                <ion-select
+                  aria-label="Action"
+                  interface="popover"
+                  placeholder="Action"
+                  (ionChange)="onSelectAction($event, area)"
+                  [(ngModel)]="area.selectedAction"
                 >
-                    <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-                </ion-button>
+                  <ion-select-option value="Weather">When it rains</ion-select-option>
+                  <ion-select-option value="oranges">Oranges</ion-select-option>
+                  <ion-select-option value="bananas">Bananas</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+  
+            <div *ngIf="area.selectedAction === 'Weather'" class="city-div">
+              <ion-list class="city-list">
+                <ion-item>
+                  <ion-select
+                    aria-label="City"
+                    interface="popover"
+                    placeholder="City"
+                    (ionChange)="onSelectCity($event, area)"
+                    [(ngModel)]="area.selectedCity"
+                  >
+                    <ion-select-option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
             </div>
+  
+            <div *ngIf="area.selectedAction !== 'Weather'" class="input-div">
+              <ion-input
+                class="input-balise"
+                size="small"
+                placeholder="Enter a text"
+              ></ion-input>
+            </div>
+  
+            <ion-list class="reaction-list">
+              <ion-item>
+                <ion-select
+                  aria-label="Reaction"
+                  interface="popover"
+                  placeholder="Reaction"
+                  (ionChange)="onSelectReaction($event, area)"
+                  [(ngModel)]="area.selectedReaction"
+                >
+                  <ion-select-option value="Spotify">Sad music is played</ion-select-option>
+                  <ion-select-option value="oranges">Oranges</ion-select-option>
+                  <ion-select-option value="bananas">Bananas</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+  
+            <ion-button size="small" fill="solid" class="apply-button" (click)="ApplyArea(area)">
+              {{ area.buttonText }}
+            </ion-button>
+          </div>
+  
+          <ion-button size="small" class="close-button" (click)="DelArea(area.id)">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
         </div>
-        <ion-button class="add-button" (click)="AddNewArea()">+</ion-button>
+      </div>
+  
+      <ion-button class="add-button" (click)="AddNewArea()">+</ion-button>
     </div>
-</ion-content>
+  </ion-content>
+  
