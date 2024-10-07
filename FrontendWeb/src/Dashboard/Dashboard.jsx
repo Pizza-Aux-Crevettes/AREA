@@ -38,6 +38,25 @@ const getGmailMsg = async (token) => {
     }
 };
 
+const SendEmail = async (token, dest) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/gmail/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+                dest: dest,
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const getWeather = async (forJson) => {
     try {
         const response = await fetch('http://localhost:3000/api/Weather', {
@@ -80,6 +99,11 @@ const playPreview = async () => {
 function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState('Action');
     const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
+    const [input, setInput] = useState('');
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value);
+    };
     const cities = [
         { name: 'Paris' },
         { name: 'Marseille' },
@@ -152,7 +176,13 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Dropdown>
             </Menu>
         ) : (
-            <TextInput placeholder="Input" radius="md" size="lg" />
+            <TextInput
+                placeholder="Input"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                radius="md"
+                size="lg"
+            />
         );
     }
 
@@ -218,7 +248,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={() => handleClick('Email')}>
-                        When I recieve is recieve
+                        When I recieve an email
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
@@ -293,13 +323,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() =>
-                            setSelectedReactionItem(
-                                'Reaction numero deux pour Perrine'
-                            )
-                        }
+                        onClick={() => setSelectedReactionItem('sendEmail')}
                     >
-                        Reaction numero deux pour Perrine
+                        send an email
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
@@ -324,7 +350,6 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 }
 
 const applyActions = async (action, forJson) => {
-
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {
@@ -339,8 +364,11 @@ const applyActions = async (action, forJson) => {
 };
 
 const applyReactions = (reaction) => {
+    const google_token = Cookies.get('google_token');
     if (reaction === 'Spotify') {
         playPreview();
+    } else if (reaction === 'sendEmail') {
+        SendEmail(google_token, '');
     }
     return;
 };
@@ -403,13 +431,21 @@ function AddRectangle({ addNewArea }) {
 }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([{ id: 1, buttonText: "Apply" }, { id: 2, buttonText: "Apply" }, { id: 3, buttonText: "Apply" }]);
-    const [actionReaction, setActionReaction] = useState({ action: "", reaction: "" });
-    const [selectedCity, setSelectedCity] = useState("City");
+    const [areas, setAreas] = useState([
+        { id: 1, buttonText: 'Apply' },
+        { id: 2, buttonText: 'Apply' },
+        { id: 3, buttonText: 'Apply' },
+    ]);
+    const [actionReaction, setActionReaction] = useState({
+        action: '',
+        reaction: '',
+    });
+    const [selectedCity, setSelectedCity] = useState('City');
 
     const addNewArea = () => {
-        const maxId = areas.length > 0 ? Math.max(...areas.map(area => area.id)) : 0;
-        const newArea = { id: maxId + 1, buttonText: "Apply" };
+        const maxId =
+            areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+        const newArea = { id: maxId + 1, buttonText: 'Apply' };
         setAreas([...areas, newArea]);
     };
 
@@ -417,16 +453,25 @@ function Dashboard() {
         setAreas((prevAreas) =>
             prevAreas.map((area) =>
                 area.id === id
-                    ? { ...area, buttonText: area.buttonText === "Apply" ? "■ Stop" : "Apply" }
+                    ? {
+                          ...area,
+                          buttonText:
+                              area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
+                      }
                     : area
             )
         );
+
+        const area = areas.find((area) => area.id === id);
+        if (area.buttonText === 'Apply') {
+            applyAcRea(actionReaction, selectedCity);
+        }
     };
 
     const handleStopArea = (id) => {
         setAreas((prevAreas) =>
             prevAreas.map((area) =>
-                area.id === id ? { ...area, buttonText: "Apply" } : area
+                area.id === id ? { ...area, buttonText: 'Apply' } : area
             )
         );
     };
@@ -483,12 +528,17 @@ function Dashboard() {
                                         setSelectedCity={setSelectedCity}
                                     />
 
-                                    {area.buttonText === "■ Stop" ? (
-                                        <StopArea areaId={area.id} onConfirm={handleStopArea} />
+                                    {area.buttonText === '■ Stop' ? (
+                                        <StopArea
+                                            areaId={area.id}
+                                            onConfirm={handleStopArea}
+                                        />
                                     ) : (
                                         <Button
                                             className="button-correct"
-                                            onClick={() => handleApplyClick(area.id)}
+                                            onClick={() =>
+                                                handleApplyClick(area.id)
+                                            }
                                         >
                                             {area.buttonText}
                                         </Button>
