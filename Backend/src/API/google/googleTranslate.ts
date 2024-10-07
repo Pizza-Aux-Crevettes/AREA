@@ -6,7 +6,6 @@ export async function translate(
     const apiKey: string = process.env.GOOGLE_API_KEY as string;
     const urlTranslate = "https://newsapi.org/v2/top-headlines";
     try {
-        console.log(apiKey);
         const result = await fetch(urlTranslate, {
             method: "POST",
             headers: {
@@ -22,7 +21,6 @@ export async function translate(
         });
 
         const data = await result.json();
-        console.log(data);
     } catch (error) {
         console.error("error during translation : ", error);
     }

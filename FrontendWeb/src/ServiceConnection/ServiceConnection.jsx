@@ -39,18 +39,22 @@ const getGmailMsg = async (token) => {
 };
 
 const registerService = async (service) => {
-    try {
-        const response = await fetch('http://localhost:3000/api/user/me', {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + Cookies.get('token'),
-                'Content-Type': 'application/json',
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-        }
-        const json = await response.json();
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/user/me",
+      {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer " + Cookies.get("token"),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+    const json = await response.json();
 
         if (json && json.email) {
             const token = Cookies.get(service + '_token');

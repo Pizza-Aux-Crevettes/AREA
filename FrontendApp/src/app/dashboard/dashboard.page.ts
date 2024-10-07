@@ -73,7 +73,6 @@ export class DashboardPage {
     }
 
     deleteCookies() {
-        console.log("test");
         this.localStorage.removeItem("token");
         this.router.navigate(["/login"]);
     }
@@ -117,7 +116,6 @@ export class DashboardPage {
                                 (response) => {
                                     userEmail = response;
                                     if (area.selectedReaction === "Spotify" && actionOk && userEmail !== "") { 
-                                        console.log(userEmail);               
                                         this.tokenService
                                             .getServicesTokens(userEmail)
                                             .subscribe((response) => {

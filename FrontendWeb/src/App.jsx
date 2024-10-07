@@ -18,13 +18,13 @@ const App = () => {
                         {Cookies.get("token") ? (
                             <>
                                 <Route path="/" element={<Dashboard />} />
-                                <Route path="/Service" element={<Service />} />
+                                <Route path="/service" element={<Service />} />
                             </>
                         ) : (
                             <>
                                 <Route path="/" element={<Login />} />
                                 <Route
-                                    path="/Register"
+                                    path="/register"
                                     element={<Register />}
                                 />
                             </>

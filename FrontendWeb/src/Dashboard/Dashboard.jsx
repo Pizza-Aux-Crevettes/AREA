@@ -302,7 +302,6 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 }
 
 const applyAcRea = (actionReaction, selectedCity) => {
-    console.log('TEST =', actionReaction);
     let res = false;
     const forJson = selectedCity;
     const google_token = Cookies.get('google_token');
@@ -332,9 +331,8 @@ const applyAcRea = (actionReaction, selectedCity) => {
         })
         .then((res) => {
             if (res === true) {
-                if (actionReaction.reaction === 'Spotify') {
-                    console.log("c'est ok");
-                    playPreview();
+                if (actionReaction.reaction === "Spotify") {
+                     playPreview();
                 }
             }
         })
