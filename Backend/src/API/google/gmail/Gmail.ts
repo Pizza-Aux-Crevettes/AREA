@@ -12,6 +12,13 @@ module.exports = (app: Express) => {
             });
             return;
         }
-        res.status(200).json(result.snippet);
+        if (result.labelIds[0] !== 'UNREAD') {
+            res.status(500).json({
+                msg: 'Not new emails',
+            });
+
+            return;
+        }
+        res.status(200).json(true);
     });
 };
