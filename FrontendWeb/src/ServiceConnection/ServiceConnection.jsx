@@ -64,30 +64,6 @@ function Service() {
     window.location.href = "http://localhost:3000/" + service + "/login";
   }
 
-  // const playPreview = async (accessToken) => {
-  //     const response = await fetch(
-  //         `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
-  //         {
-  //             headers: {
-  //                 Authorization: `Bearer ${accessToken}`,
-  //             },
-  //         }
-  //     );
-  //     const data = await response.json();
-  //     const previewUrl = data.preview_url;
-
-  //     if (previewUrl) {
-  //         const audio = new Audio(previewUrl);
-  //         audio.play();
-  //     } else {
-  //         console.log("Pas de prévisualisation disponible pour ce morceau.");
-  //     }
-  // };
-
-  // const fetchSpotifyData = async () => {
-  //     playPreview(token);
-  // };
-
   return (
     <div className="service">
       <div className="all-container">

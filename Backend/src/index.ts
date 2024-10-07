@@ -29,6 +29,7 @@ require("./routes/users/users")(app);
 require("./API/Spotify")(app);
 require("./API/Google")(app);
 require("./API/Discord")(app);
+require("./API/X")(app);
 //newsApi();
 getWeather("Paris");
 app.listen(port, () => {});
