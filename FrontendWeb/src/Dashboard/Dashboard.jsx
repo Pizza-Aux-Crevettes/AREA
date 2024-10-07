@@ -86,7 +86,6 @@ const playPreview = async () => {
     );
     const data = await response.json();
     const previewUrl = data.preview_url;
-    console.log(previewUrl);
 
     if (previewUrl) {
         const audio = new Audio(previewUrl);
@@ -100,22 +99,6 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState('Action');
     const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
     const [input, setInput] = useState('');
-
-    const handleInputChange = (event) => {
-        setInput(event.target.value);
-    };
-    const cities = [
-        { name: 'Paris' },
-        { name: 'Marseille' },
-        { name: 'Lyon' },
-        { name: 'Toulouse' },
-        { name: 'Nice' },
-        { name: 'Nantes' },
-        { name: 'Montpellier' },
-        { name: 'Strasbourg' },
-        { name: 'Bordeaux' },
-        { name: 'Lille' },
-    ];
 
     function TextInputDash() {
         const [isOverflowing, setIsOverflowing] = useState(false);
@@ -176,15 +159,26 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Dropdown>
             </Menu>
         ) : (
-            <TextInput
-                placeholder="Input"
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                radius="md"
-                size="lg"
-            />
+            <div/>
         );
     }
+
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value);
+    };
+    const cities = [
+        { name: 'Paris' },
+        { name: 'Marseille' },
+        { name: 'Lyon' },
+        { name: 'Toulouse' },
+        { name: 'Nice' },
+        { name: 'Nantes' },
+        { name: 'Montpellier' },
+        { name: 'Strasbourg' },
+        { name: 'Bordeaux' },
+        { name: 'Lille' },
+    ];
 
     function MenuDashAction({ title }) {
         const [isOverflowing, setIsOverflowing] = useState(false);
@@ -266,7 +260,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         const buttonRef = useRef(null);
 
         const handleClick = (reaction) => {
-            setSelectedReactionItem('sad music is played');
+            setSelectedReactionItem(reaction);
             setActionReaction((prevState) => ({
                 ...prevState,
                 reaction: reaction,
@@ -323,7 +317,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() => setSelectedReactionItem('sendEmail')}
+                        onClick={() => handleClick('sendEmail')}
                     >
                         send an email
                     </Menu.Item>
@@ -368,7 +362,7 @@ const applyReactions = (reaction) => {
     if (reaction === 'Spotify') {
         playPreview();
     } else if (reaction === 'sendEmail') {
-        SendEmail(google_token, '');
+        SendEmail(google_token, "anast.bouby@icloud.com");
     }
     return;
 };
