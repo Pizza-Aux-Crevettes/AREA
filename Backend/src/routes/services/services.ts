@@ -38,7 +38,8 @@ module.exports = (app: Express) => {
         console.log(service_infos);
         const result = await updateService(
             service_infos.userEmail,
-            service_infos.token_spotify
+            service_infos.token,
+            service_infos.service
         );
         if (result === null) {
             res.status(400).json({

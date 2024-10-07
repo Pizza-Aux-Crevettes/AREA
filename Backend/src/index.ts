@@ -31,7 +31,7 @@ require("./routes/services/services")(app);
 require("./routes/login/login")(app);
 require("./routes/register/register")(app);
 require("./API/Spotify")(app);
-require("./API/Google")(app);
+require("./API/google/Google")(app);
 require("./API/Discord")(app);
 require("./API/X")(app);
 require("./API/openWeather/openWeather")(app);
