@@ -36,8 +36,9 @@
         "axios": "^1.7.7",
         "jest": "^29.7.0",
         "supertest": "^7.0.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
         "ts-jest": "^29.2.5",
-        "tsoa": "^6.4.0",
-		"swagger-ui-express": "^5.0.1"
+        "tsoa": "^6.4.0"
     }
 }

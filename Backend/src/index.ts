@@ -30,9 +30,10 @@ require("./routes/users/users")(app);
 require("./routes/services/services")(app);
 require("./routes/login/login")(app);
 require("./routes/register/register")(app);
-
 require("./API/Spotify")(app);
 require("./API/Google")(app);
+require("./API/Discord")(app);
+require("./API/X")(app);
 require("./API/openWeather/openWeather")(app);
 
 const swaggerOptions: swaggerJsDoc.Options = {
@@ -60,5 +61,6 @@ const swaggerOptions: swaggerJsDoc.Options = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 //newsApi();
 app.listen(port, () => {});

@@ -20,6 +20,7 @@ module.exports = (app: Express) => {
 
     app.get("/api/user/me", async (req: Request, res: Response) => {
         const token = req.header("Authorization");
+        // console.log(token);
         res.header("Response-Type", "application/json");
         if (!token) {
             res.status(401).json();
@@ -28,6 +29,7 @@ module.exports = (app: Express) => {
             let webToken = token.toString().split(" ")[1];
             try {
                 const decoded: any = jwt.verify(webToken, process.env.SECRET);
+                console.log(decoded.email);
                 res.status(200).json({ email: decoded.email });
             } catch (error) {
                 console.error("JWT verification failed:", error);

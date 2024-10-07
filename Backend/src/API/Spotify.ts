@@ -44,8 +44,9 @@ module.exports = (app: Express) => {
             const refresh_token = response.data.refresh_token;
 
             res.redirect(
-                `http://localhost:5173/Service?access_token=${access_token}`
+                `http://localhost:5173/Service?spotify_token=${access_token}`
             );
+
         } catch (error) {
             console.error("Error retrieving access token:", error);
             res.send("Error during token retrieval");

@@ -32,7 +32,8 @@ export async function updateService(
         ])
         .eq("user_email", user_email)
         .select();
-    if (data != null && data.length === 0) {
+    if (data === null || data.length === 0) {
+        console.log(error)
         return null;
     } else {
         return data;
