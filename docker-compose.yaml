@@ -1,16 +1,22 @@
+volumes:
+    area_volume:
+
 services:
     frontend-web:
         build: FrontendWeb
         ports:
-            - "3000:5173"
+            - "8081:8081"
         volumes:
-            - ./FrontendWeb:/app
-        command: npm run dev
+            - area_volume:/output
 
     backend:
         build: Backend
         ports:
-            - "3001:3000"
+            - "8080:8080"
         volumes:
-            - ./Backend:/app
-        command: npm run dev
+            - area_volume:/output
+
+    mobile_app:
+        build: FrontendApp
+        volumes:
+            - area_volume:/output

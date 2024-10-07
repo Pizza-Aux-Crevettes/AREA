@@ -43,6 +43,8 @@
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1",
         "ts-jest": "^29.2.5",
-        "tsoa": "^6.4.0"
+        "tsoa": "^6.4.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
     }
 }

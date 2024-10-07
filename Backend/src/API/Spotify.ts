@@ -1,35 +1,35 @@
-import { Express } from "express";
-import axios from "axios";
+import { Express } from 'express';
+import axios from 'axios';
 
 const client_id = process.env.SPOTIFY_CLIENT_ID!;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
-const redirect_uri = "http://localhost:3000/spotify/callback";
+const redirect_uri = 'http://localhost:8080/spotify/callback';
 
 module.exports = (app: Express) => {
-    app.get("/spotify/login", (req, res) => {
-        const scope = "user-read-private user-read-email";
+    app.get('/spotify/login', (req, res) => {
+        const scope = 'user-read-private user-read-email';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
             scope
         )}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
         res.redirect(authUrl);
     });
 
-    app.get("/spotify/callback", async (req, res) => {
+    app.get('/spotify/callback', async (req, res) => {
         const code = req.query.code || null;
 
         const authOptions = {
-            url: "https://accounts.spotify.com/api/token",
+            url: 'https://accounts.spotify.com/api/token',
             headers: {
                 Authorization:
-                    "Basic " +
+                    'Basic ' +
                     Buffer.from(`${client_id}:${client_secret}`).toString(
-                        "base64"
+                        'base64'
                     ),
             },
             form: {
                 code: code,
                 redirect_uri: redirect_uri,
-                grant_type: "authorization_code",
+                grant_type: 'authorization_code',
             },
             json: true,
         };
@@ -48,10 +48,9 @@ module.exports = (app: Express) => {
             redirectUrl = `${origin}service?spotify_token=${access_token}`;
 
             res.redirect(redirectUrl);
-
         } catch (error) {
-            console.error("Error retrieving access token:", error);
-            res.send("Error during token retrieval");
+            console.error('Error retrieving access token:', error);
+            res.send('Error during token retrieval');
         }
     });
 };

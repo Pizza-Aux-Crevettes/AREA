@@ -19,27 +19,23 @@ function RectangleService({ text, logo, Click }) {
 }
 
 const registerService = async (service) => {
-  try {
-    const response = await fetch(
-      "http://localhost:3000/api/user/me",
-      {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Bearer " + Cookies.get("token"),
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-    const json = await response.json();
+    try {
+        const response = await fetch('http://localhost:8080/api/user/me', {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + Cookies.get('token'),
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const json = await response.json();
 
         if (json && json.email) {
             const token = Cookies.get(service + '_token');
             const userEmail = json.email;
-            fetch('http://localhost:3000/api/setNewToken', {
+            fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +107,7 @@ function Service() {
     }, []);
 
     const handleClick = (service) => {
-        window.location.href = 'http://localhost:3000/' + service + '/login';
+        window.location.href = 'http://localhost:8080/' + service + '/login';
     };
 
     return (

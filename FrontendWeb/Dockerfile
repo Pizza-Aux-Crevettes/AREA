@@ -1,13 +1,13 @@
 FROM node:22-alpine3.19
 
-WORKDIR /app
+USER root
+VOLUME /output
 
-COPY package.json ./
+WORKDIR /app
+COPY . /app
 
 RUN npm install
 
-COPY . .
+EXPOSE 8081
 
-EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD npm run dev

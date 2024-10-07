@@ -18,7 +18,7 @@ import Cookies from 'cookies-js';
 
 const getGmailMsg = async (token) => {
     try {
-        const response = await fetch('http://localhost:3000/api/gmail/msg', {
+        const response = await fetch('http://localhost:8080/api/gmail/msg', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const getGmailMsg = async (token) => {
 
 const getWeather = async (forJson) => {
     try {
-        const response = await fetch('http://localhost:3000/api/Weather', {
+        const response = await fetch('http://localhost:8080/api/Weather', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -324,7 +324,6 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 }
 
 const applyActions = async (action, forJson) => {
-
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {
@@ -403,13 +402,21 @@ function AddRectangle({ addNewArea }) {
 }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([{ id: 1, buttonText: "Apply" }, { id: 2, buttonText: "Apply" }, { id: 3, buttonText: "Apply" }]);
-    const [actionReaction, setActionReaction] = useState({ action: "", reaction: "" });
-    const [selectedCity, setSelectedCity] = useState("City");
+    const [areas, setAreas] = useState([
+        { id: 1, buttonText: 'Apply' },
+        { id: 2, buttonText: 'Apply' },
+        { id: 3, buttonText: 'Apply' },
+    ]);
+    const [actionReaction, setActionReaction] = useState({
+        action: '',
+        reaction: '',
+    });
+    const [selectedCity, setSelectedCity] = useState('City');
 
     const addNewArea = () => {
-        const maxId = areas.length > 0 ? Math.max(...areas.map(area => area.id)) : 0;
-        const newArea = { id: maxId + 1, buttonText: "Apply" };
+        const maxId =
+            areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+        const newArea = { id: maxId + 1, buttonText: 'Apply' };
         setAreas([...areas, newArea]);
     };
 
@@ -417,7 +424,11 @@ function Dashboard() {
         setAreas((prevAreas) =>
             prevAreas.map((area) =>
                 area.id === id
-                    ? { ...area, buttonText: area.buttonText === "Apply" ? "■ Stop" : "Apply" }
+                    ? {
+                          ...area,
+                          buttonText:
+                              area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
+                      }
                     : area
             )
         );
@@ -426,7 +437,7 @@ function Dashboard() {
     const handleStopArea = (id) => {
         setAreas((prevAreas) =>
             prevAreas.map((area) =>
-                area.id === id ? { ...area, buttonText: "Apply" } : area
+                area.id === id ? { ...area, buttonText: 'Apply' } : area
             )
         );
     };
@@ -483,12 +494,17 @@ function Dashboard() {
                                         setSelectedCity={setSelectedCity}
                                     />
 
-                                    {area.buttonText === "■ Stop" ? (
-                                        <StopArea areaId={area.id} onConfirm={handleStopArea} />
+                                    {area.buttonText === '■ Stop' ? (
+                                        <StopArea
+                                            areaId={area.id}
+                                            onConfirm={handleStopArea}
+                                        />
                                     ) : (
                                         <Button
                                             className="button-correct"
-                                            onClick={() => handleApplyClick(area.id)}
+                                            onClick={() =>
+                                                handleApplyClick(area.id)
+                                            }
                                         >
                                             {area.buttonText}
                                         </Button>
