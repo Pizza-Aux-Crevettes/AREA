@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { of } from "rxjs";
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: "root",
 })
 export class LoginService {
-    private API_URL = "http://localhost:3000";
+    private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
 
     login(email: string, password: string) {
+        console.log(this.API_URL);
         const headers = new HttpHeaders({
             "Content-Type": "application/json",
         });

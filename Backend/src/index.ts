@@ -64,4 +64,5 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //newsApi();
-app.listen(port, () => { });
+
+app.listen(port, "0.0.0.0", () => {});
