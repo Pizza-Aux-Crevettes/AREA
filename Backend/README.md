@@ -68,7 +68,7 @@ The project requires certain environment variables to function correctly.
 
 ## API Documentation
 
-The complete API documentation can be accessed via Swagger. Once the server is running, navigate to http://localhost:3000/api-docs to explore the available endpoints and their usage.
+The complete API documentation can be accessed via Swagger. Once the server is running, navigate to http://localhost:8080/api-docs to explore the available endpoints and their usage.
 
 ---
 
