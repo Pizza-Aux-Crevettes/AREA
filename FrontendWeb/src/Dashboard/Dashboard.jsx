@@ -79,7 +79,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
             };
             checkOverflow();
         }, [selectedCity]);
-        return selectedActionItem === "When it rains" ? (
+        return selectedActionItem === "Weather" ? (
             <Menu>
                 <Menu.Target>
                     <Tooltip
@@ -120,7 +120,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         const buttonRef = useRef(null);
 
         const handleClick = (action) => {
-            setSelectedActionItem("When it rains");
+            setSelectedActionItem(action);
             setActionReaction((prevState) => ({
                 ...prevState,
                 action: action,
@@ -178,12 +178,12 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     <MenuDivider />
                     <Menu.Item
                         onClick={() =>
-                            setSelectedActionItem(
-                                "Action numero deux un peu incroyable mais pas trop"
+                            handleClick(
+                                "email"
                             )
                         }
                     >
-                        Action numero deux un peu incroyable mais pas trop
+                        When I recieve is recieve
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item

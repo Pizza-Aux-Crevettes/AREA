@@ -18,9 +18,29 @@ function RectangleService({ text, logo, Click }) {
   );
 }
 
+const setGoogleMe = async (token) => {
+  try {
+    const response = await fetch("http://localhost:3000/api/Gmail/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token
+      }),
+    })
+      .then((response) => {
+        console.log("test", response.json);
+      })
+      .then(() => { });
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
 const registerService = async (service) => {
   try {
-    console.log("coucou")
     const response = await fetch(
       "http://localhost:3000/api/user/me",
       {
@@ -96,8 +116,10 @@ function Service() {
       token_goo = params.get("google_token");
       if (token_goo) {
         Cookies.set("google_token", token_goo);
-        if (Cookies.get("google_token"))
+        if (Cookies.get("google_token")) {
           registerService("google");
+          setGoogleMe(Cookies.get("google_token"));
+        }
       }
       window.history.replaceState(null, "", window.location.pathname);
     }
