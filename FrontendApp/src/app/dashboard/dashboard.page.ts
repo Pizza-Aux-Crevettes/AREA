@@ -1,17 +1,20 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { TokenService } from "src/app/services/token/token.service";
 import { SpotifyService } from "src/app/services/spotify/spotify.service";
 import { RegisterService } from "src/app/services/register/register.service";
 import { WeatherService } from "src/app/services/weather/weather.service";
 import { LocalStorageService } from "../services/localStorage/localStorage.service";
 import { Router } from "@angular/router";
+import { AlertController } from '@ionic/angular';
 
 interface Area {
     id: number;
     selectedAction: string;
     selectedReaction: string;
     selectedCity?: string;
+    buttonText: string;
 }
+
 @Component({
     selector: "app-dashboard",
     templateUrl: "./dashboard.page.html",
@@ -31,18 +34,20 @@ export class DashboardPage {
         { name: "Bordeaux" },
         { name: "Lille" },
     ];
+
     constructor(
         private tokenService: TokenService,
         private spotifyService: SpotifyService,
         private registerService: RegisterService,
         private weatherService: WeatherService,
         private localStorage: LocalStorageService,
-        private router: Router
+        private router: Router,
+        private alertController: AlertController
     ) {
         this.areas = [
-            { id: 1, selectedAction: '', selectedReaction: '', selectedCity: '' },
-            { id: 2, selectedAction: '', selectedReaction: '', selectedCity: '' },
-            { id: 3, selectedAction: '', selectedReaction: '', selectedCity: '' }
+            { id: 1, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' },
+            { id: 2, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' },
+            { id: 3, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' }
         ];
     }
 
@@ -51,13 +56,46 @@ export class DashboardPage {
             id: this.areas.length + 1,
             selectedAction: '',
             selectedReaction: '',
-            selectedCity: ''
+            selectedCity: '',
+            buttonText: 'Apply'
         };
         this.areas.push(newArea);
     }
 
     DelArea(id: number) {
         this.areas = this.areas.filter((area) => area.id !== id);
+    }
+
+    ApplyArea(area: Area) {
+        if (area.buttonText === 'Apply') {
+            area.buttonText = '■ Stop';
+        } else {
+            this.presentConfirm(area);
+        }
+    }
+
+    async presentConfirm(area: Area) {
+        const alert = await this.alertController.create({
+            header: 'Confirm!',
+            message: 'Are you sure you want to stop this area?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Stop action canceled');
+                    }
+                },
+                {
+                    text: 'Yes',
+                    handler: () => {
+                        area.buttonText = 'Apply';
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     onSelectAction(event: any, area: Area) {
@@ -78,9 +116,8 @@ export class DashboardPage {
     }
 
     moveToService() {
-        console.log("move to service");
         this.router.navigate(["/service"]);
-      }
+    }
 
     playPreview(trackId: string, token_spotify: string) {
         this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
@@ -97,46 +134,5 @@ export class DashboardPage {
                 console.error("Error fetching track preview:", error);
             }
         );
-    }
-
-    ApplyArea(area: Area) {
-        let actionOk = false;
-        let userEmail = "";
-        let token_spotify = "";
-        let token = this.localStorage.getItem("token");
-
-        if (area.selectedAction === "Weather") {
-            this.weatherService
-                .getServicesWeather(area.selectedCity!)
-                .subscribe((response) => {
-                    if (response) {
-                        actionOk = true;
-                        if (token !== null) {
-                            this.tokenService.getUserData(token).subscribe(
-                                (response) => {
-                                    userEmail = response;
-                                    if (area.selectedReaction === "Spotify" && actionOk && userEmail !== "") { 
-                                        this.tokenService
-                                            .getServicesTokens(userEmail)
-                                            .subscribe((response) => {
-                                                console.log("response = ", response[0].token_spotify);
-                                                token_spotify = response[0].token_spotify;
-                                                if (token_spotify !== "") {
-                                                    this.playPreview(
-                                                        "1Fid2jjqsHViMX6xNH70hE",
-                                                        token_spotify
-                                                    );
-                                                }
-                                            });
-                                    }
-                                },
-                                (error) => {
-                                    console.error("Erreur lors de l'appel:", error);
-                                }
-                            );
-                        }
-                    }
-                });
-        }
     }
 }
