@@ -49,12 +49,12 @@ export async function getGmailMsg(token: string) {
     return res;
 }
 
-export async function sendGmail(token: string, dest: string, mess: string) {
+export async function sendGmail(token: string, dest: string) {
     const email = [
         `To: ${dest}`,
         'Subject: AREA: reaction',
         '',
-        mess
+        'Tu as un ou des mails pas ouverts °<3°'
     ].join('\n');
     const encodedMessage = base64.encode(email);
 
