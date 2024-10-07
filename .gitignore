@@ -15,3 +15,5 @@ psd
 thumb
 sketch
 build/
+coverage/
+.idea/

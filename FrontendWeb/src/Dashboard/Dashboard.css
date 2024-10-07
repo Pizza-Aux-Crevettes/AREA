@@ -1,0 +1,115 @@
+.dashboard .button-menu {
+    display: flex;
+    justify-content: space-between;
+    background-color: #b5ceff;
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    width: 30vh;
+    padding: 10px;
+    gap: 8px; /* Ajoute un espace entre le texte et l'icône */
+    overflow: hidden;
+}
+
+.dashboard .button-menu:hover {
+    background-color: #a9c2f3;
+    color: rgb(0, 0, 0);
+}
+
+.dashboard .all-container {
+    background-color: #b5ceff;
+    display: grid;
+    grid-template-rows: 0px 100vh;
+    grid-gap: 4%;
+    overflow: hidden;
+}
+
+.dashboard .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard .back-rectangle {
+    background-color: #8cb3ff;
+    width: 80%;
+    height: 80%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.dashboard .column-container {
+    display: flex;
+    flex-direction: column;
+    border-color: red 10px solid;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    gap: 2vh;
+}
+
+.row_container {
+    display: flex;
+    flex-direction: row;
+}
+
+.dashboard .rectangle {
+    background-color: #7289da;
+    border: 1px solid black;
+    width: 120vh;
+    height: 10vh;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 2%;
+    box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+    position: relative;
+}
+
+.dashboard .cont-rect {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 2%;
+}
+
+.dashboard .rectangle-add {
+    background-color: #7289da;
+    border: 1px solid black;
+    width: 120vh;
+    height: 10vh;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2%;
+    box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+    position: relative;
+    color: black;
+}
+
+.dashboard .rectangle-add:hover {
+    background-color: #6a7fcc;
+}
+
+.dashboard .button-cross {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 0px;
+    right: -5px;
+    cursor: pointer;
+    height: 4vh;
+}
+
+.button-correct {
+    background-color: #6a7fcc;
+    margin-left: 2%;
+    margin-top: 2%;
+    width: 10vh;
+    height: 5vh;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 1px solid black;
+}

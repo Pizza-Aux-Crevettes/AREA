@@ -1,0 +1,35 @@
+.info-container {
+    margin: 10px;
+}
+
+.info-container .underline-input {
+    border-bottom: black solid 1px;
+}
+
+.register {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.register a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+.register p {
+    color: #ffffff;
+    font-size: 0.8rem;
+}
+
+.bad-entry {
+    text-align: center;
+    color: #ff0606;
+}

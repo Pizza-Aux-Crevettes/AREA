@@ -1,0 +1,93 @@
+.main_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #B5CEFF;
+}
+
+.register_div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #7889da;
+    width: 70vh;
+    height: 80vh;
+    justify-content: space-between;
+    border-radius: 50px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
+    gap: 10px;
+}
+
+.loading {
+    border-radius: 50px;
+}
+
+.global-input {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.global-input input {
+    background-color: #94acec;
+    padding: 5px 20px;
+    border: none;
+    font-size: 35px;
+    border-radius: 50px;
+    width: 500px;
+    height: 70px;
+}
+
+.button-create Button {
+    background-color: #33478f;
+    border-radius: 50px;
+}
+
+.button-create Button:hover {
+    background-color: #4359ac;
+}
+
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}
+
+
+.login p {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.errorMsg_div {
+  color: red;
+  margin: 10px 0;
+  font-size: 18px;
+}
+  
+.correctMsg_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: green;
+  margin: 10px 0;
+}

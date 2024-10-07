@@ -1,0 +1,68 @@
+.service .all-container {
+  background-color: #B5CEFF;
+  display: grid;
+  grid-template-rows: 0px 100vh;
+  grid-gap: 4%;
+  overflow: hidden;
+
+}
+
+.service .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.service .back-rectangle {
+  background-color: #8CB3FF;
+  width: 80%;
+  height: 80%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.service .column-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 18vh;
+  gap: 16vh;
+}
+
+.service .rectangle {
+  background-color: #7289DA;
+  border: 1px solid black;
+  width: 42vh;
+  height: 22vh;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5%;
+  box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
+  position: relative;
+}
+
+.service .rectangle .button-style {
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 0em 4em;
+  background-color: #33478f;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.service .rectangle .button-style:hover {
+  border-color: #0e1631;
+  background-color: #2b3c79;
+}
+
+.service .logo-rect {
+  /* background-color: aliceblue; */
+  /* border-color: red 1px solid; */
+  margin-top: 1vh;
+  height: 7vh;
+}
