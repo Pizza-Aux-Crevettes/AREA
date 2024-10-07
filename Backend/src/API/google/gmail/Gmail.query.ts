@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import * as base64 from 'base64-url';
 
 dotenv.config();
 
@@ -46,4 +47,39 @@ export async function getGmailMsg(token: string) {
         return null;
     }
     return res;
+}
+
+export async function sendGmail(token: string, dest: string, mess: string) {
+    const email = [
+        `To: ${dest}`,
+        'Subject: AREA: reaction',
+        '',
+        mess
+    ].join('\n');
+    const encodedMessage = base64.encode(email);
+
+    try {
+        const res = await fetch(
+            'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ raw: encodedMessage }),
+            }
+        );
+        if (!res.ok) {
+            const errorInfo = await res.json();
+            console.error('Error :', errorInfo);
+            return null;
+        }
+        const result = await res.json();
+        console.log('email send!', result);
+        return result;
+    } catch (error) {
+        console.error('error when sending the email:', error);
+        return null;
+    }
 }
