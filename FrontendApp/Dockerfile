@@ -10,10 +10,10 @@ RUN mkdir -p /opt/android-sdk && \
     mv cmdline-tools/cmdline-tools cmdline-tools/tools
 
 ENV ANDROID_HOME /opt/android-sdk
-ENV PATH="${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+ENV PATH="${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/build-tools/32.0.0/:${PATH}"
 
 RUN yes | sdkmanager --licenses && \
-    sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+    sdkmanager "platform-tools" "platforms;android-32" "build-tools;32.0.0"
 
 RUN npm install -g @ionic/cli
 
@@ -26,9 +26,18 @@ RUN npm install
 RUN ionic capacitor build android
 
 WORKDIR /app/android
-COPY build_apk.sh /app/build_apk.sh
 
 USER root
 RUN mkdir /output
 
-CMD ["bash", "/app/build_apk.sh"]
+VOLUME /output
+
+RUN ./gradlew assembleRelease
+
+RUN keytool -genkey -alias replserver -keyalg RSA -keystore area.keystore -dname "CN=pizzacrevette, OU=R&D, O=PizzaCrevette" -storepass password -keypass password
+
+RUN zipalign -p 4 /app/android/app/build/outputs/apk/release/app-release-unsigned.apk /app/android/app/build/outputs/apk/release/area_app.apk
+RUN apksigner sign --ks area.keystore --ks-pass pass:password --key-pass pass:password /app/android/app/build/outputs/apk/release/area_app.apk
+RUN apksigner verify /app/android/app/build/outputs/apk/release/area_app.apk
+
+CMD ["cp", "/app/android/app/build/outputs/apk/release/area_app.apk", "/output/area_app.apk"]
