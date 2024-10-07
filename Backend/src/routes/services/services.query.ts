@@ -20,13 +20,15 @@ export async function createService(user_email: string): Promise<any> {
 
 export async function updateService(
     user_email: string,
-    token_spotify: string
+    token: string,
+    service: string
 ): Promise<any> {
+    const tokenName = "token_" + service;
     const { data, error } = await supabase
         .from("Service")
         .update([
             {
-                token_spotify: token_spotify,
+                [tokenName]: token,
                 Maj_date: new Date().toString(),
             },
         ])

@@ -20,6 +20,7 @@ function RectangleService({ text, logo, Click }) {
 
 const registerService = async (service) => {
   try {
+    console.log("coucou")
     const response = await fetch(
       "http://localhost:3000/api/user/me",
       {
@@ -37,7 +38,7 @@ const registerService = async (service) => {
     const json = await response.json();
 
     if (json && json.email) {
-      const token_spotify = Cookies.get(service + "_token");
+      const token = Cookies.get(service + "_token");
       const userEmail = json.email;
       fetch("http://localhost:3000/api/setNewToken", {
         method: "POST",
@@ -46,7 +47,8 @@ const registerService = async (service) => {
         },
         body: JSON.stringify({
           userEmail: userEmail,
-          token_spotify: token_spotify,
+          token: token,
+          service: service,
         }),
       })
         .then((response) => {
