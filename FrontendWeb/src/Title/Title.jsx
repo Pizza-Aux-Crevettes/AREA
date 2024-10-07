@@ -15,8 +15,8 @@ function NavigateMenu () {
     }
 
     function goToService() {
-        navigate("/Service");
-        location.pathname === "/Service";
+        navigate("/service");
+        location.pathname === "/service";
     }
 
     return (
@@ -48,7 +48,6 @@ function NavigateMenu () {
 
 function Title({ title }) {
     function deleteCookies() {
-        console.log("oui");
         Cookies.set("token", "", { expires: -1 });
         Cookies.set("spotify_token", "", { expires: -1 });
         window.location.reload();

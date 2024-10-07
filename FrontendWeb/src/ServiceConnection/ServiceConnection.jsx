@@ -20,7 +20,6 @@ function RectangleService({ text, logo, Click }) {
 
 const registerService = async (service) => {
   try {
-    console.log("coucou")
     const response = await fetch(
       "http://localhost:3000/api/user/me",
       {
