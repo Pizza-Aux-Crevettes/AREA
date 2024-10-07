@@ -18,26 +18,6 @@ function RectangleService({ text, logo, Click }) {
     );
 }
 
-const getGmailMsg = async (token) => {
-    try {
-        const response = await fetch('http://localhost:3000/api/gmail/msg', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                token: token,
-            }),
-        })
-            .then((response) => {
-                console.log('test', response.json);
-            })
-            .then(() => {});
-    } catch (error) {
-        console.log(error);
-    }
-};
-
 const registerService = async (service) => {
   try {
     const response = await fetch(
@@ -115,7 +95,6 @@ function Service() {
                 Cookies.set('google_token', token_goo);
                 if (Cookies.get('google_token')) {
                     registerService('google');
-                    setGoogleMe(Cookies.get('google_token'));
                 }
             }
             window.history.replaceState(null, '', window.location.pathname);

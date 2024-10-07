@@ -28,16 +28,37 @@ const getGmailMsg = async (token) => {
             }),
         });
         const data = await response.json();
-        console.log('data =', data);
+        if (data.msg === 'Not new emails') {
+            return false;
+        } else {
+            return true;
+        }
     } catch (error) {
-        console.log('BLOUP');
+        console.log(error);
+    }
+};
+
+const getWeather = async (forJson) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/Weather', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                forJson,
+            }),
+        });
+        const res = await response.json();
+        return res;
+    } catch (error) {
         console.log(error);
     }
 };
 
 const playPreview = async () => {
     const response = await fetch(
-        `https://api.spotify.com/v1/tracks/1Fid2jjqsHViMX6xNH70hE`,
+        `https://api.spotify.com/v1/tracks/5Qnrgqy1pAm9GyNQOgyVFz`,
         {
             headers: {
                 Authorization: `Bearer ${Cookies.get('spotify_token')}`,
@@ -46,6 +67,7 @@ const playPreview = async () => {
     );
     const data = await response.json();
     const previewUrl = data.preview_url;
+    console.log(previewUrl);
 
     if (previewUrl) {
         const audio = new Audio(previewUrl);
@@ -195,7 +217,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                         When it rains
                     </Menu.Item>
                     <MenuDivider />
-                    <Menu.Item onClick={() => handleClick('email')}>
+                    <Menu.Item onClick={() => handleClick('Email')}>
                         When I recieve is recieve
                     </Menu.Item>
                     <MenuDivider />
@@ -301,44 +323,36 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     );
 }
 
-const applyAcRea = (actionReaction, selectedCity) => {
-    let res = false;
-    const forJson = selectedCity;
+const applyActions = async (action, forJson) => {
+
     const google_token = Cookies.get('google_token');
 
-    console.log(google_token);
-
-    if (actionReaction.action === 'email' && google_token !== '') {
-        console.log('ouiiiiii');
-        getGmailMsg(google_token);
+    if (action === 'Email' && google_token !== '') {
+        const data = await getGmailMsg(google_token);
+        return data;
+    } else if (action === 'Weather') {
+        const res = await getWeather(forJson);
+        return res;
+    } else {
+        return false;
     }
+};
 
-    /*fetch('http://localhost:3000/api/' + actionReaction.action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            forJson,
-        }),
-    })
-        .then((response) => {
-            if (response.ok) {
-                return true;
-            } else {
-                return false;
-            }
-        })
-        .then((res) => {
-            if (res === true) {
-                if (actionReaction.reaction === "Spotify") {
-                     playPreview();
-                }
-            }
-        })
-        .catch((error) => {
-            console.error('Erreur lors de la requête :', error);
-        });*/
+const applyReactions = (reaction) => {
+    if (reaction === 'Spotify') {
+        playPreview();
+    }
+    return;
+};
+
+const applyAcRea = async (actionReaction, selectedCity) => {
+    const forJson = selectedCity;
+
+    const dataAction = await applyActions(actionReaction.action, forJson);
+
+    if (dataAction) {
+        applyReactions(actionReaction.reaction);
+    }
 };
 
 function RectangleDashboard({
@@ -389,23 +403,68 @@ function AddRectangle({ addNewArea }) {
 }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
-    const [actionReaction, setActionReaction] = useState(
-        { action: '' },
-        { reaction: '' }
-    );
-    const [selectedCity, setSelectedCity] = useState('City');
+    const [areas, setAreas] = useState([{ id: 1, buttonText: "Apply" }, { id: 2, buttonText: "Apply" }, { id: 3, buttonText: "Apply" }]);
+    const [actionReaction, setActionReaction] = useState({ action: "", reaction: "" });
+    const [selectedCity, setSelectedCity] = useState("City");
 
     const addNewArea = () => {
-        const newArea = {
-            id: areas.length + 1,
-        };
+        const maxId = areas.length > 0 ? Math.max(...areas.map(area => area.id)) : 0;
+        const newArea = { id: maxId + 1, buttonText: "Apply" };
         setAreas([...areas, newArea]);
+    };
+
+    const handleApplyClick = (id) => {
+        setAreas((prevAreas) =>
+            prevAreas.map((area) =>
+                area.id === id
+                    ? { ...area, buttonText: area.buttonText === "Apply" ? "■ Stop" : "Apply" }
+                    : area
+            )
+        );
+    };
+
+    const handleStopArea = (id) => {
+        setAreas((prevAreas) =>
+            prevAreas.map((area) =>
+                area.id === id ? { ...area, buttonText: "Apply" } : area
+            )
+        );
     };
 
     const removeArea = (id) => {
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
     };
+
+    function StopArea({ areaId, onConfirm }) {
+        const [opened, setOpened] = useState(false);
+
+        const handleCloseModal = () => setOpened(false);
+        const handleConfirm = () => {
+            onConfirm(areaId);
+            setOpened(false);
+        };
+
+        return (
+            <>
+                <Button
+                    className="button-correct"
+                    onClick={() => setOpened(true)}
+                >
+                    ■ Stop
+                </Button>
+
+                <Modal
+                    opened={opened}
+                    onClose={handleCloseModal}
+                    title="Stopping area"
+                    centered
+                >
+                    <p>Are you sure you want to stop this area?</p>
+                    <Button onClick={handleConfirm}>Yes</Button>
+                </Modal>
+            </>
+        );
+    }
 
     return (
         <div className="dashboard">
@@ -423,18 +482,17 @@ function Dashboard() {
                                         selectedCity={selectedCity}
                                         setSelectedCity={setSelectedCity}
                                     />
-                                    <button
-                                        className="button-correct"
-                                        onClick={() =>
-                                            applyAcRea(
-                                                actionReaction,
-                                                selectedCity
-                                            )
-                                        }
-                                    >
-                                        {' '}
-                                        Apply
-                                    </button>
+
+                                    {area.buttonText === "■ Stop" ? (
+                                        <StopArea areaId={area.id} onConfirm={handleStopArea} />
+                                    ) : (
+                                        <Button
+                                            className="button-correct"
+                                            onClick={() => handleApplyClick(area.id)}
+                                        >
+                                            {area.buttonText}
+                                        </Button>
+                                    )}
                                 </div>
                             ))}
                             <AddRectangle addNewArea={addNewArea} />
