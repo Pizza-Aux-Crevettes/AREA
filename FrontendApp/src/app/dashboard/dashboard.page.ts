@@ -6,40 +6,19 @@ import { WeatherService } from "src/app/services/weather/weather.service";
 import { LocalStorageService } from "../services/localStorage/localStorage.service";
 import { Router } from "@angular/router";
 
+interface Area {
+    id: number;
+    selectedAction: string;
+    selectedReaction: string;
+    selectedCity?: string;
+}
 @Component({
     selector: "app-dashboard",
     templateUrl: "./dashboard.page.html",
     styleUrls: ["./dashboard.page.scss"],
 })
 export class DashboardPage {
-    selectedAction: string;
-    selectedReaction: string;
-    selectedCity: string;
-
-    constructor(
-        private tokenService: TokenService,
-        private spotifyService: SpotifyService,
-        private registerService: RegisterService,
-        private weatherService: WeatherService,
-        private localStorage: LocalStorageService,
-        private router: Router
-    ) {
-        this.selectedAction = "";
-        this.selectedReaction = "";
-        this.selectedCity = "";
-    }
-    areas = [{ id: 1 }, { id: 2 }, { id: 3 }];
-    selectedActionValue: string = "";
-    selectedReactionValue: string = "";
-    selectedCityValue: string = "";
-
-    addNewArea(): void {
-        const newArea = {
-            id: this.areas.length + 1,
-        };
-        this.areas = [...this.areas, newArea];
-    }
-
+    areas: Area[] = [];
     cities = [
         { name: "Paris" },
         { name: "Marseille" },
@@ -52,21 +31,45 @@ export class DashboardPage {
         { name: "Bordeaux" },
         { name: "Lille" },
     ];
-
-    onSelectAction(event: any) {
-        this.selectedActionValue = event.detail.value;
+    constructor(
+        private tokenService: TokenService,
+        private spotifyService: SpotifyService,
+        private registerService: RegisterService,
+        private weatherService: WeatherService,
+        private localStorage: LocalStorageService,
+        private router: Router
+    ) {
+        this.areas = [
+            { id: 1, selectedAction: '', selectedReaction: '', selectedCity: '' },
+            { id: 2, selectedAction: '', selectedReaction: '', selectedCity: '' },
+            { id: 3, selectedAction: '', selectedReaction: '', selectedCity: '' }
+        ];
     }
 
-    onSelectReaction(event: any) {
-        this.selectedReactionValue = event.detail.value;
-    }
-
-    onSelectCity(event: any) {
-        this.selectedCityValue = event.detail.value;
+    AddNewArea() {
+        const newArea: Area = {
+            id: this.areas.length + 1,
+            selectedAction: '',
+            selectedReaction: '',
+            selectedCity: ''
+        };
+        this.areas.push(newArea);
     }
 
     DelArea(id: number) {
         this.areas = this.areas.filter((area) => area.id !== id);
+    }
+
+    onSelectAction(event: any, area: Area) {
+        area.selectedAction = event.detail.value;
+    }
+
+    onSelectReaction(event: any, area: Area) {
+        area.selectedReaction = event.detail.value;
+    }
+
+    onSelectCity(event: any, area: Area) {
+        area.selectedCity = event.detail.value;
     }
 
     deleteCookies() {
@@ -75,20 +78,10 @@ export class DashboardPage {
         this.router.navigate(["/login"]);
     }
 
-    AddArea() {
-        const maxId = this.areas.reduce(
-            (max, area) => (area.id > max ? area.id : max),
-            0
-        );
-        const newArea = { id: maxId + 1 };
-        this.areas.push(newArea);
-    }
-
     playPreview(trackId: string, token_spotify: string) {
         this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
             (data) => {
                 const previewUrl = data.preview_url;
-
                 if (previewUrl) {
                     const audio = new Audio(previewUrl);
                     audio.play();
@@ -102,15 +95,15 @@ export class DashboardPage {
         );
     }
 
-    ApplyArea(action: string, reaction: string, city: string) {
+    ApplyArea(area: Area) {
         let actionOk = false;
         let userEmail = "";
         let token_spotify = "";
         let token = this.localStorage.getItem("token");
 
-        if (action === "Weather") {
+        if (area.selectedAction === "Weather") {
             this.weatherService
-                .getServicesWeather(this.selectedCity)
+                .getServicesWeather(area.selectedCity!)
                 .subscribe((response) => {
                     if (response) {
                         actionOk = true;
@@ -118,7 +111,7 @@ export class DashboardPage {
                             this.tokenService.getUserData(token).subscribe(
                                 (response) => {
                                     userEmail = response;
-                                    if (reaction === "Spotify" && actionOk && userEmail !== "") { 
+                                    if (area.selectedReaction === "Spotify" && actionOk && userEmail !== "") { 
                                         console.log(userEmail);               
                                         this.tokenService
                                             .getServicesTokens(userEmail)
@@ -139,8 +132,6 @@ export class DashboardPage {
                                 }
                             );
                         }
-
-
                     }
                 });
         }

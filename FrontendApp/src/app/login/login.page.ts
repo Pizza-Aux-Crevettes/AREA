@@ -30,7 +30,7 @@ export class LoginPage implements OnInit {
             .login(this.inputEmail, this.inputPassword)
             .pipe(
                 catchError((error) => {
-                    console.error("Email or password is incorrect");
+                    alert("Email or password is incorrect");
                     this.invalidField = true;
                     return of(null);
                 })
