@@ -324,6 +324,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 }
 
 const applyActions = async (action, forJson) => {
+
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {
@@ -352,7 +353,6 @@ const applyAcRea = async (actionReaction, selectedCity) => {
     if (dataAction) {
         applyReactions(actionReaction.reaction);
     }
-    return;
 };
 
 function RectangleDashboard({
@@ -403,23 +403,68 @@ function AddRectangle({ addNewArea }) {
 }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
-    const [actionReaction, setActionReaction] = useState(
-        { action: '' },
-        { reaction: '' }
-    );
-    const [selectedCity, setSelectedCity] = useState('City');
+    const [areas, setAreas] = useState([{ id: 1, buttonText: "Apply" }, { id: 2, buttonText: "Apply" }, { id: 3, buttonText: "Apply" }]);
+    const [actionReaction, setActionReaction] = useState({ action: "", reaction: "" });
+    const [selectedCity, setSelectedCity] = useState("City");
 
     const addNewArea = () => {
-        const newArea = {
-            id: areas.length + 1,
-        };
+        const maxId = areas.length > 0 ? Math.max(...areas.map(area => area.id)) : 0;
+        const newArea = { id: maxId + 1, buttonText: "Apply" };
         setAreas([...areas, newArea]);
+    };
+
+    const handleApplyClick = (id) => {
+        setAreas((prevAreas) =>
+            prevAreas.map((area) =>
+                area.id === id
+                    ? { ...area, buttonText: area.buttonText === "Apply" ? "■ Stop" : "Apply" }
+                    : area
+            )
+        );
+    };
+
+    const handleStopArea = (id) => {
+        setAreas((prevAreas) =>
+            prevAreas.map((area) =>
+                area.id === id ? { ...area, buttonText: "Apply" } : area
+            )
+        );
     };
 
     const removeArea = (id) => {
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
     };
+
+    function StopArea({ areaId, onConfirm }) {
+        const [opened, setOpened] = useState(false);
+
+        const handleCloseModal = () => setOpened(false);
+        const handleConfirm = () => {
+            onConfirm(areaId);
+            setOpened(false);
+        };
+
+        return (
+            <>
+                <Button
+                    className="button-correct"
+                    onClick={() => setOpened(true)}
+                >
+                    ■ Stop
+                </Button>
+
+                <Modal
+                    opened={opened}
+                    onClose={handleCloseModal}
+                    title="Stopping area"
+                    centered
+                >
+                    <p>Are you sure you want to stop this area?</p>
+                    <Button onClick={handleConfirm}>Yes</Button>
+                </Modal>
+            </>
+        );
+    }
 
     return (
         <div className="dashboard">
@@ -437,18 +482,17 @@ function Dashboard() {
                                         selectedCity={selectedCity}
                                         setSelectedCity={setSelectedCity}
                                     />
-                                    <button
-                                        className="button-correct"
-                                        onClick={() =>
-                                            applyAcRea(
-                                                actionReaction,
-                                                selectedCity
-                                            )
-                                        }
-                                    >
-                                        {' '}
-                                        Apply
-                                    </button>
+
+                                    {area.buttonText === "■ Stop" ? (
+                                        <StopArea areaId={area.id} onConfirm={handleStopArea} />
+                                    ) : (
+                                        <Button
+                                            className="button-correct"
+                                            onClick={() => handleApplyClick(area.id)}
+                                        >
+                                            {area.buttonText}
+                                        </Button>
+                                    )}
                                 </div>
                             ))}
                             <AddRectangle addNewArea={addNewArea} />

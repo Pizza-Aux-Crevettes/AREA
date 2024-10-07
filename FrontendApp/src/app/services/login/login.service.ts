@@ -12,7 +12,6 @@ export class LoginService {
     constructor(private http: HttpClient) {}
 
     login(email: string, password: string) {
-        console.log(this.API_URL);
         const headers = new HttpHeaders({
             "Content-Type": "application/json",
         });
