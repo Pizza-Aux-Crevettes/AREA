@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 import Cookies from "cookies-js";
-import { Button, LoadingOverlay } from '@mantine/core';
+import { Button, LoadingOverlay } from "@mantine/core";
 import { resolvePath, useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
@@ -24,7 +24,7 @@ function Login() {
 
     function LoginUser() {
         setLoading(true);
-        fetch("http://localhost:3000/api/getUsers", {
+        fetch("http://localhost:3000/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,7 +53,11 @@ function Login() {
     return (
         <div className="login-main-div">
             <div className="login_div">
-                <LoadingOverlay visible={loading} overlayBlur={2} className="loading"/>
+                <LoadingOverlay
+                    visible={loading}
+                    overlayBlur={2}
+                    className="loading"
+                />
                 <div className="login-first-container">
                     <h1>Login</h1>
                     <div className="email_input">
@@ -61,7 +65,7 @@ function Login() {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            />
+                        />
                     </div>
                     <div className="password_input">
                         <input
@@ -69,23 +73,18 @@ function Login() {
                             value={password}
                             type="password"
                             onChange={(e) => setPassword(e.target.value)}
-                            />
+                        />
                     </div>
                     <CreationMsg></CreationMsg>
                     <div>
                         <div className="button-login">
-                            <Button size='xl' onClick={LoginUser}>
-                                    Login
-                                </Button>
-                            </div>
+                            <Button size="xl" onClick={LoginUser}>
+                                Login
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 <div className="login-second-container">
-                    <div className="forgot_password">
-                        <a href="https://www.amoursucre.com/s1/city">
-                            Forgot your password?
-                        </a>
-                    </div>
                     <div className="sign_in">
                         <p>New here?</p>
                         <a href="http://localhost:5173/Register">Register</a>

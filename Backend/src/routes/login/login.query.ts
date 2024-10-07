@@ -1,33 +1,6 @@
 import supabase from "../../config/db";
 import bcrypt from "bcryptjs";
 
-export async function createUsers(
-    user_name: string,
-    user_surname: string,
-    user_username: string,
-    user_pwd: string,
-    user_email: string
-): Promise<any> {
-    const { data, error } = await supabase
-        .from("User")
-        .insert([
-            {
-                name: user_name,
-                surname: user_surname,
-                username: user_username,
-                password: user_pwd,
-                email: user_email,
-            },
-        ])
-        .select();
-    if (error) {
-        console.log(error);
-        return null;
-    } else {
-        return data;
-    }
-}
-
 export async function loginUsers(user_email: string): Promise<any> {
     const { data: user_info, error } = await supabase
         .from("User")
@@ -53,7 +26,7 @@ export async function verifyPwd(pwd: string, hashedPwd: string): Promise<any> {
     if (samePwd) {
         return true;
     } else {
-        console.log("bad password");
+        console.error("bad password");
         return false;
     }
 }
