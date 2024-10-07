@@ -78,6 +78,11 @@ export class DashboardPage {
         this.router.navigate(["/login"]);
     }
 
+    moveToService() {
+        console.log("move to service");
+        this.router.navigate(["/service"]);
+      }
+
     playPreview(trackId: string, token_spotify: string) {
         this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
             (data) => {
