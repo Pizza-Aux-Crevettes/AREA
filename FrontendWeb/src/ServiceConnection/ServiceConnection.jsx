@@ -18,32 +18,43 @@ function RectangleService({ text, logo, Click }) {
   );
 }
 
-// const handleGoogleLogin = () => {
-//   window.location.href = "http://localhost:3000/google/login";
-// };
-
-// const handleSpotifyLogin = () => {
-//   window.location.href = "http://localhost:3000/spotify/login";
-// };
-
-// const handleXLogin = () => {
-//   window.location.href = "http://localhost:3000/twitter/login";
-// };
-
-// const handleDiscordLogin = () => {
-//   window.location.href = "http://localhost:3000/discord/login";
-// };
-
 function Service() {
   useEffect(() => {
     const search = window.location.search;
-    let Token = window.localStorage.getItem("access_token=");
+    let token_spo = window.localStorage.getItem("spotify_token=");
+    let token_x = window.localStorage.getItem("x_token=");
+    let token_goo = window.localStorage.getItem("google_token=");
+    let token_dis = window.localStorage.getItem("discord_token=");
 
-    if (!Token && search) {
+    if (!token_spo && search) {
       const params = new URLSearchParams(search);
-      Token = params.get("access_token");
-      if (Token) {
-        Cookies.set("google_token", Token);
+      token_spo = params.get("access_token");
+      if (token_spo) {
+        Cookies.set("spotify_token", token_spo);
+      }
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    if (!token_x && search) {
+      const params = new URLSearchParams(search);
+      token_x = params.get("access_token");
+      if (token_x) {
+        Cookies.set("x_token", token_x);
+      }
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    if (!token_goo && search) {
+      const params = new URLSearchParams(search);
+      token_goo = params.get("access_token");
+      if (token_goo) {
+        Cookies.set("google_token", token_goo);
+      }
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    if (!token_dis && search) {
+      const params = new URLSearchParams(search);
+      token_dis = params.get("access_token");
+      if (token_dis) {
+        Cookies.set("discord_token", token_dis);
       }
       window.history.replaceState(null, "", window.location.pathname);
     }
