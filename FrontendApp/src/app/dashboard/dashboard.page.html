@@ -23,11 +23,11 @@
                     <ion-list class="action-list">
                         <ion-item>
                             <ion-select
-                                aria-label="Action"
-                                interface="popover"
-                                placeholder="Action"
-                                (ionChange)="onSelectAction($event)"
-                                [(ngModel)]="selectedAction"
+                            aria-label="Action"
+                            interface="popover"
+                            placeholder="Action"
+                            (ionChange)="onSelectAction($event, area)"
+                            [(ngModel)]="area.selectedAction"
                             >
                                 <ion-select-option
                                     class="text-list"
@@ -44,21 +44,20 @@
                         </ion-item>
                     </ion-list>
                     <div
-                        *ngIf="selectedActionValue === 'Weather'"
+                        *ngIf="area.selectedAction === 'Weather'"
                         class="city-div"
                     >
                         <ion-list class="city-list">
                             <ion-item>
                                 <ion-select
-                                    aria-label="City"
-                                    interface="popover"
-                                    placeholder="City"
-                                    (ionChange)="onSelectCity($event)"
-                                    [(ngModel)]="selectedCity"
+                                aria-label="City"
+                                interface="popover"
+                                placeholder="City"
+                                (ionChange)="onSelectCity($event, area)"
+                                [(ngModel)]="area.selectedCity"
                                 >
                                     <ion-select-option
                                         *ngFor="let city of cities"
-                                        class="text-list"
                                         value="{{city.name}}"
                                         >{{city.name}}</ion-select-option
                                     >
@@ -67,7 +66,7 @@
                         </ion-list>
                     </div>
                     <div
-                        *ngIf="selectedActionValue !== 'Wheather'"
+                        *ngIf="area.selectedAction !== 'Weather'"
                         class="input-div"
                     >
                         <ion-input
@@ -80,11 +79,11 @@
                     <ion-list class="reaction-list">
                         <ion-item>
                             <ion-select
-                                aria-label="Reaction"
-                                interface="popover"
-                                placeholder="Reaction"
-                                (ionChange)="onSelectReaction($event)"
-                                [(ngModel)]="selectedReaction"
+                            aria-label="Reaction"
+                            interface="popover"
+                            placeholder="Reaction"
+                            (ionChange)="onSelectReaction($event, area)"
+                            [(ngModel)]="area.selectedReaction"
                             >
                                 <ion-select-option
                                     class="text-list"
@@ -101,10 +100,10 @@
                         </ion-item>
                     </ion-list>
                     <ion-button
-                        size="small"
-                        fill="solid"
-                        class="apply-button"
-                        (click)="ApplyArea(selectedAction, selectedReaction, selectedCity)"
+                    size="small"
+                    fill="solid"
+                    class="apply-button"
+                    (click)="ApplyArea(area)"
                         >Apply</ion-button
                     >
                 </div>
@@ -117,6 +116,6 @@
                 </ion-button>
             </div>
         </div>
-        <ion-button class="add-button" (click)="AddArea()">+</ion-button>
+        <ion-button class="add-button" (click)="AddNewArea()">+</ion-button>
     </div>
 </ion-content>
