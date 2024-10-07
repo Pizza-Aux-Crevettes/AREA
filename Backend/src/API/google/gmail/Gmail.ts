@@ -18,7 +18,7 @@ module.exports = (app: Express) => {
     app.post('/api/gmail/send', async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const info = req.body;
-        const result = await sendGmail(info.token, info.dest, info.mess);
+        const result = await sendGmail(info.token, info.dest);
         if (result === null) {
             res.status(500).json({
                 msg: 'Error when fetching user mail',
