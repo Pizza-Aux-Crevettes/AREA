@@ -18,7 +18,7 @@ import Cookies from 'cookies-js';
 
 const getGmailMsg = async (token) => {
     try {
-        const response = await fetch('http://localhost:3000/api/gmail/msg', {
+        const response = await fetch('http://localhost:8080/api/gmail/msg', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,9 +38,28 @@ const getGmailMsg = async (token) => {
     }
 };
 
+const SendEmail = async (token, dest) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/gmail/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+                dest: dest,
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const getWeather = async (forJson) => {
     try {
-        const response = await fetch('http://localhost:3000/api/Weather', {
+        const response = await fetch('http://localhost:8080/api/Weather', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +86,6 @@ const playPreview = async () => {
     );
     const data = await response.json();
     const previewUrl = data.preview_url;
-    console.log(previewUrl);
 
     if (previewUrl) {
         const audio = new Audio(previewUrl);
@@ -79,19 +97,8 @@ const playPreview = async () => {
 
 function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState('Action');
-    const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
-    const cities = [
-        { name: 'Paris' },
-        { name: 'Marseille' },
-        { name: 'Lyon' },
-        { name: 'Toulouse' },
-        { name: 'Nice' },
-        { name: 'Nantes' },
-        { name: 'Montpellier' },
-        { name: 'Strasbourg' },
-        { name: 'Bordeaux' },
-        { name: 'Lille' },
-    ];
+    const [selectedReactionItem, setSelectedReactionItem] = useState('Reaction');
+    const [input, setInput] = useState('');
 
     function TextInputDash() {
         const [isOverflowing, setIsOverflowing] = useState(false);
@@ -152,11 +159,28 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Dropdown>
             </Menu>
         ) : (
-            <TextInput placeholder="Input" radius="md" size="lg" />
+            <div/>
         );
     }
 
-    function MenuDashAction({ title }) {
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value);
+    };
+    const cities = [
+        { name: 'Paris' },
+        { name: 'Marseille' },
+        { name: 'Lyon' },
+        { name: 'Toulouse' },
+        { name: 'Nice' },
+        { name: 'Nantes' },
+        { name: 'Montpellier' },
+        { name: 'Strasbourg' },
+        { name: 'Bordeaux' },
+        { name: 'Lille' },
+    ];
+
+    function MenuDashAction({ }) {
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
 
@@ -218,25 +242,19 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={() => handleClick('Email')}>
-                        When I recieve is recieve
-                    </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item
-                        onClick={() => setSelectedActionItem('Action courte')}
-                    >
-                        Action courte
+                        When I recieve an email
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         );
     }
-    function MenuDashReaction({ title }) {
-        const [selectedItem, setSelectedItem] = useState(title);
+    function MenuDashReaction({}) {
+        const [selectedItem, setSelectedItem] = useState("Reaction");
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
 
         const handleClick = (reaction) => {
-            setSelectedReactionItem('sad music is played');
+            setSelectedReactionItem(reaction);
             setActionReaction((prevState) => ({
                 ...prevState,
                 reaction: reaction,
@@ -293,21 +311,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() =>
-                            setSelectedReactionItem(
-                                'Reaction numero deux pour Perrine'
-                            )
-                        }
+                        onClick={() => handleClick('sendEmail')}
                     >
-                        Reaction numero deux pour Perrine
-                    </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item
-                        onClick={() =>
-                            setSelectedReactionItem('Reaction courte')
-                        }
-                    >
-                        Reaction courte
+                        send an email
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -316,15 +322,14 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 
     return (
         <div className="cont-rect">
-            <MenuDashAction title="Action" />
+            <MenuDashAction  />
             <TextInputDash />
-            <MenuDashReaction title="Reaction" />
+            <MenuDashReaction />
         </div>
     );
 }
 
 const applyActions = async (action, forJson) => {
-
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {
@@ -339,8 +344,11 @@ const applyActions = async (action, forJson) => {
 };
 
 const applyReactions = (reaction) => {
+    const google_token = Cookies.get('google_token');
     if (reaction === 'Spotify') {
         playPreview();
+    } else if (reaction === 'sendEmail') {
+        SendEmail(google_token, "anast.bouby@icloud.com");
     }
     return;
 };
@@ -403,68 +411,89 @@ function AddRectangle({ addNewArea }) {
 }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([{ id: 1, buttonText: "Apply" }, { id: 2, buttonText: "Apply" }, { id: 3, buttonText: "Apply" }]);
-    const [actionReaction, setActionReaction] = useState({ action: "", reaction: "" });
-    const [selectedCity, setSelectedCity] = useState("City");
+    const [areas, setAreas] = useState([
+        { id: 1},
+        { id: 2},
+        { id: 3}
+        // { id: 1, buttonText: 'Apply' },
+        // { id: 2, buttonText: 'Apply' },
+        // { id: 3, buttonText: 'Apply' },
+    ]);
+    const [actionReaction, setActionReaction] = useState({
+        action: '',
+        reaction: '',
+    });
+    const [selectedCity, setSelectedCity] = useState('City');
 
     const addNewArea = () => {
-        const maxId = areas.length > 0 ? Math.max(...areas.map(area => area.id)) : 0;
-        const newArea = { id: maxId + 1, buttonText: "Apply" };
+        const maxId =
+            areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+        // const newArea = { id: maxId + 1, buttonText: 'Apply' };
+        const newArea = {id: maxId +  1};
         setAreas([...areas, newArea]);
     };
 
-    const handleApplyClick = (id) => {
-        setAreas((prevAreas) =>
-            prevAreas.map((area) =>
-                area.id === id
-                    ? { ...area, buttonText: area.buttonText === "Apply" ? "■ Stop" : "Apply" }
-                    : area
-            )
-        );
-    };
+    // const handleApplyClick = (id) => {
+    //     setAreas((prevAreas) =>
+    //         prevAreas.map((area) =>
+    //             area.id === id
+    //                 ? {
+    //                       ...area,
+    //                       buttonText:
+    //                           area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
+    //                   }
+    //                 : area
+    //         )
+    //     );
 
-    const handleStopArea = (id) => {
-        setAreas((prevAreas) =>
-            prevAreas.map((area) =>
-                area.id === id ? { ...area, buttonText: "Apply" } : area
-            )
-        );
-    };
+    //     const area = areas.find((area) => area.id === id);
+    //     if (area.buttonText === 'Apply') {
+    //         applyAcRea(actionReaction, selectedCity);
+    //     }
+    // };
+
+    // const handleStopArea = (id) => {
+    //     setAreas((prevAreas) =>
+    //         prevAreas.map((area) =>
+    //             area.id === id ? { ...area, buttonText: 'Apply' } : area
+    //         )
+    //     );
+    // };
 
     const removeArea = (id) => {
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
     };
 
-    function StopArea({ areaId, onConfirm }) {
-        const [opened, setOpened] = useState(false);
+    // function StopArea({ areaId, onConfirm }) {
+    //     const [opened, setOpened] = useState(false);
 
-        const handleCloseModal = () => setOpened(false);
-        const handleConfirm = () => {
-            onConfirm(areaId);
-            setOpened(false);
-        };
+    //     const handleCloseModal = () => setOpened(false);
+    //     const handleConfirm = () => {
+    //         onConfirm(areaId);
+    //         setOpened(false);
+    //     };
 
-        return (
-            <>
-                <Button
-                    className="button-correct"
-                    onClick={() => setOpened(true)}
-                >
-                    ■ Stop
-                </Button>
+    //     return (
+    //         <>
+    //             <Button
+    //                 className="button-correct"
+    //                 onClick={() => setOpened(true)}
+    //             >
+    //                 ■ Stop
+    //             </Button>
 
-                <Modal
-                    opened={opened}
-                    onClose={handleCloseModal}
-                    title="Stopping area"
-                    centered
-                >
-                    <p>Are you sure you want to stop this area?</p>
-                    <Button onClick={handleConfirm}>Yes</Button>
-                </Modal>
-            </>
-        );
-    }
+    //             <Modal
+    //                 opened={opened}
+    //                 onClose={handleCloseModal}
+    //                 title="Stopping area"
+    //                 centered
+    //             >
+    //                 <p>Are you sure you want to stop this area?</p>
+    //                 <Button onClick={handleConfirm}>Yes</Button>
+    //             </Modal>
+    //         </>
+    //     );
+    // }
 
     return (
         <div className="dashboard">
@@ -483,16 +512,22 @@ function Dashboard() {
                                         setSelectedCity={setSelectedCity}
                                     />
 
-                                    {area.buttonText === "■ Stop" ? (
-                                        <StopArea areaId={area.id} onConfirm={handleStopArea} />
-                                    ) : (
+                                    {/* {area.buttonText === '■ Stop' ? (
+                                        <StopArea
+                                            areaId={area.id}
+                                            onConfirm={handleStopArea}
+                                        />
+                                    ) : ( */}
                                         <Button
                                             className="button-correct"
-                                            onClick={() => handleApplyClick(area.id)}
+                                            onClick={() =>
+                                                applyAcRea(actionReaction, selectedCity)
+                                            }
                                         >
-                                            {area.buttonText}
+                                            Apply
+                                            {/* {area.buttonText} */}
                                         </Button>
-                                    )}
+                                    {/* )} */}
                                 </div>
                             ))}
                             <AddRectangle addNewArea={addNewArea} />

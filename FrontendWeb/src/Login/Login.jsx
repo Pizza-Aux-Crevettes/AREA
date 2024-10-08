@@ -1,12 +1,12 @@
-import { useState } from "react";
-import "./Login.css";
-import Cookies from "cookies-js";
-import { Button, LoadingOverlay } from "@mantine/core";
-import { resolvePath, useNavigate, useLocation } from "react-router-dom";
+import { useState } from 'react';
+import './Login.css';
+import Cookies from 'cookies-js';
+import { Button, LoadingOverlay } from '@mantine/core';
+import { resolvePath, useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [notLogin, setNotLogin] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -24,10 +24,10 @@ function Login() {
 
     function LoginUser() {
         setLoading(true);
-        fetch("http://localhost:3000/api/login", {
-            method: "POST",
+        fetch('http://localhost:8080/api/login', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 email,
@@ -43,7 +43,7 @@ function Login() {
                 }
             })
             .then((json) => {
-                Cookies.set("token", json.own_token);
+                Cookies.set('token', json.own_token);
                 window.location.reload();
             })
             .then(() => {});
@@ -86,7 +86,7 @@ function Login() {
                 <div className="login-second-container">
                     <div className="sign_in">
                         <p>New here?</p>
-                        <a href="http://localhost:5173/Register">Register</a>
+                        <a href="http://localhost:8081/Register">Register</a>
                     </div>
                 </div>
             </div>

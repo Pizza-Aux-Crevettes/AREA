@@ -50,6 +50,7 @@ function Title({ title }) {
     function deleteCookies() {
         Cookies.set("token", "", { expires: -1 });
         Cookies.set("spotify_token", "", { expires: -1 });
+        Cookies.set("google_token", "", { expires: -1 });
         window.location.reload();
     }
     return (

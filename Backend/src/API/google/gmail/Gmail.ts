@@ -28,10 +28,11 @@ module.exports = (app: Express) => {
         const result = await sendGmail(info.token, info.dest);
         if (result === null) {
             res.status(500).json({
-                msg: 'Error when fetching user mail',
+                msg: 'Error when sending the mail',
             });
             return;
         }
-        res.status(200).json(result.snippet);
+        res.status(200).json(result);
+
     });
 };

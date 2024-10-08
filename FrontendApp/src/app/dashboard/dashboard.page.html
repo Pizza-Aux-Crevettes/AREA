@@ -1,13 +1,13 @@
 <ion-content>
     <div class="Dashboard-div">
       <div class="Dashboard-title-bar">
-        <div>
+        <!--<div>
           <img
             src="assets/menu.png"
             style="width: 24px; height: 24px; margin-top: 100%;"
             (click)="moveToService()"
           />
-        </div>
+        </div>-->
         <ion-text color="dark">
           <h1>Dashboard</h1>
         </ion-text>
@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-  
+
       <div class="flex-rectangle" *ngFor="let area of areas">
         <div class="main-rectangle">
           <div class="actionReaction-rect">
@@ -33,12 +33,11 @@
                   [(ngModel)]="area.selectedAction"
                 >
                   <ion-select-option value="Weather">When it rains</ion-select-option>
-                  <ion-select-option value="oranges">Oranges</ion-select-option>
-                  <ion-select-option value="bananas">Bananas</ion-select-option>
+                  <ion-select-option value="Email">When I receive an email</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-  
+
             <div *ngIf="area.selectedAction === 'Weather'" class="city-div">
               <ion-list class="city-list">
                 <ion-item>
@@ -54,7 +53,7 @@
                 </ion-item>
               </ion-list>
             </div>
-  
+
             <div *ngIf="area.selectedAction !== 'Weather'" class="input-div">
               <ion-input
                 class="input-balise"
@@ -62,7 +61,7 @@
                 placeholder="Enter a text"
               ></ion-input>
             </div>
-  
+
             <ion-list class="reaction-list">
               <ion-item>
                 <ion-select
@@ -73,24 +72,22 @@
                   [(ngModel)]="area.selectedReaction"
                 >
                   <ion-select-option value="Spotify">Sad music is played</ion-select-option>
-                  <ion-select-option value="oranges">Oranges</ion-select-option>
-                  <ion-select-option value="bananas">Bananas</ion-select-option>
+                  <ion-select-option value="sendEmail">send an email</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-  
-            <ion-button size="small" fill="solid" class="apply-button" (click)="ApplyArea(area)">
+
+            <ion-button size="small" fill="solid" class="apply-button" (click)="ApplyArea(area.selectedAction, area.selectedReaction, area.selectedCity)">
               {{ area.buttonText }}
             </ion-button>
           </div>
-  
+
           <ion-button size="small" class="close-button" (click)="DelArea(area.id)">
             <ion-icon slot="icon-only" name="close-outline"></ion-icon>
           </ion-button>
         </div>
       </div>
-  
-      <ion-button class="add-button" (click)="AddNewArea()">+</ion-button>
+
+      <ion-button class="add-button" (click)="addNewArea()">+</ion-button>
     </div>
   </ion-content>
-  

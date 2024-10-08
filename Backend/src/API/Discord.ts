@@ -1,10 +1,9 @@
-import { Express } from "express";
+import { Express } from 'express';
 import axios from 'axios';
-
 
 const client_id = process.env.DISCORD_CLIENT_ID!;
 const client_secret = process.env.DISCORD_CLIENT_SECRET!;
-const redirect_uri = 'http://localhost:3000/discord/callback';
+const redirect_uri = 'http://localhost:8080/discord/callback';
 
 module.exports = (app: Express) => {
     app.get('/discord/login', (req, res) => {
@@ -32,14 +31,21 @@ module.exports = (app: Express) => {
         });
 
         try {
-            const response = await axios.post(tokenUrl, bodyParams, authOptions);
+            const response = await axios.post(
+                tokenUrl,
+                bodyParams,
+                authOptions
+            );
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
 
-            res.redirect(`http://localhost:5173/service?discord_token=${access_token}`);
+            res.redirect(
+                `http://localhost:8081/service?discord_token=${access_token}`
+            );
+
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
         }
     });
-}
+};

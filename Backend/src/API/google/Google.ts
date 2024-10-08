@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const client_id = process.env.GOOGLE_CLIENT_ID!;
 const client_secret = process.env.GOOGLE_CLIENT_SECRET!;
-const redirect_uri = 'http://localhost:3000/google/callback';
+const redirect_uri = 'http://localhost:8080/google/callback';
 
 module.exports = (app: Express) => {
     app.get('/google/login', (req, res) => {
@@ -41,7 +41,10 @@ module.exports = (app: Express) => {
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
 
-            res.redirect( `http://localhost:5173/service?google_token=${access_token}` );
+            res.redirect(
+                `http://localhost:8081/service?google_token=${access_token}`
+            );
+
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');

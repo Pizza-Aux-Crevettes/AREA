@@ -1,27 +1,27 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button, LoadingOverlay } from "@mantine/core";
-import "./Register.css";
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Button, LoadingOverlay } from '@mantine/core';
+import './Register.css';
 
 function Register() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const [alreadyUse, setAlreadyUse] = useState("");
+    const [alreadyUse, setAlreadyUse] = useState('');
     const [accountCreated, setAccountCreated] = useState(false);
     const [loading, setLoading] = useState(false);
 
     function goToLogin() {
-        navigate("/");
-        location.pathname === "/";
+        navigate('/');
+        location.pathname === '/';
     }
 
     function CreationMsg({ correctMsg }) {
-        if (alreadyUse !== "") {
+        if (alreadyUse !== '') {
             return <div className="errorMsg_div">{alreadyUse} </div>;
         } else if (accountCreated) {
             setTimeout(goToLogin, 3000);
@@ -32,19 +32,19 @@ function Register() {
     }
 
     function registerDatas() {
-        setAlreadyUse("");
+        setAlreadyUse('');
         setLoading(true);
         if (
-            email !== "" &&
-            password !== "" &&
-            name !== "" &&
-            surname !== "" &&
-            username !== ""
+            email !== '' &&
+            password !== '' &&
+            name !== '' &&
+            surname !== '' &&
+            username !== ''
         ) {
-            fetch("http://localhost:3000/api/register", {
-                method: "POST",
+            fetch('http://localhost:8080/api/register', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     email,
@@ -57,10 +57,10 @@ function Register() {
                 .then((response) => {
                     setLoading(false);
                     if (response.ok) {
-                        fetch("http://localhost:3000/api/setNewUSer", {
-                            method: "POST",
+                        fetch('http://localhost:8080/api/setNewUSer', {
+                            method: 'POST',
                             headers: {
-                                "Content-Type": "application/json",
+                                'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
                                 userEmail: email,
@@ -69,7 +69,7 @@ function Register() {
                         setAccountCreated(true);
                     } else {
                         setAlreadyUse(
-                            "Username or email already use, please change and retry"
+                            'Username or email already use, please change and retry'
                         );
                     }
                 })
@@ -77,7 +77,7 @@ function Register() {
         } else {
             setTimeout(() => {
                 setLoading(false);
-                setAlreadyUse("Please enter your information.");
+                setAlreadyUse('Please enter your information.');
             }, 300);
         }
     }
@@ -90,7 +90,7 @@ function Register() {
                     overlayBlur={2}
                     className="loading"
                 />
-                <b style={{ fontSize: "8vh", color: "white" }}>Register</b>
+                <b style={{ fontSize: '8vh', color: 'white' }}>Register</b>
                 <div className="global-input">
                     <input
                         placeholder="Name"
@@ -130,7 +130,7 @@ function Register() {
                 </div>
                 <CreationMsg
                     correctMsg={
-                        "Your account has been created. You will be redirected to login"
+                        'Your account has been created. You will be redirected to login'
                     }
                 />
                 <div className="button-create">
@@ -140,7 +140,7 @@ function Register() {
                 </div>
                 <div className="login">
                     <p>Already have an account ? </p>
-                    <a href="http://localhost:5173/">Login</a>
+                    <a href="http://localhost:8081/">Login</a>
                 </div>
             </div>
         </div>
