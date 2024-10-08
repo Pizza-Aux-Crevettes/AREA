@@ -12,7 +12,6 @@ This project is the Frontend part of the AREA project. It provides a user interf
 -   [Starting the Project](#starting-the-project)
 -   [Environment Variables](#environment-variables)
 -   [Project Structure](#project-structure)
--   [Dependencies](#dependencies)
 
 ---
 
@@ -30,8 +29,8 @@ To install and run the frontend web locally:
 2. Clone the repository:
 
     ```bash
-    git clone <your-repo-url>
-    cd frontWeb-project
+    git clone git@github.com:EpitechPromo2027/B-DEV-500-TLS-5-1-area-anastasia.bouby.git
+    cd B-DEV-500-TLS-5-1-area-anastasia.bouby/FrontWeb
     ```
 
 3. Install the dependencies:
@@ -58,7 +57,7 @@ To install and run the frontend web locally:
     yarn dev
     ```
 
-**The server will run by default on port 5173.**
+**The server will run by default on port 8081.**
 
 
 2. If you want build the project and after start it independently:
@@ -136,16 +135,3 @@ The following dependencies are required for the project:
 -   eslint-plugin-react-refresh: ^0.4.9
 -   globals: ^15.9.0
 -   vite: ^4.5.5
-
-**Dependencies:**
-
--   @mantine/core: ^7.13.1
--   @mantine/hooks: ^7.13.1
--   @mantine/notifications: ^7.12.2
--   @tabler/icons-react: ^3.17.0
--   axios: ^1.7.7
--   cookies-js: ^1.2.3
--   react: ^18.3.1
--   react-dom: ^18.3.1
--   react-router-dom: ^6.26.2
-
