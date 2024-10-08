@@ -1,11 +1,12 @@
-import { Component } from "@angular/core";
-import { TokenService } from "src/app/services/token/token.service";
-import { SpotifyService } from "src/app/services/spotify/spotify.service";
-import { RegisterService } from "src/app/services/register/register.service";
-import { WeatherService } from "src/app/services/weather/weather.service";
-import { LocalStorageService } from "../services/localStorage/localStorage.service";
-import { Router } from "@angular/router";
-import { AlertController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { TokenService } from 'src/app/services/token/token.service';
+import { SpotifyService } from 'src/app/services/spotify/spotify.service';
+import { WeatherService } from 'src/app/services/weather/weather.service';
+import { GmailService } from 'src/app/services/gmail/gmail.service';
+import { of, Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { LocalStorageService } from '../services/localStorage/localStorage.service';
+import { Router } from '@angular/router';
 
 interface Area {
     id: number;
@@ -14,89 +15,84 @@ interface Area {
     selectedCity?: string;
     buttonText: string;
 }
-
 @Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.page.html",
-    styleUrls: ["./dashboard.page.scss"],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.page.html',
+    styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage {
     areas: Area[] = [];
-    cities = [
-        { name: "Paris" },
-        { name: "Marseille" },
-        { name: "Lyon" },
-        { name: "Toulouse" },
-        { name: "Nice" },
-        { name: "Nantes" },
-        { name: "Montpellier" },
-        { name: "Strasbourg" },
-        { name: "Bordeaux" },
-        { name: "Lille" },
-    ];
 
     constructor(
         private tokenService: TokenService,
         private spotifyService: SpotifyService,
-        private registerService: RegisterService,
         private weatherService: WeatherService,
+        private gmailService: GmailService,
         private localStorage: LocalStorageService,
-        private router: Router,
-        private alertController: AlertController
+        private router: Router
     ) {
         this.areas = [
-            { id: 1, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' },
-            { id: 2, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' },
-            { id: 3, selectedAction: '', selectedReaction: '', selectedCity: '', buttonText: 'Apply' }
+            {
+                id: 1,
+                selectedAction: '',
+                selectedReaction: '',
+                selectedCity: '',
+                buttonText: 'Apply',
+            },
+            {
+                id: 2,
+                selectedAction: '',
+                selectedReaction: '',
+                selectedCity: '',
+                buttonText: 'Apply',
+            },
+            {
+                id: 3,
+                selectedAction: '',
+                selectedReaction: '',
+                selectedCity: '',
+                buttonText: 'Apply',
+            },
         ];
     }
+    deleteCookies() {
+        console.log('test');
+        this.localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+    }
 
-    AddNewArea() {
+    moveToService() {
+        console.log('move to dashboard');
+        this.router.navigate(['/service']);
+    }
+
+    connectService(service: string) {
+        window.location.href = 'http://localhost:8080/' + service + '/login';
+    }
+
+    addNewArea(): void {
         const newArea: Area = {
             id: this.areas.length + 1,
             selectedAction: '',
             selectedReaction: '',
             selectedCity: '',
-            buttonText: 'Apply'
+            buttonText: 'Apply',
         };
         this.areas.push(newArea);
     }
 
-    DelArea(id: number) {
-        this.areas = this.areas.filter((area) => area.id !== id);
-    }
-
-    ApplyArea(area: Area) {
-        if (area.buttonText === 'Apply') {
-            area.buttonText = '■ Stop';
-        } else {
-            this.presentConfirm(area);
-        }
-    }
-
-    async presentConfirm(area: Area) {
-        const alert = await this.alertController.create({
-            header: 'Confirm!',
-            message: 'Are you sure you want to stop this area?',
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: () => {
-                        console.log('Stop action canceled');
-                    }
-                },
-                {
-                    text: 'Yes',
-                    handler: () => {
-                        area.buttonText = 'Apply';
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
-    }
+    cities = [
+        { name: 'Paris' },
+        { name: 'Marseille' },
+        { name: 'Lyon' },
+        { name: 'Toulouse' },
+        { name: 'Nice' },
+        { name: 'Nantes' },
+        { name: 'Montpellier' },
+        { name: 'Strasbourg' },
+        { name: 'Bordeaux' },
+        { name: 'Lille' },
+    ];
 
     onSelectAction(event: any, area: Area) {
         area.selectedAction = event.detail.value;
@@ -110,29 +106,91 @@ export class DashboardPage {
         area.selectedCity = event.detail.value;
     }
 
-    deleteCookies() {
-        this.localStorage.removeItem("token");
-        this.router.navigate(["/login"]);
+    DelArea(id: number) {
+        this.areas = this.areas.filter((area) => area.id !== id);
     }
 
-    moveToService() {
-        this.router.navigate(["/service"]);
+    AddArea() {
+        const newArea: Area = {
+            id: this.areas.length + 1,
+            selectedAction: '',
+            selectedReaction: '',
+            selectedCity: '',
+            buttonText: 'Apply',
+        };
+        this.areas.push(newArea);
     }
 
     playPreview(trackId: string, token_spotify: string) {
         this.spotifyService.getTrackPreview(trackId, token_spotify).subscribe(
             (data) => {
                 const previewUrl = data.preview_url;
+
                 if (previewUrl) {
                     const audio = new Audio(previewUrl);
                     audio.play();
                 } else {
-                    console.log("No preview available for this song.");
+                    console.log('No preview available for this song.');
                 }
             },
             (error) => {
-                console.error("Error fetching track preview:", error);
+                console.error('Error fetching track preview:', error);
             }
         );
+    }
+
+    ApplyActions(
+        action: string,
+        city: string | undefined,
+        me: string
+    ): Observable<boolean> {
+        if (action === 'Weather') {
+            console.log('tets');
+            return this.weatherService.getServicesWeather(city).pipe(
+                map((response) => !!response),
+                catchError(() => of(false))
+            );
+        } else if (action === 'Email') {
+            return this.gmailService.getGmailMsg(me).pipe(
+                map((response) => !!response),
+                catchError(() => of(false))
+            );
+        } else {
+            return of(false);
+        }
+    }
+
+    ApplyReaction(reaction: string, dest: string) {
+        let token_spotify = '';
+        if (reaction === 'Spotify') {
+            this.tokenService
+                .getServicesTokens('areaepitech18@gmail.com', 'spotify')
+                .subscribe((response) => {
+                    token_spotify = response[0].token_spotify;
+                    console.log(token_spotify);
+                    if (token_spotify !== '') {
+                        this.playPreview(
+                            '1Fid2jjqsHViMX6xNH70hE',
+                            token_spotify
+                        );
+                    }
+                });
+        } else if (reaction === 'sendEmail') {
+            this.tokenService
+                .getServicesTokens('areaepitech18@gmail.com', 'google')
+                .subscribe((response) => {
+                    this.gmailService
+                        .sendEmail(response, dest)
+                        .subscribe((res) => {
+                            console.log(res);
+                        });
+                });
+        }
+    }
+
+    ApplyArea(action: string, reaction: string, city: string | undefined) {
+        if (this.ApplyActions(action, city, 'areaepitech18@gmail.com')) {
+            this.ApplyReaction(reaction, 'areaepitech18@gmail.com');
+        }
     }
 }

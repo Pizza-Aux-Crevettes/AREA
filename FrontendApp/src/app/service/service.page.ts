@@ -13,10 +13,6 @@ import { Router } from '@angular/router';
 })
 export class ServicePage {
     constructor(
-        private tokenService: TokenService,
-        private spotifyService: SpotifyService,
-        private registerService: RegisterService,
-        private weatherService: WeatherService,
         private localStorage: LocalStorageService,
         private router: Router
     ) {}
