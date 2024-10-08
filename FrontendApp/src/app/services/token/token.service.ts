@@ -10,8 +10,7 @@ export class TokenService {
 
     constructor(private http: HttpClient) {}
 
-    getServicesTokens(email: any): Observable<any> {
-        const user_email = email.email;
+    getServicesTokens(email: any, service: string): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
@@ -21,7 +20,8 @@ export class TokenService {
                 `${this.API_URL}/api/getToken`,
                 JSON.parse(
                     JSON.stringify({
-                        user_email,
+                        user_email: email,
+                        service,
                     })
                 ),
                 {

@@ -9,7 +9,8 @@ export class WeatherService {
     private API_URL = 'http://localhost:8080';
 
     constructor(private http: HttpClient) {}
-    getServicesWeather(city: string): Observable<any> {
+    getServicesWeather(city: string | undefined): Observable<any> {
+        console.log(city);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
