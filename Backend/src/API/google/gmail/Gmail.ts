@@ -33,5 +33,6 @@ module.exports = (app: Express) => {
             return;
         }
         res.status(200).json(result);
+
     });
 };

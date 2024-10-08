@@ -44,6 +44,7 @@ module.exports = (app: Express) => {
             res.redirect(
                 `http://localhost:8081/service?google_token=${access_token}`
             );
+
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
