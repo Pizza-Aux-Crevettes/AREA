@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
     HttpClient,
     HttpErrorResponse,
     HttpHeaders,
-} from "@angular/common/http";
-import { catchError, of, throwError } from "rxjs";
+} from '@angular/common/http';
+import { catchError, of, throwError } from 'rxjs';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class RegisterService {
-    private API_URL = "http://localhost:3000";
+    private API_URL = 'http://localhost:8080';
 
     constructor(private http: HttpClient) {}
     register(
@@ -21,7 +21,7 @@ export class RegisterService {
         password: string
     ) {
         const headers = new HttpHeaders({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         });
         return this.http
             .post<any>(
@@ -39,7 +39,7 @@ export class RegisterService {
             )
             .pipe(
                 catchError((error: HttpErrorResponse) => {
-                    console.error("request error : ", error);
+                    console.error('request error : ', error);
                     return throwError(error);
                 })
             );
@@ -47,7 +47,7 @@ export class RegisterService {
 
     setNewUser(email: string) {
         const headers = new HttpHeaders({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         });
 
         try {
@@ -61,11 +61,11 @@ export class RegisterService {
                 }
             );
         } catch (error) {
-            console.error("Error :", error);
+            console.error('Error :', error);
             return of({
                 status: 500,
                 error: true,
-                message: "Error",
+                message: 'Error',
                 data: {},
             });
         }

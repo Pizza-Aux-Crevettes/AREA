@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable, of } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class WeatherService {
-    private API_URL = "http://localhost:3000";
+    private API_URL = 'http://localhost:8080';
 
     constructor(private http: HttpClient) {}
     getServicesWeather(city: string): Observable<any> {
         const headers = new HttpHeaders({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         });
 
         const forJson = city;
@@ -27,11 +27,11 @@ export class WeatherService {
                 }
             );
         } catch (error) {
-            console.error("Error :", error);
+            console.error('Error :', error);
             return of({
                 status: 500,
                 error: true,
-                message: "Error",
+                message: 'Error',
                 data: {},
             });
         }

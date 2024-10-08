@@ -18,7 +18,7 @@ import Cookies from 'cookies-js';
 
 const getGmailMsg = async (token) => {
     try {
-        const response = await fetch('http://localhost:3000/api/gmail/msg', {
+        const response = await fetch('http://localhost:8080/api/gmail/msg', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const SendEmail = async (token, dest) => {
 
 const getWeather = async (forJson) => {
     try {
-        const response = await fetch('http://localhost:3000/api/Weather', {
+        const response = await fetch('http://localhost:8080/api/Weather', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
