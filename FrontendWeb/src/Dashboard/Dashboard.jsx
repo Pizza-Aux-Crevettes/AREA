@@ -38,6 +38,25 @@ const getGmailMsg = async (token) => {
     }
 };
 
+const SendEmail = async (token, dest) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/gmail/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+                dest: dest,
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const getWeather = async (forJson) => {
     try {
         const response = await fetch('http://localhost:8080/api/Weather', {
@@ -67,7 +86,6 @@ const playPreview = async () => {
     );
     const data = await response.json();
     const previewUrl = data.preview_url;
-    console.log(previewUrl);
 
     if (previewUrl) {
         const audio = new Audio(previewUrl);
@@ -80,18 +98,7 @@ const playPreview = async () => {
 function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState('Action');
     const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
-    const cities = [
-        { name: 'Paris' },
-        { name: 'Marseille' },
-        { name: 'Lyon' },
-        { name: 'Toulouse' },
-        { name: 'Nice' },
-        { name: 'Nantes' },
-        { name: 'Montpellier' },
-        { name: 'Strasbourg' },
-        { name: 'Bordeaux' },
-        { name: 'Lille' },
-    ];
+    const [input, setInput] = useState('');
 
     function TextInputDash() {
         const [isOverflowing, setIsOverflowing] = useState(false);
@@ -152,9 +159,26 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                 </Menu.Dropdown>
             </Menu>
         ) : (
-            <TextInput placeholder="Input" radius="md" size="lg" />
+            <div/>
         );
     }
+
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value);
+    };
+    const cities = [
+        { name: 'Paris' },
+        { name: 'Marseille' },
+        { name: 'Lyon' },
+        { name: 'Toulouse' },
+        { name: 'Nice' },
+        { name: 'Nantes' },
+        { name: 'Montpellier' },
+        { name: 'Strasbourg' },
+        { name: 'Bordeaux' },
+        { name: 'Lille' },
+    ];
 
     function MenuDashAction({ title }) {
         const [isOverflowing, setIsOverflowing] = useState(false);
@@ -218,7 +242,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={() => handleClick('Email')}>
-                        When I recieve is recieve
+                        When I recieve an email
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
@@ -236,7 +260,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         const buttonRef = useRef(null);
 
         const handleClick = (reaction) => {
-            setSelectedReactionItem('sad music is played');
+            setSelectedReactionItem(reaction);
             setActionReaction((prevState) => ({
                 ...prevState,
                 reaction: reaction,
@@ -293,13 +317,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
-                        onClick={() =>
-                            setSelectedReactionItem(
-                                'Reaction numero deux pour Perrine'
-                            )
-                        }
+                        onClick={() => handleClick('sendEmail')}
                     >
-                        Reaction numero deux pour Perrine
+                        send an email
                     </Menu.Item>
                     <MenuDivider />
                     <Menu.Item
@@ -338,8 +358,11 @@ const applyActions = async (action, forJson) => {
 };
 
 const applyReactions = (reaction) => {
+    const google_token = Cookies.get('google_token');
     if (reaction === 'Spotify') {
         playPreview();
+    } else if (reaction === 'sendEmail') {
+        SendEmail(google_token, "anast.bouby@icloud.com");
     }
     return;
 };
@@ -432,6 +455,11 @@ function Dashboard() {
                     : area
             )
         );
+
+        const area = areas.find((area) => area.id === id);
+        if (area.buttonText === 'Apply') {
+            applyAcRea(actionReaction, selectedCity);
+        }
     };
 
     const handleStopArea = (id) => {

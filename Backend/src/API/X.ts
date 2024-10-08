@@ -32,6 +32,7 @@ module.exports = (app: Express) => {
         });
 
         try {
+
             const response = await axios.post(
                 tokenUrl,
                 bodyParams,
