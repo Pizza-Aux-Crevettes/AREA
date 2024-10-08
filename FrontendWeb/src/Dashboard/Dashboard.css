@@ -115,6 +115,7 @@
     border: 1px solid black;
     box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
     position: absolute;
+    /* margin-left: 95%; */
     right: 0;
 }
 

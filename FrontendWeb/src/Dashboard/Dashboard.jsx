@@ -97,7 +97,7 @@ const playPreview = async () => {
 
 function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
     const [selectedActionItem, setSelectedActionItem] = useState('Action');
-    const [selectedReactionItem, setSelectedReactionItem] = useState('Action');
+    const [selectedReactionItem, setSelectedReactionItem] = useState('Reaction');
     const [input, setInput] = useState('');
 
     function TextInputDash() {
@@ -180,7 +180,7 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
         { name: 'Lille' },
     ];
 
-    function MenuDashAction({ title }) {
+    function MenuDashAction({ }) {
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
 
@@ -244,18 +244,12 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     <Menu.Item onClick={() => handleClick('Email')}>
                         When I recieve an email
                     </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item
-                        onClick={() => setSelectedActionItem('Action courte')}
-                    >
-                        Action courte
-                    </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         );
     }
-    function MenuDashReaction({ title }) {
-        const [selectedItem, setSelectedItem] = useState(title);
+    function MenuDashReaction({}) {
+        const [selectedItem, setSelectedItem] = useState("Reaction");
         const [isOverflowing, setIsOverflowing] = useState(false);
         const buttonRef = useRef(null);
 
@@ -321,14 +315,6 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
                     >
                         send an email
                     </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item
-                        onClick={() =>
-                            setSelectedReactionItem('Reaction courte')
-                        }
-                    >
-                        Reaction courte
-                    </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         );
@@ -336,9 +322,9 @@ function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
 
     return (
         <div className="cont-rect">
-            <MenuDashAction title="Action" />
+            <MenuDashAction  />
             <TextInputDash />
-            <MenuDashReaction title="Reaction" />
+            <MenuDashReaction />
         </div>
     );
 }
@@ -426,9 +412,12 @@ function AddRectangle({ addNewArea }) {
 
 function Dashboard() {
     const [areas, setAreas] = useState([
-        { id: 1, buttonText: 'Apply' },
-        { id: 2, buttonText: 'Apply' },
-        { id: 3, buttonText: 'Apply' },
+        { id: 1},
+        { id: 2},
+        { id: 3}
+        // { id: 1, buttonText: 'Apply' },
+        // { id: 2, buttonText: 'Apply' },
+        // { id: 3, buttonText: 'Apply' },
     ]);
     const [actionReaction, setActionReaction] = useState({
         action: '',
@@ -439,71 +428,72 @@ function Dashboard() {
     const addNewArea = () => {
         const maxId =
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
-        const newArea = { id: maxId + 1, buttonText: 'Apply' };
+        // const newArea = { id: maxId + 1, buttonText: 'Apply' };
+        const newArea = {id: maxId +  1};
         setAreas([...areas, newArea]);
     };
 
-    const handleApplyClick = (id) => {
-        setAreas((prevAreas) =>
-            prevAreas.map((area) =>
-                area.id === id
-                    ? {
-                          ...area,
-                          buttonText:
-                              area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
-                      }
-                    : area
-            )
-        );
+    // const handleApplyClick = (id) => {
+    //     setAreas((prevAreas) =>
+    //         prevAreas.map((area) =>
+    //             area.id === id
+    //                 ? {
+    //                       ...area,
+    //                       buttonText:
+    //                           area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
+    //                   }
+    //                 : area
+    //         )
+    //     );
 
-        const area = areas.find((area) => area.id === id);
-        if (area.buttonText === 'Apply') {
-            applyAcRea(actionReaction, selectedCity);
-        }
-    };
+    //     const area = areas.find((area) => area.id === id);
+    //     if (area.buttonText === 'Apply') {
+    //         applyAcRea(actionReaction, selectedCity);
+    //     }
+    // };
 
-    const handleStopArea = (id) => {
-        setAreas((prevAreas) =>
-            prevAreas.map((area) =>
-                area.id === id ? { ...area, buttonText: 'Apply' } : area
-            )
-        );
-    };
+    // const handleStopArea = (id) => {
+    //     setAreas((prevAreas) =>
+    //         prevAreas.map((area) =>
+    //             area.id === id ? { ...area, buttonText: 'Apply' } : area
+    //         )
+    //     );
+    // };
 
     const removeArea = (id) => {
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
     };
 
-    function StopArea({ areaId, onConfirm }) {
-        const [opened, setOpened] = useState(false);
+    // function StopArea({ areaId, onConfirm }) {
+    //     const [opened, setOpened] = useState(false);
 
-        const handleCloseModal = () => setOpened(false);
-        const handleConfirm = () => {
-            onConfirm(areaId);
-            setOpened(false);
-        };
+    //     const handleCloseModal = () => setOpened(false);
+    //     const handleConfirm = () => {
+    //         onConfirm(areaId);
+    //         setOpened(false);
+    //     };
 
-        return (
-            <>
-                <Button
-                    className="button-correct"
-                    onClick={() => setOpened(true)}
-                >
-                    ■ Stop
-                </Button>
+    //     return (
+    //         <>
+    //             <Button
+    //                 className="button-correct"
+    //                 onClick={() => setOpened(true)}
+    //             >
+    //                 ■ Stop
+    //             </Button>
 
-                <Modal
-                    opened={opened}
-                    onClose={handleCloseModal}
-                    title="Stopping area"
-                    centered
-                >
-                    <p>Are you sure you want to stop this area?</p>
-                    <Button onClick={handleConfirm}>Yes</Button>
-                </Modal>
-            </>
-        );
-    }
+    //             <Modal
+    //                 opened={opened}
+    //                 onClose={handleCloseModal}
+    //                 title="Stopping area"
+    //                 centered
+    //             >
+    //                 <p>Are you sure you want to stop this area?</p>
+    //                 <Button onClick={handleConfirm}>Yes</Button>
+    //             </Modal>
+    //         </>
+    //     );
+    // }
 
     return (
         <div className="dashboard">
@@ -522,21 +512,22 @@ function Dashboard() {
                                         setSelectedCity={setSelectedCity}
                                     />
 
-                                    {area.buttonText === '■ Stop' ? (
+                                    {/* {area.buttonText === '■ Stop' ? (
                                         <StopArea
                                             areaId={area.id}
                                             onConfirm={handleStopArea}
                                         />
-                                    ) : (
+                                    ) : ( */}
                                         <Button
                                             className="button-correct"
                                             onClick={() =>
-                                                handleApplyClick(area.id)
+                                                applyAcRea(actionReaction, selectedCity)
                                             }
                                         >
-                                            {area.buttonText}
+                                            Apply
+                                            {/* {area.buttonText} */}
                                         </Button>
-                                    )}
+                                    {/* )} */}
                                 </div>
                             ))}
                             <AddRectangle addNewArea={addNewArea} />
