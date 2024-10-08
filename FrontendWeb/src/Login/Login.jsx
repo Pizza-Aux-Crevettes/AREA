@@ -86,7 +86,7 @@ function Login() {
                 <div className="login-second-container">
                     <div className="sign_in">
                         <p>New here?</p>
-                        <a href="http://localhost:5173/Register">Register</a>
+                        <a href="http://localhost:8081/Register">Register</a>
                     </div>
                 </div>
             </div>
