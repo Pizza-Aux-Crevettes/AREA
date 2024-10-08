@@ -10,7 +10,6 @@ This project is the Frontend part of the AREA project. It provides a user interf
 
 -   [Installation](#installation)
 -   [Starting the Project](#starting-the-project)
--   [Environment Variables](#environment-variables)
 -   [Project Structure](#project-structure)
 
 ---
@@ -30,7 +29,7 @@ To install and run the frontend web locally:
 
     ```bash
     git clone git@github.com:EpitechPromo2027/B-DEV-500-TLS-5-1-area-anastasia.bouby.git
-    cd B-DEV-500-TLS-5-1-area-anastasia.bouby/FrontWeb
+    cd B-DEV-500-TLS-5-1-area-anastasia.bouby/FrontendWeb
     ```
 
 3. Install the dependencies:
