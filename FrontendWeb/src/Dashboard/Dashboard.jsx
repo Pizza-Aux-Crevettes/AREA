@@ -402,7 +402,7 @@ function RectangleDashboard({
 
 function AddRectangle({ addNewArea }) {
     return (
-        <div>
+        <div className='row_container'>
             <Button className="rectangle-add" onClick={addNewArea}>
                 <img src={logo_plus} alt="Add new area" width={50} />
             </Button>
