@@ -1,3 +1,6 @@
+import './Dashboard.css';
+import Cookies from 'cookies-js';
+
 const getGmailMsg = async (token) => {
     try {
         const response = await fetch('http://localhost:8080/api/gmail/msg', {
@@ -78,7 +81,7 @@ const playPreview = async () => {
 };
 
 
-const applyActions = async (action, forJson) => {
+export const applyActions = async (action, forJson) => {
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {
@@ -92,7 +95,7 @@ const applyActions = async (action, forJson) => {
     }
 };
 
-const applyReactions = (reaction) => {
+export const applyReactions = (reaction) => {
     const google_token = Cookies.get('google_token');
     if (reaction === 'Spotify') {
         playPreview();
@@ -102,232 +105,232 @@ const applyReactions = (reaction) => {
     return;
 };
 
-function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
-    const [selectedActionItem, setSelectedActionItem] = useState('Action');
-    const [selectedReactionItem, setSelectedReactionItem] = useState('Reaction');
-    const [input, setInput] = useState('');
+// function ActionReaction({ setActionReaction, selectedCity, setSelectedCity }) {
+//     const [selectedActionItem, setSelectedActionItem] = useState('Action');
+//     const [selectedReactionItem, setSelectedReactionItem] = useState('Reaction');
+//     const [input, setInput] = useState('');
 
-    function TextInputDash() {
-        const [isOverflowing, setIsOverflowing] = useState(false);
-        const buttonRef = useRef(null);
+//     function TextInputDash() {
+//         const [isOverflowing, setIsOverflowing] = useState(false);
+//         const buttonRef = useRef(null);
 
-        const checkOverflow = () => {
-            if (buttonRef.current) {
-                const span = document.createElement('span');
-                span.style.visibility = 'hidden';
-                span.style.whiteSpace = 'nowrap';
-                span.style.font = window.getComputedStyle(
-                    buttonRef.current
-                ).font;
-                span.textContent = selectedActionItem;
+//         const checkOverflow = () => {
+//             if (buttonRef.current) {
+//                 const span = document.createElement('span');
+//                 span.style.visibility = 'hidden';
+//                 span.style.whiteSpace = 'nowrap';
+//                 span.style.font = window.getComputedStyle(
+//                     buttonRef.current
+//                 ).font;
+//                 span.textContent = selectedActionItem;
 
-                document.body.appendChild(span);
-                const textWidth = span.scrollWidth;
-                document.body.removeChild(span);
+//                 document.body.appendChild(span);
+//                 const textWidth = span.scrollWidth;
+//                 document.body.removeChild(span);
 
-                const buttonWidth = buttonRef.current.clientWidth;
-                const isOverflowing = textWidth > buttonWidth;
+//                 const buttonWidth = buttonRef.current.clientWidth;
+//                 const isOverflowing = textWidth > buttonWidth;
 
-                setIsOverflowing(isOverflowing);
-            }
-        };
-        checkOverflow();
+//                 setIsOverflowing(isOverflowing);
+//             }
+//         };
+//         checkOverflow();
 
-        return selectedActionItem === 'Weather' ? (
-            <Menu>
-                <Menu.Target>
-                    <Tooltip
-                        label={selectedCity}
-                        disabled={!isOverflowing}
-                        position="bottom"
-                        withArrow
-                    >
-                        <Button
-                            className="button-menu"
-                            size="lg"
-                            ref={buttonRef}
-                        >
-                            {selectedCity}
-                            <IconChevronDown size={16} />
-                        </Button>
-                    </Tooltip>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    {cities.map((city, index) => (
-                        <div key={index}>
-                            <Menu.Item
-                                onClick={() => setSelectedCity(city.name)}
-                            >
-                                {city.name}
-                            </Menu.Item>
-                        </div>
-                    ))}
-                </Menu.Dropdown>
-            </Menu>
-        ) : (
-            <div />
-        );
-    }
+//         return selectedActionItem === 'Weather' ? (
+//             <Menu>
+//                 <Menu.Target>
+//                     <Tooltip
+//                         label={selectedCity}
+//                         disabled={!isOverflowing}
+//                         position="bottom"
+//                         withArrow
+//                     >
+//                         <Button
+//                             className="button-menu"
+//                             size="lg"
+//                             ref={buttonRef}
+//                         >
+//                             {selectedCity}
+//                             <IconChevronDown size={16} />
+//                         </Button>
+//                     </Tooltip>
+//                 </Menu.Target>
+//                 <Menu.Dropdown>
+//                     {cities.map((city, index) => (
+//                         <div key={index}>
+//                             <Menu.Item
+//                                 onClick={() => setSelectedCity(city.name)}
+//                             >
+//                                 {city.name}
+//                             </Menu.Item>
+//                         </div>
+//                     ))}
+//                 </Menu.Dropdown>
+//             </Menu>
+//         ) : (
+//             <div />
+//         );
+//     }
 
 
-    const handleInputChange = (event) => {
-        setInput(event.target.value);
-    };
-    const cities = [
-        { name: 'Paris' },
-        { name: 'Marseille' },
-        { name: 'Lyon' },
-        { name: 'Toulouse' },
-        { name: 'Nice' },
-        { name: 'Nantes' },
-        { name: 'Montpellier' },
-        { name: 'Strasbourg' },
-        { name: 'Bordeaux' },
-        { name: 'Lille' },
-    ];
+//     const handleInputChange = (event) => {
+//         setInput(event.target.value);
+//     };
+//     const cities = [
+//         { name: 'Paris' },
+//         { name: 'Marseille' },
+//         { name: 'Lyon' },
+//         { name: 'Toulouse' },
+//         { name: 'Nice' },
+//         { name: 'Nantes' },
+//         { name: 'Montpellier' },
+//         { name: 'Strasbourg' },
+//         { name: 'Bordeaux' },
+//         { name: 'Lille' },
+//     ];
 
-    function MenuDashAction({ }) {
-        const [isOverflowing, setIsOverflowing] = useState(false);
-        const buttonRef = useRef(null);
+//     function MenuDashAction({ }) {
+//         const [isOverflowing, setIsOverflowing] = useState(false);
+//         const buttonRef = useRef(null);
 
-        const handleClick = (action) => {
-            setSelectedActionItem(action);
-            setActionReaction((prevState) => ({
-                ...prevState,
-                action: action,
-            }));
-        };
+//         const handleClick = (action) => {
+//             setSelectedActionItem(action);
+//             setActionReaction((prevState) => ({
+//                 ...prevState,
+//                 action: action,
+//             }));
+//         };
 
-        const checkOverflow = () => {
-            if (buttonRef.current) {
-                const span = document.createElement('span');
-                span.style.visibility = 'hidden';
-                span.style.whiteSpace = 'nowrap';
-                span.style.font = window.getComputedStyle(
-                    buttonRef.current
-                ).font;
-                span.textContent = selectedActionItem;
+//         const checkOverflow = () => {
+//             if (buttonRef.current) {
+//                 const span = document.createElement('span');
+//                 span.style.visibility = 'hidden';
+//                 span.style.whiteSpace = 'nowrap';
+//                 span.style.font = window.getComputedStyle(
+//                     buttonRef.current
+//                 ).font;
+//                 span.textContent = selectedActionItem;
 
-                document.body.appendChild(span);
-                const textWidth = span.scrollWidth;
-                document.body.removeChild(span);
+//                 document.body.appendChild(span);
+//                 const textWidth = span.scrollWidth;
+//                 document.body.removeChild(span);
 
-                const buttonWidth = buttonRef.current.clientWidth;
-                const isOverflowing = textWidth > buttonWidth;
+//                 const buttonWidth = buttonRef.current.clientWidth;
+//                 const isOverflowing = textWidth > buttonWidth;
 
-                setIsOverflowing(isOverflowing);
-            }
-        };
-        checkOverflow();
+//                 setIsOverflowing(isOverflowing);
+//             }
+//         };
+//         checkOverflow();
 
-        return (
-            <Menu width={200} shadow="md">
-                <Menu.Target>
-                    <Tooltip
-                        label={selectedActionItem}
-                        disabled={!isOverflowing}
-                        position="bottom"
-                        withArrow
-                    >
-                        <Button
-                            className="button-menu"
-                            size="lg"
-                            ref={buttonRef}
-                        >
-                            {selectedActionItem}
-                            <IconChevronDown size={16} />
-                        </Button>
-                    </Tooltip>
-                </Menu.Target>
+//         return (
+//             <Menu width={200} shadow="md">
+//                 <Menu.Target>
+//                     <Tooltip
+//                         label={selectedActionItem}
+//                         disabled={!isOverflowing}
+//                         position="bottom"
+//                         withArrow
+//                     >
+//                         <Button
+//                             className="button-menu"
+//                             size="lg"
+//                             ref={buttonRef}
+//                         >
+//                             {selectedActionItem}
+//                             <IconChevronDown size={16} />
+//                         </Button>
+//                     </Tooltip>
+//                 </Menu.Target>
 
-                <Menu.Dropdown>
-                    <Menu.Item onClick={() => handleClick('Weather')}>
-                        When it rains
-                    </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item onClick={() => handleClick('Email')}>
-                        When I recieve an email
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
-        );
-    }
+//                 <Menu.Dropdown>
+//                     <Menu.Item onClick={() => handleClick('Weather')}>
+//                         When it rains
+//                     </Menu.Item>
+//                     <MenuDivider />
+//                     <Menu.Item onClick={() => handleClick('Email')}>
+//                         When I recieve an email
+//                     </Menu.Item>
+//                 </Menu.Dropdown>
+//             </Menu>
+//         );
+//     }
 
-    function MenuDashReaction({ }) {
-        const [selectedItem, setSelectedItem] = useState("Reaction");
-        const [isOverflowing, setIsOverflowing] = useState(false);
-        const buttonRef = useRef(null);
+//     function MenuDashReaction({ }) {
+//         const [selectedItem, setSelectedItem] = useState("Reaction");
+//         const [isOverflowing, setIsOverflowing] = useState(false);
+//         const buttonRef = useRef(null);
 
-        const handleClick = (reaction) => {
-            setSelectedReactionItem(reaction);
-            setActionReaction((prevState) => ({
-                ...prevState,
-                reaction: reaction,
-            }));
-        };
+//         const handleClick = (reaction) => {
+//             setSelectedReactionItem(reaction);
+//             setActionReaction((prevState) => ({
+//                 ...prevState,
+//                 reaction: reaction,
+//             }));
+//         };
 
-        const checkOverflow = () => {
-            if (buttonRef.current) {
-                const span = document.createElement('span');
-                span.style.visibility = 'hidden';
-                span.style.whiteSpace = 'nowrap';
-                span.style.font = window.getComputedStyle(
-                    buttonRef.current
-                ).font;
-                span.textContent = selectedItem;
+//         const checkOverflow = () => {
+//             if (buttonRef.current) {
+//                 const span = document.createElement('span');
+//                 span.style.visibility = 'hidden';
+//                 span.style.whiteSpace = 'nowrap';
+//                 span.style.font = window.getComputedStyle(
+//                     buttonRef.current
+//                 ).font;
+//                 span.textContent = selectedItem;
 
-                document.body.appendChild(span);
-                const textWidth = span.scrollWidth;
-                document.body.removeChild(span);
+//                 document.body.appendChild(span);
+//                 const textWidth = span.scrollWidth;
+//                 document.body.removeChild(span);
 
-                const buttonWidth = buttonRef.current.clientWidth;
-                const isOverflowing = textWidth > buttonWidth;
+//                 const buttonWidth = buttonRef.current.clientWidth;
+//                 const isOverflowing = textWidth > buttonWidth;
 
-                setIsOverflowing(isOverflowing);
-            }
-        };
-        checkOverflow();
+//                 setIsOverflowing(isOverflowing);
+//             }
+//         };
+//         checkOverflow();
 
-        return (
-            <Menu width={200} shadow="md">
-                <Menu.Target>
-                    <Tooltip
-                        label={selectedReactionItem}
-                        disabled={!isOverflowing}
-                        position="bottom"
-                        withArrow
-                    >
-                        <Button
-                            className="button-menu"
-                            size="lg"
-                            ref={buttonRef}
-                        >
-                            {selectedReactionItem}
-                            <IconChevronDown size={16} />
-                        </Button>
-                    </Tooltip>
-                </Menu.Target>
+//         return (
+//             <Menu width={200} shadow="md">
+//                 <Menu.Target>
+//                     <Tooltip
+//                         label={selectedReactionItem}
+//                         disabled={!isOverflowing}
+//                         position="bottom"
+//                         withArrow
+//                     >
+//                         <Button
+//                             className="button-menu"
+//                             size="lg"
+//                             ref={buttonRef}
+//                         >
+//                             {selectedReactionItem}
+//                             <IconChevronDown size={16} />
+//                         </Button>
+//                     </Tooltip>
+//                 </Menu.Target>
 
-                <Menu.Dropdown>
-                    <Menu.Item onClick={() => handleClick('Spotify')}>
-                        sad music is played
-                    </Menu.Item>
-                    <MenuDivider />
-                    <Menu.Item
-                        onClick={() => handleClick('sendEmail')}
-                    >
-                        send an email
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
-        );
-    }
+//                 <Menu.Dropdown>
+//                     <Menu.Item onClick={() => handleClick('Spotify')}>
+//                         sad music is played
+//                     </Menu.Item>
+//                     <MenuDivider />
+//                     <Menu.Item
+//                         onClick={() => handleClick('sendEmail')}
+//                     >
+//                         send an email
+//                     </Menu.Item>
+//                 </Menu.Dropdown>
+//             </Menu>
+//         );
+//     }
 
-    return (
-        <div className="cont-rect">
-            <MenuDashAction />
-            {/* <TextInputDash /> */}
-            <MenuDashReaction />
-        </div>
-    );
-}
+//     return (
+//         <div className="cont-rect">
+//             <MenuDashAction />
+//             {/* <TextInputDash /> */}
+//             <MenuDashReaction />
+//         </div>
+//     );
+// }

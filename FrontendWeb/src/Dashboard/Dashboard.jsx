@@ -55,15 +55,6 @@ function AddRectangle({ addNewArea }) {
 //         </>
 //     );
 // }
-const applyAcRea = async (actionReaction, selectedCity) => {
-    const forJson = selectedCity;
-
-    const dataAction = await applyActions(actionReaction.action, forJson);
-
-    if (dataAction) {
-        applyReactions(actionReaction.reaction);
-    }
-};
 
 function Dashboard() {
     const [areas, setAreas] = useState([]);

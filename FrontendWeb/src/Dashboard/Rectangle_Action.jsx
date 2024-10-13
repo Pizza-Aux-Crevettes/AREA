@@ -14,17 +14,21 @@ import './Dashboard.css';
 import logo_plus from '../assets/plus.png';
 import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
+import {applyActions, applyReactions} from './Action_Reaction';
 
 
-const applyAcRea = async () => {
+const applyAcRea = async (action, reaction, input) => {
     console.log("Apply!!")
-    // const forJson = selectedCity;
-    // const dataAction = await applyActions(actionReaction.action, forJson);
+    if (action !== "Action" && reaction !== "Reaction") {
+        const forJson = input;
+        const dataAction = await applyActions(action, forJson);
 
-    // if (dataAction) {
-    //     applyReactions(actionReaction.reaction);
-    // }
+        if (dataAction) {
+            applyReactions(reaction);
+        }
+    }
 };
+
 function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
