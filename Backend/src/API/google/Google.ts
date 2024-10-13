@@ -7,9 +7,15 @@ const redirect_uri = 'http://localhost:8080/google/callback';
 
 module.exports = (app: Express) => {
     app.get('/google/login', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
         const scope =
             'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&access_type=offline&prompt=consent`;
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
         res.redirect(authUrl);
     });
 
@@ -40,9 +46,9 @@ module.exports = (app: Express) => {
 
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
-
+            const origin = req.query.state;
             res.redirect(
-                `http://localhost:8081/service?google_token=${access_token}`
+                `${origin}service?google_token=${access_token}`
             );
 
         } catch (error) {

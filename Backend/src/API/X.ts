@@ -7,8 +7,14 @@ const redirect_uri = 'http://localhost:8080/twitter/callback';
 
 module.exports = (app: Express) => {
     app.get('/twitter/login', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
         const scope = 'tweet.read users.read offline.access';
-        const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
+        const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
         res.redirect(authUrl);
     });
 
@@ -32,7 +38,6 @@ module.exports = (app: Express) => {
         });
 
         try {
-
             const response = await axios.post(
                 tokenUrl,
                 bodyParams,
@@ -41,10 +46,8 @@ module.exports = (app: Express) => {
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
 
-            res.redirect(
-                `http://localhost:8081/service?x_token=${access_token}`
-            );
-
+            const origin = req.query.state;
+            res.redirect(`${origin}service?x_token=${access_token}`);
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
