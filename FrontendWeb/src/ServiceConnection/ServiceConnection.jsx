@@ -61,49 +61,23 @@ const registerService = async (service) => {
 function Service() {
     useEffect(() => {
         const search = window.location.search;
-        let token_spo = window.localStorage.getItem('spotify_token=');
-        let token_x = window.localStorage.getItem('x_token=');
-        let token_goo = window.localStorage.getItem('google_token=');
-        let token_dis = window.localStorage.getItem('discord_token=');
-
-        if (!token_spo && search) {
-            const params = new URLSearchParams(search);
-            token_spo = params.get('spotify_token');
-            if (token_spo) {
-                Cookies.set('spotify_token', token_spo);
-                if (Cookies.get('spotify_token')) registerService('spotify');
+        const params = new URLSearchParams(search);
+        let token = '';
+        const serviceList = [
+            'spotify_token',
+            'x_token',
+            'google_token',
+            'discord_token',
+        ];
+        for (let i = 0; i < serviceList.length; i++) {
+            token = params.get(serviceList[i]);
+            if (token) {
+                Cookies.set(serviceList[i], token);
+                if (Cookies.get(serviceList[i]))
+                    registerService(serviceList[i]);
             }
-            window.history.replaceState(null, '', window.location.pathname);
         }
-        if (!token_x && search) {
-            const params = new URLSearchParams(search);
-            token_x = params.get('x_token');
-            if (token_x) {
-                Cookies.set('x_token', token_x);
-                if (Cookies.get('x_token')) registerService('x');
-            }
-            window.history.replaceState(null, '', window.location.pathname);
-        }
-        if (!token_goo && search) {
-            const params = new URLSearchParams(search);
-            token_goo = params.get('google_token');
-            if (token_goo) {
-                Cookies.set('google_token', token_goo);
-                if (Cookies.get('google_token')) {
-                    registerService('google');
-                }
-            }
-            window.history.replaceState(null, '', window.location.pathname);
-        }
-        if (!token_dis && search) {
-            const params = new URLSearchParams(search);
-            token_dis = params.get('discord_token');
-            if (token_dis) {
-                Cookies.set('discord_token', token_dis);
-                if (Cookies.get('discord_token')) registerService('discord');
-            }
-            window.history.replaceState(null, '', window.location.pathname);
-        }
+        window.history.replaceState(null, '', window.location.pathname);
     }, []);
 
     const handleClick = (service, origin) => {

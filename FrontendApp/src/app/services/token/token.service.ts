@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TokenService {
-    private API_URL = 'http://localhost:8080';
+    private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
 

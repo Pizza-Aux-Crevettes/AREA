@@ -5,12 +5,13 @@ import {
     HttpHeaders,
 } from '@angular/common/http';
 import { catchError, of, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RegisterService {
-    private API_URL = 'http://localhost:8080';
+    private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
     register(
