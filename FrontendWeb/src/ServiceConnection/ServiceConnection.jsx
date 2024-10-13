@@ -106,8 +106,8 @@ function Service() {
         }
     }, []);
 
-    const handleClick = (service) => {
-        window.location.href = 'http://localhost:8080/' + service + '/login';
+    const handleClick = (service, origin) => {
+        window.location.href = 'http://localhost:8080/' + service + '/login/';
     };
 
     return (
@@ -120,24 +120,44 @@ function Service() {
                             <RectangleService
                                 text="<b>Connect to<br />discord<b\>"
                                 logo={logo_discord}
-                                Click={() => handleClick('discord')}
+                                Click={() =>
+                                    handleClick(
+                                        'discord',
+                                        'http://localhost:8081'
+                                    )
+                                }
                             />
                             <RectangleService
                                 text="<b>Connect to<br />Google<b\>"
                                 logo={logo_google}
-                                Click={() => handleClick('google')}
+                                Click={() =>
+                                    handleClick(
+                                        'google',
+                                        'http://localhost:8081'
+                                    )
+                                }
                             />
                         </div>
                         <div className="column-container">
                             <RectangleService
                                 text="<b>Connect to<br />Twitter (X)<b\>"
                                 logo={logo_X}
-                                Click={() => handleClick('twitter')}
+                                Click={() =>
+                                    handleClick(
+                                        'twitter',
+                                        'http://localhost:8081'
+                                    )
+                                }
                             />
                             <RectangleService
                                 text="<b>Connect to<br />Spotify<b\>"
                                 logo={logo_spotify}
-                                Click={() => handleClick('spotify')}
+                                Click={() =>
+                                    handleClick(
+                                        'spotify',
+                                        'http://localhost:8081'
+                                    )
+                                }
                             />
                         </div>
                     </div>
