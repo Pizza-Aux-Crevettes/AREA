@@ -11,7 +11,7 @@ export class TokenService {
 
     constructor(private http: HttpClient) {}
 
-    getServicesTokens(email: any, service: string): Observable<any> {
+    getServicesTokens(email: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
@@ -22,7 +22,6 @@ export class TokenService {
                 JSON.parse(
                     JSON.stringify({
                         user_email: email,
-                        service,
                     })
                 ),
                 {
@@ -50,6 +49,47 @@ export class TokenService {
             return this.http.get<any>(`${this.API_URL}/api/user/me`, {
                 headers: headers,
             });
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+    getSubstringBeforeCharacter(word: string, char: string): string {
+        const index = word.indexOf(char);
+        return index !== -1 ? word.substring(0, index) : word;
+    }
+
+    setTokenInDb(
+        token: string,
+        userEmail: string,
+        service: string
+    ): Observable<any> {
+        const newService = this.getSubstringBeforeCharacter(service, '_');
+        console.log(service);
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/api/setNewToken`,
+                JSON.parse(
+                    JSON.stringify({
+                        userEmail: userEmail,
+                        token: token,
+                        service: newService,
+                    })
+                ),
+                {
+                    headers: headers,
+                }
+            );
         } catch (error) {
             console.error('Error :', error);
             return of({

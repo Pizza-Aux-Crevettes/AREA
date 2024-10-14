@@ -56,13 +56,11 @@ export class DashboardPage {
         ];
     }
     deleteCookies() {
-        console.log('test');
         this.localStorage.removeItem('token');
         this.router.navigate(['/login']);
     }
 
     moveToService() {
-        console.log('move to dashboard');
         this.router.navigate(['/service']);
     }
 
@@ -162,7 +160,7 @@ export class DashboardPage {
             if (token_service !== '') {
                 this.playPreview('1Fid2jjqsHViMX6xNH70hE', token_service);
             } else {
-                console.error('Please connect to spotify');
+                alert('Please connect to spotify');
             }
         } else if (reaction === 'sendEmail') {
             token_service = `${this.localStorage.getItem('google_token')}`;
@@ -174,7 +172,7 @@ export class DashboardPage {
                     .sendEmail(token_service, dest)
                     .subscribe((res) => {});
             } else {
-                console.error('Please connect to google');
+                alert('Please connect to google');
             }
         }
     }

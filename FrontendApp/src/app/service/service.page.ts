@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { TokenService } from 'src/app/services/token/token.service';
 
 @Component({
     selector: 'app-service',
@@ -18,29 +19,40 @@ export class ServicePage implements OnInit {
 
     constructor(
         private localStorage: LocalStorageService,
-        private router: Router
+        private router: Router,
+        private tokenService: TokenService
     ) {}
 
     ngOnInit() {
         const search = window.location.search;
         const params = new URLSearchParams(search);
+        let email = '';
         let token = '';
+        let userToken = this.localStorage.getItem('token');
         for (let i = 0; i < this.serviceList.length; i++) {
-            if (params.get(this.serviceList[i])) {
-                token = `${params.get(this.serviceList[i])}`;
-                this.localStorage.setItem(this.serviceList[i], token);
+            if (params.get(this.serviceList[i]) && userToken !== null) {
+                this.tokenService
+                    .getUserData(userToken)
+                    .subscribe((response) => {
+                        email = response.email;
+                        token = `${params.get(this.serviceList[i])}`;
+                        this.localStorage.setItem(this.serviceList[i], token);
+                        this.tokenService
+                            .setTokenInDb(token, email, this.serviceList[i])
+                            .subscribe((response) => {
+                                console.log(response);
+                            });
+                    });
             }
         }
     }
 
     deleteCookies() {
-        console.log('test');
         this.localStorage.removeItem('token');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
     }
 
     moveToDashboard() {
-        console.log('move to dashboard');
         this.router.navigate(['/dashboard']);
     }
 

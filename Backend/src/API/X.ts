@@ -47,7 +47,9 @@ module.exports = (app: Express) => {
             const refresh_token = response.data.refresh_token;
 
             const origin = req.query.state;
-            res.redirect(`${origin}service?x_token=${access_token}`);
+            res.redirect(
+                `${origin}service?x_token=${access_token}&x_refresh=${refresh_token}`
+            );
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
