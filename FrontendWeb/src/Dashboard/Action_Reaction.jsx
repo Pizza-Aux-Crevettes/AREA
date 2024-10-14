@@ -83,6 +83,7 @@ const playPreview = async () => {
 
 
 export const applyActions = async (action, forJson) => {
+    console.log(action, "&", forJson)
     const google_token = Cookies.get('google_token');
 
     if (action === 'Email' && google_token !== '') {

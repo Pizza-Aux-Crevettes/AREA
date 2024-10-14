@@ -60,7 +60,6 @@ function Dashboard() {
         setInput([...input, newInput]);
     };
 
-
     const inputChange = (id, value) => {
         setInput((prevInputs) =>
             prevInputs.map((inp) =>
@@ -68,7 +67,6 @@ function Dashboard() {
             )
         );
     };
-
 
     // const handleApplyClick = (id) => {
     //     setAreas((prevAreas) =>

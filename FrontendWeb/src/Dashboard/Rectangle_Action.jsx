@@ -13,17 +13,20 @@ import logo_cross from '../assets/cross.png';
 import { applyActions, applyReactions } from './Action_Reaction';
 
 
-const applyAcRea = async (action, reaction, input) => {
-    console.log("Apply!!")
+const applyAcRea = async (action, reaction, input, cityInput) => {
+    console.log("Apply!!");
+
+    const finalInput = action === "Email" ? input : cityInput;
+
     if (action !== "Action" && reaction !== "Reaction") {
-        const forJson = input;
-        const dataAction = await applyActions(action, forJson);
+        const dataAction = await applyActions(action, finalInput);
 
         if (dataAction) {
             applyReactions(reaction);
         }
     }
 };
+
 
 function RectangleDashboard({ id, onRemove, input, inputChange }) {
     const [opened, { open, close }] = useDisclosure(false);
@@ -183,7 +186,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange }) {
             <Button
                 className="button-correct"
                 onClick={() =>
-                    applyAcRea(action, reaction, input)
+                    applyAcRea(action, reaction, input, choseCity)
                 }
             >
                 Apply
