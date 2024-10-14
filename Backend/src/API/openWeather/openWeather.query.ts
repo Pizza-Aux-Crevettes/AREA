@@ -68,24 +68,54 @@ export async function getWeather(userCity: string): Promise<any> {
     }
 }
 
-export async function getAlerts(): Promise<any> {
-    const apiKey = process.env.OPENWHEATER_KEY as string;
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=47.65&lon=101.44&exclude=hourly,daily&appid=${apiKey}`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erreur: ${response.status}`);
+export async function getAlerts(userCity: string): Promise<any> {
+    interface cities {
+        city: string;
+        position: string;
+    }
+
+    let Cities: cities[] = [
+        { city: "Tokyo", position: "lat=35.67&lon=139.65" },
+        { city: "Jakarta", position: "lat=-6.20&lon=106.84" },
+        { city: "Manille", position: "lat=14.59&lon=120.98" },
+        { city: "Port-au-Prince", position: "lat=18.59&lon=-72.30" },
+        { city: "Mexico City", position: "lat=19.43&lon=-99.13" },
+        { city: "Los Angeles", position: "lat=34.05&lon=-118.24" },
+        { city: "Calcutta", position: "lat=22.57&lon=88.36" },
+        { city: "Dhaka", position: "lat=23.81&lon=90.41" },
+        { city: "Caracas", position: "lat=10.48&lon=-66.90" },
+        { city: "Christchurch", position: "lat=-43.53&lon=172.63" },
+    ];
+
+    let userPosition = "";
+
+    for (let i = 0; i < Cities.length; i++) {
+        if (Cities[i].city === userCity) {
+            userPosition = Cities[i].position;
         }
-        const data = await response.json();
-        if (data.alerts) {
-            return data.alerts;
-        } else {
-            return '';
+    }
+
+    if (userPosition !== "") {
+        const apiKey = process.env.OPENWHEATER_KEY as string;
+        const url = `https://api.openweathermap.org/data/3.0/onecall?${userPosition}&exclude=hourly,daily&appid=${apiKey}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Erreur: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.alerts) {
+                return data.alerts;
+            } else {
+                return '';
+            }
+        } catch (error) {
+            console.error(
+                "fetching data: ",
+                error
+            );
         }
-    } catch (error) {
-        console.error(
-            "fetching data: ",
-            error
-        );
+    } else {
+        console.error("No data found");
     }
 }

@@ -17,7 +17,8 @@ module.exports = (app: Express) => {
 
     app.post("/api/alerts", async (req: Request, res: Response) =>{
         res.setHeader("Content-Type", "application/json");
-        const result = await getAlerts();
+        const city = req.body;
+        const result = await getAlerts(city.forJson);
         if (result === null) {
             res.status(500).json({
                 msg: "Error when fetching alerts",
