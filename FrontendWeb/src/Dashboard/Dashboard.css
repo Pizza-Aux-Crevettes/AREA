@@ -51,14 +51,15 @@
 }
 
 .row_container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: center;
-    width: 90%;    
-    position: relative;
+    justify-items: center;
+    width: 100%;
 }
 
 .dashboard .rectangle {
+    grid-column: 2;
     background-color: #7289da;
     border: 1px solid black;
     width: 120vh;
@@ -90,6 +91,7 @@
     padding: 2%;
     box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
     position: relative;
+    grid-column: 2;
 }
 
 .dashboard .rectangle-add:hover {
@@ -114,9 +116,7 @@
     cursor: pointer;
     border: 1px solid black;
     box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
-    position: absolute;
-    /* margin-left: 95%; */
-    right: 0;
+    grid-column: 3;
 }
 
 .dashboard .button-correct:hover {
