@@ -7,8 +7,14 @@ const redirect_uri = 'http://localhost:8080/discord/callback';
 
 module.exports = (app: Express) => {
     app.get('/discord/login', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
         const scope = 'identify email';
-        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
     });
 
@@ -38,9 +44,9 @@ module.exports = (app: Express) => {
             );
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
-
+            const origin = req.query.state;
             res.redirect(
-                `http://localhost:8081/service?discord_token=${access_token}`
+                `${origin}service?discord_token=${access_token}`
             );
 
         } catch (error) {
