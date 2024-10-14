@@ -66,10 +66,6 @@ export class DashboardPage {
         this.router.navigate(['/service']);
     }
 
-    connectService(service: string) {
-        window.location.href = 'http://localhost:8080/' + service + '/login';
-    }
-
     addNewArea(): void {
         const newArea: Area = {
             id: this.areas.length + 1,
@@ -145,7 +141,6 @@ export class DashboardPage {
         me: string
     ): Observable<boolean> {
         if (action === 'Weather') {
-            console.log('tets');
             return this.weatherService.getServicesWeather(city).pipe(
                 map((response) => !!response),
                 catchError(() => of(false))
@@ -161,35 +156,38 @@ export class DashboardPage {
     }
 
     ApplyReaction(reaction: string, dest: string) {
-        let token_spotify = '';
+        let token_service = '';
         if (reaction === 'Spotify') {
-            this.tokenService
-                .getServicesTokens('areaepitech18@gmail.com', 'spotify')
-                .subscribe((response) => {
-                    token_spotify = response[0].token_spotify;
-                    console.log(token_spotify);
-                    if (token_spotify !== '') {
-                        this.playPreview(
-                            '1Fid2jjqsHViMX6xNH70hE',
-                            token_spotify
-                        );
-                    }
-                });
+            token_service = `${this.localStorage.getItem('spotify_token')}`;
+            if (token_service !== '') {
+                this.playPreview('1Fid2jjqsHViMX6xNH70hE', token_service);
+            } else {
+                console.error('Please connect to spotify');
+            }
         } else if (reaction === 'sendEmail') {
-            this.tokenService
-                .getServicesTokens('areaepitech18@gmail.com', 'google')
-                .subscribe((response) => {
-                    this.gmailService
-                        .sendEmail(response, dest)
-                        .subscribe((res) => {
-                            console.log(res);
-                        });
-                });
+            token_service = `${this.localStorage.getItem('google_token')}`;
+            if (token_service !== '') {
+                this.gmailService
+                    .sendEmail(token_service, dest)
+                    .subscribe((res) => {});
+                this.gmailService
+                    .sendEmail(token_service, dest)
+                    .subscribe((res) => {});
+            } else {
+                console.error('Please connect to google');
+            }
         }
     }
 
     ApplyArea(action: string, reaction: string, city: string | undefined) {
-        if (this.ApplyActions(action, city, 'areaepitech18@gmail.com')) {
+        let me = '';
+        let token = this.localStorage.getItem('token');
+        if (token !== null) {
+            this.tokenService.getUserData(token).subscribe((response) => {
+                me = response;
+            });
+        }
+        if (this.ApplyActions(action, city, me)) {
             this.ApplyReaction(reaction, 'areaepitech18@gmail.com');
         }
     }

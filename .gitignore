@@ -17,3 +17,5 @@ sketch
 build/
 coverage/
 .idea/
+android/
+www/

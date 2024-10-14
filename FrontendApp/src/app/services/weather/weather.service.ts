@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class WeatherService {
-    private API_URL = 'http://localhost:8080';
+    private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
     getServicesWeather(city: string | undefined): Observable<any> {
-        console.log(city);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
