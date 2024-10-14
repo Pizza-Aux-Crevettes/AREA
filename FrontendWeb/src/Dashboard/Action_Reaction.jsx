@@ -61,6 +61,26 @@ const getWeather = async (forJson) => {
     }
 };
 
+const getAlerts = async (forJson) => {
+    try {
+        const response = await fetch (
+            'http://localhost:8080/api/alerts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                forJson,
+            }),
+        });
+        const res = await response.json();
+        console.log(res)
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const playPreview = async () => {
     const response = await fetch(
         `https://api.spotify.com/v1/tracks/5Qnrgqy1pAm9GyNQOgyVFz`,
@@ -92,6 +112,9 @@ export const applyActions = async (action, forJson) => {
     } else if (action === 'Weather') {
         const res = await getWeather(forJson);
         return res;
+    } else if (action === 'Alerts') {
+        const data = await getAlerts(forJson);
+        return data;
     } else {
         return false;
     }

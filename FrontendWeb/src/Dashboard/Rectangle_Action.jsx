@@ -6,6 +6,7 @@ import {
     TextInput,
     Modal,
     MenuDivider,
+    Select
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
@@ -13,13 +14,11 @@ import logo_cross from '../assets/cross.png';
 import { applyActions, applyReactions } from './Action_Reaction';
 
 
-const applyAcRea = async (action, reaction, input, cityInput) => {
-    console.log("Apply!!");
-
-    const finalInput = action === "Email" ? input : cityInput;
+const applyAcRea = async (action, reaction, input) => {
+    console.log(input);
 
     if (action !== "Action" && reaction !== "Reaction") {
-        const dataAction = await applyActions(action, finalInput);
+        const dataAction = await applyActions(action, input);
 
         if (dataAction) {
             applyReactions(reaction);
@@ -27,12 +26,10 @@ const applyAcRea = async (action, reaction, input, cityInput) => {
     }
 };
 
-
 function RectangleDashboard({ id, onRemove, input, inputChange }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
     const [reaction, setReaction] = useState('Reaction');
-    const [choseCity, setChoseCity] = useState('City');
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
@@ -40,12 +37,12 @@ function RectangleDashboard({ id, onRemove, input, inputChange }) {
         close();
     };
 
-    const setSelectedCity = (cityName) => {
-        setChoseCity(cityName);
-    };
+    const changeActions = (action) => {
+        setAction(action);
+        inputChange(id, '');
+    }
 
     const handleWeather = () => {
-
         const cities = [
             { name: 'Paris' },
             { name: 'Marseille' },
@@ -61,30 +58,39 @@ function RectangleDashboard({ id, onRemove, input, inputChange }) {
 
         return (
             <>
-                <Menu width={200} shadow="md">
-                    <Menu.Target>
-                            <Button
-                                className="button-menu"
-                                size="lg"
-                                ref={buttonRef}
-                            >
-                                {choseCity}
-                                <IconChevronDown size={16} />
-                            </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {cities.map((city, index) => (
-                            <div key={index}>
-                                <Menu.Item
-                                    onClick={() => setSelectedCity(city.name)}
-                                >
-                                    {city.name}
-                                </Menu.Item>
-                                <MenuDivider />
-                            </div>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu>
+                <Select
+                    placeholder="City"
+                    value={input}
+                    onChange={(value) => inputChange(id, value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                />
+            </>
+        )
+    }
+
+    const handleAlerts = () => {
+
+        const cities = [
+            { name: 'Tokyo' },
+            { name: 'Jakarta' },
+            { name: 'Manille' },
+            { name: 'Port-au-Prince' },
+            { name: 'Mexico City' },
+            { name: 'Los Angeles' },
+            { name: 'Calcutta' },
+            { name: 'Dhaka' },
+            { name: 'Caracas' },
+            { name: 'Christchurch' },
+        ];
+
+        return (
+            <>
+                <Select
+                    placeholder="City"
+                    value={input}
+                    onChange={(value) => inputChange(id, value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                />
             </>
         )
     }
@@ -118,46 +124,51 @@ function RectangleDashboard({ id, onRemove, input, inputChange }) {
                 <div className='cont-rect'>
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {action}
-                                    <IconChevronDown size={16} />
-                                </Button>
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
+                            >
+                                {action}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setAction('Weather')}>
+                            <Menu.Item onClick={() => changeActions('Weather')}>
                                 When it rains
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setAction('Email')}>
+                            <Menu.Item onClick={() => changeActions('Email')}>
                                 When I recieve an email
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeActions('Alerts')}>
+                                When it is alerts
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
+                    {action === 'Alerts' ? (
+                        handleAlerts()
+                    ) : (<></>)}
                     {action === 'Weather' ? (
                         handleWeather()
                     ) : (
-                        action === 'Action' ? (
-                            <></>
-                        ) : (
+                        action === 'Email' ? (
                             handleInput()
-                        )
+                        ) : (<></>)
                     )}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {reaction}
-                                    <IconChevronDown size={16} />
-                                </Button>
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
+                            >
+                                {reaction}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
 
                         <Menu.Dropdown>
@@ -186,7 +197,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange }) {
             <Button
                 className="button-correct"
                 onClick={() =>
-                    applyAcRea(action, reaction, input, choseCity)
+                    applyAcRea(action, reaction, input)
                 }
             >
                 Apply
