@@ -43,6 +43,9 @@ function Title({ title }) {
         Cookies.set('token', '', { expires: -1 });
         Cookies.set('spotify_token', '', { expires: -1 });
         Cookies.set('google_token', '', { expires: -1 });
+        Cookies.set('discord_token', '', { expires: -1 });
+        Cookies.set('x_token', '', { expires: -1 });
+
         setTimeout(() => {
             window.location.reload();
         }, 1000);

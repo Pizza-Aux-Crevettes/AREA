@@ -9,6 +9,12 @@ function Login() {
     const [password, setPassword] = useState('');
     const [notLogin, setNotLogin] = useState(false);
     const [loading, setLoading] = useState(false);
+    const services = [
+        'spotify_token',
+        'google_token',
+        'x_token',
+        'discord_token',
+    ];
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -22,9 +28,9 @@ function Login() {
         }
     }
 
-    function LoginUser() {
+    async function LoginUser() {
         setLoading(true);
-        fetch('http://localhost:8080/api/login', {
+        const resultLogin = await fetch('http://localhost:8080/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,20 +39,32 @@ function Login() {
                 email,
                 password,
             }),
-        })
-            .then((response) => {
-                setLoading(false);
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    setNotLogin(true);
+        });
+        setLoading(false);
+
+        if (resultLogin.ok) {
+            const json = await resultLogin.json();
+            Cookies.set('token', json.own_token);
+            const resultToken = await fetch(
+                'http://localhost:8080/api/getToken',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_email: email,
+                    }),
                 }
-            })
-            .then((json) => {
-                Cookies.set('token', json.own_token);
-                window.location.reload();
-            })
-            .then(() => {});
+            );
+            const data = await resultToken.json();
+            for (let i = 0; i < services.length; i++) {
+                Cookies.set(services[i], data[0][`${services[i]}`]);
+            }
+            window.location.reload();
+        } else {
+            setNotLogin(true);
+        }
     }
 
     return (

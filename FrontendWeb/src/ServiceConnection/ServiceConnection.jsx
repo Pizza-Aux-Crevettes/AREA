@@ -18,7 +18,10 @@ function RectangleService({ text, logo, Click }) {
         </div>
     );
 }
-
+const getSubstringBeforeCharacter = (word, char) => {
+    const index = word.indexOf(char);
+    return index !== -1 ? word.substring(0, index) : word;
+};
 const registerService = async (service) => {
     try {
         const response = await fetch('http://localhost:8080/api/user/me', {
@@ -34,8 +37,9 @@ const registerService = async (service) => {
         const json = await response.json();
 
         if (json && json.email) {
-            const token = Cookies.get(service + '_token');
+            const token = Cookies.get(service);
             const userEmail = json.email;
+            const newService = getSubstringBeforeCharacter(service, '_');
             fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
                 headers: {
@@ -44,7 +48,7 @@ const registerService = async (service) => {
                 body: JSON.stringify({
                     userEmail: userEmail,
                     token: token,
-                    service: service,
+                    service: newService,
                 }),
             })
                 .then((response) => {
