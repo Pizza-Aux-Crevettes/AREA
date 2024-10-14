@@ -66,23 +66,6 @@ function Dashboard() {
         setInput([...input, newInput]);
     };
 
-    useEffect(() => {
-        try {
-            fetch('http://localhost:8080/api/alerts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => {
-                    console.log(response.json);
-                })
-                .then(() => { });
-        } catch (error) {
-            console.error('An error occured', error);
-        }
-    }, []);
-
     const inputChange = (id, value) => {
         setInput((prevInputs) =>
             prevInputs.map((inp) =>
