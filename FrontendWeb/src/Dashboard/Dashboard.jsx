@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Button,
 } from '@mantine/core';
@@ -61,11 +61,27 @@ function Dashboard() {
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
         // const newArea = { id: maxId + 1, buttonText: 'Apply' };
         const newArea = { id: maxId + 1 };
-        const newInput = {content: '', id: maxId + 1};
+        const newInput = { content: '', id: maxId + 1 };
         setAreas([...areas, newArea]);
         setInput([...input, newInput]);
     };
 
+    useEffect(() => {
+        try {
+            fetch('http://localhost:8080/api/alerts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => {
+                    console.log(response.json);
+                })
+                .then(() => { });
+        } catch (error) {
+            console.error('An error occured', error);
+        }
+    }, []);
 
     const inputChange = (id, value) => {
         setInput((prevInputs) =>

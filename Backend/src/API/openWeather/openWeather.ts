@@ -1,5 +1,5 @@
 import { Express, Request, Response } from "express";
-import { getWeather } from "./openWeather.query";
+import { getWeather, getAlerts } from "./openWeather.query";
 
 module.exports = (app: Express) => {
     app.post("/api/Weather", async (req: Request, res: Response) => {
@@ -14,4 +14,16 @@ module.exports = (app: Express) => {
         }
         res.status(200).json(result);
     });
+
+    app.post("/api/alerts", async (req: Request, res: Response) =>{
+        res.setHeader("Content-Type", "application/json");
+        const result = await getAlerts();
+        if (result === null) {
+            res.status(500).json({
+                msg: "Error when fetching alerts",
+            });
+            return;
+        }
+        res.status(200).json(result);
+    })
 };

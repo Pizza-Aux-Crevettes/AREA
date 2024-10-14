@@ -67,3 +67,20 @@ export async function getWeather(userCity: string): Promise<any> {
         console.error("No data found");
     }
 }
+
+export async function getAlerts(): Promise<any> {
+    const apiKey = process.env.OPENWHEATER_KEY as string;
+    const url = `https://api.openweathermap.org/alerts/1.0?location={"type":"Polygon","coordinates":[[[109.072266,-9.62148],[108.896484,-44.787594],[157.060547,-44.787594],[157.763672,-9.62148],[109.072266,-9.62148]]]}&appid=${apiKey}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Erreur: ${response.status}`);
+        }
+        const data = await response.json();
+    } catch (error) {
+        console.error(
+            "fetching data: ",
+            error
+        );
+    }
+}
