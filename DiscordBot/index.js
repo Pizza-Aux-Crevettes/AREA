@@ -14,7 +14,6 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Charger les commandes
 const foldersPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(foldersPath).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -25,25 +24,20 @@ for (const file of commandFiles) {
     }
 }
 
-// Événement quand le bot est prêt
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
 });
 
-// Événement pour gérer les interactions
-client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
+client.on('messageCreate', async message => {
+    if (message.author.bot) return;
 
-    const command = client.commands.get(interaction.commandName);
-    if (!command) return;
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        await interaction.reply({ content: 'Une erreur est survenue lors de l\'exécution de la commande.', ephemeral: true });
+    if (message.content.includes("reply")) {
+        const cleanedMessage = message.content.replace(/reply/i, '').trim();
+        await message.reply(`Vous avez dit : "${cleanedMessage}"`)
+            .then(() => console.log(`Replied to message successfully`))
+            .catch(console.error);
     }
 });
 
-// Connexion du bot
+
 client.login(process.env.DISCORD_TOKEN);

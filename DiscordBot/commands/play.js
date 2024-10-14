@@ -21,7 +21,6 @@ module.exports = {
                 adapterCreator: interaction.guild.voiceAdapterCreator,
             });
 
-            // Audio file URL
             const audioUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'; // Your audio file URL
             const resource = createAudioResource(audioUrl);
     
