@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import {
-    Button,
-} from '@mantine/core';
+import { Button } from '@mantine/core';
 import Title from '../Title/Title';
 import './Dashboard.css';
 import logo_plus from '../assets/plus.png';
@@ -49,12 +47,8 @@ function AddRectangle({ addNewArea }) {
 // }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([]);
-    const [actionReaction, setActionReaction] = useState({
-        action: '',
-        reaction: '',
-    });
-    const [input, setInput] = useState([]);
+    const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }]);
+    const [input, setInput] = useState([ { id: 1, content: '' }, { id: 2, content: '' }]);
 
     const addNewArea = () => {
         const maxId =
@@ -121,7 +115,6 @@ function Dashboard() {
                                         onRemove={removeArea}
                                         input={input.find((inp) => inp.id === area.id)?.content || ''}
                                         inputChange={inputChange}
-                                        actionReaction={actionReaction}
                                     />
                                 </div>
                             ))}
