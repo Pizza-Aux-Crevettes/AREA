@@ -6,6 +6,7 @@ import logo_X from '../assets/X.png';
 import logo_spotify from '../assets/spotify.png';
 import logo_google from '../assets/google.png';
 import './ServiceConnection.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function RectangleService({ text, logo, Click }) {
     return (
@@ -59,7 +60,14 @@ const registerService = async (service) => {
 };
 
 function Service() {
+    const navigate = useNavigate();
+    const location = useLocation();
     useEffect(() => {
+        console.log('COOKIES = ', Cookies.get('token'));
+        if (Cookies.get('token') === null) {
+            navigate('/');
+            location.pathname = '/';
+        }
         const search = window.location.search;
         const params = new URLSearchParams(search);
         let token = '';
