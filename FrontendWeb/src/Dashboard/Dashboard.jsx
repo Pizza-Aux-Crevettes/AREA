@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Button,
 } from '@mantine/core';
@@ -61,11 +61,10 @@ function Dashboard() {
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
         // const newArea = { id: maxId + 1, buttonText: 'Apply' };
         const newArea = { id: maxId + 1 };
-        const newInput = {content: '', id: maxId + 1};
+        const newInput = { content: '', id: maxId + 1 };
         setAreas([...areas, newArea]);
         setInput([...input, newInput]);
     };
-
 
     const inputChange = (id, value) => {
         setInput((prevInputs) =>
