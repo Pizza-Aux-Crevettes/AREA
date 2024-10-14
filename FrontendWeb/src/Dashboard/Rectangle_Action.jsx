@@ -86,76 +86,78 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                     <p>Are you sure you want to close this area?</p>
                     <Button onClick={handleRemove}>Yes</Button>
                 </Modal>
-                <Menu width={200} shadow="md">
-                    <Menu.Target>
-                        <Tooltip
-                            label={action}
-                            disabled={!isOverflowing}
-                            position="bottom"
-                            withArrow
-                        >
-                            <Button
-                                className="button-menu"
-                                size="lg"
-                                ref={buttonRef}
+                <div className='cont-rect'>
+                    <Menu width={200} shadow="md">
+                        <Menu.Target>
+                            <Tooltip
+                                label={action}
+                                disabled={!isOverflowing}
+                                position="bottom"
+                                withArrow
                             >
-                                {action}
-                                <IconChevronDown size={16} />
-                            </Button>
-                        </Tooltip>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item onClick={() => setAction('Weather')}>
-                            When it rains
-                        </Menu.Item>
-                        <MenuDivider />
-                        <Menu.Item onClick={() => setAction('Email')}>
-                            When I recieve an email
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
+                                <Button
+                                    className="button-menu"
+                                    size="lg"
+                                    ref={buttonRef}
+                                >
+                                    {action}
+                                    <IconChevronDown size={16} />
+                                </Button>
+                            </Tooltip>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={() => setAction('Weather')}>
+                                When it rains
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => setAction('Email')}>
+                                When I recieve an email
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
 
-                {action === 'Weather' ? (
-                    handleWeather()
-                ) : (
-                    action === 'Action' ? (
-                        <></>
+                    {action === 'Weather' ? (
+                        handleWeather()
                     ) : (
-                        handleInput(action)
-                    )
-                )}
+                        action === 'Action' ? (
+                            <></>
+                        ) : (
+                            handleInput(action)
+                        )
+                    )}
 
-                <Menu width={200} shadow="md">
-                    <Menu.Target>
-                        <Tooltip
-                            label={reaction}
-                            disabled={!isOverflowing}
-                            position="bottom"
-                            withArrow
-                        >
-                            <Button
-                                className="button-menu"
-                                size="lg"
-                                ref={buttonRef}
+                    <Menu width={200} shadow="md">
+                        <Menu.Target>
+                            <Tooltip
+                                label={reaction}
+                                disabled={!isOverflowing}
+                                position="bottom"
+                                withArrow
                             >
-                                {reaction}
-                                <IconChevronDown size={16} />
-                            </Button>
-                        </Tooltip>
-                    </Menu.Target>
+                                <Button
+                                    className="button-menu"
+                                    size="lg"
+                                    ref={buttonRef}
+                                >
+                                    {reaction}
+                                    <IconChevronDown size={16} />
+                                </Button>
+                            </Tooltip>
+                        </Menu.Target>
 
-                    <Menu.Dropdown>
-                        <Menu.Item onClick={() => setReaction('Spotify')}>
-                            sad music is played
-                        </Menu.Item>
-                        <MenuDivider />
-                        <Menu.Item
-                            onClick={() => setReaction('sendEmail')}
-                        >
-                            send an email
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={() => setReaction('Spotify')}>
+                                sad music is played
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item
+                                onClick={() => setReaction('sendEmail')}
+                            >
+                                send an email
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                </div>
                 <button className="button-cross" onClick={open}>
                     <img src={logo_cross} width={35} height={35}></img>
                 </button>
