@@ -33,7 +33,7 @@ require('./routes/register/register')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
 require('./API/google/gmail/Gmail')(app);
-require('./API/Discord')(app);
+require('./API/Discord/Discord')(app);
 require('./API/X')(app);
 require('./API/openWeather/openWeather')(app);
 
