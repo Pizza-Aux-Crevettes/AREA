@@ -1,18 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import {
-    Menu,
     Button,
-    TextInput,
-    Tooltip,
-    Modal,
-    MenuDivider,
 } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
 import Title from '../Title/Title';
 import './Dashboard.css';
 import logo_plus from '../assets/plus.png';
-import logo_cross from '../assets/cross.png';
-import Cookies from 'cookies-js';
 import RectangleDashboard from "./Rectangle_Action.jsx"
 
 function AddRectangle({ addNewArea }) {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import {
     Menu,
@@ -9,12 +9,9 @@ import {
     MenuDivider,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
-import Title from '../Title/Title';
 import './Dashboard.css';
-import logo_plus from '../assets/plus.png';
 import logo_cross from '../assets/cross.png';
-import Cookies from 'cookies-js';
-import {applyActions, applyReactions} from './Action_Reaction';
+import { applyActions, applyReactions } from './Action_Reaction';
 
 
 const applyAcRea = async (action, reaction, input) => {
@@ -33,7 +30,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
     const [reaction, setReaction] = useState('Reaction');
-    const [isOverflowing, setIsOverflowing] = useState(false);
+    const [isOverflowing] = useState(false);
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
@@ -65,10 +62,10 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
         )
     }
 
-    const handleInput = (type, input) => {
+    const handleInput = (type) => {
         return (
             <>
-                <input
+                <TextInput
                     placeholder={type}
                     value={input}
                     onChange={(e) => inputChange(id, e.target.value)}
@@ -120,7 +117,13 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
 
                 {action === 'Weather' ? (
                     handleWeather()
-                ) : (<></>)}
+                ) : (
+                    action === 'Action' ? (
+                        <></>
+                    ) : (
+                        handleInput(action)
+                    )
+                )}
 
                 <Menu width={200} shadow="md">
                     <Menu.Target>
@@ -153,11 +156,6 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
-                {/* <ActionReaction
-                setActionReaction={setActionReaction}
-                selectedCity={selectedCity}
-                setSelectedCity={setSelectedCity}
-            /> */}
                 <button className="button-cross" onClick={open}>
                     <img src={logo_cross} width={35} height={35}></img>
                 </button>
@@ -171,7 +169,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
             <Button
                 className="button-correct"
                 onClick={() =>
-                    applyAcRea()
+                    applyAcRea(action, reaction, input)
                 }
             >
                 Apply
