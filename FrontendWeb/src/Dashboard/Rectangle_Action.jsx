@@ -41,6 +41,11 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
         inputChange(id, 'contentAct', '');
     };
 
+    const changeReactions = (reaction) => {
+        setReaction(reaction);
+        inputChange(id, 'contentReact', '');
+    }
+
     const handleInput = (field, fieldName) => {
         return (
             <>
@@ -151,7 +156,7 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
                     {action === 'Email' ? handleInput(contentAct, 'contentAct') : null}
-                    {reaction === 'Tweet' ? handleInput(contentReact, 'contentReact') : null}
+                    {reaction === 'Tweet' || reaction === "MP" ? handleInput(contentReact, 'contentReact') : null}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
@@ -166,16 +171,20 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setReaction('Spotify')}>
+                            <Menu.Item onClick={() => changeReactions('Spotify')}>
                                 sad music is played
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('sendEmail')}>
+                            <Menu.Item onClick={() => changeReactions('sendEmail')}>
                                 send an email
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('Tweet')}>
+                            <Menu.Item onClick={() => changeReactions('Tweet')}>
                                 tweet your input
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeReactions('MP')}>
+                                send a mp
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
