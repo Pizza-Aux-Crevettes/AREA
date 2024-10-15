@@ -55,4 +55,47 @@ module.exports = (app: Express) => {
             res.send('Error during token retrieval');
         }
     });
+
+    app.get('/twitter/refresh_token', async (req, res) => {
+        const refresh_token = req.query.refresh_token || null;
+
+        const authOptions = {
+            url: 'https://api.twitter.com/2/oauth2/token',
+            headers: {
+                Authorization:
+                    'Basic ' +
+                    Buffer.from(`${client_id}:${client_secret}`).toString(
+                        'base64'
+                    ),
+            },
+            form: {
+                grant_type: 'refresh_token',
+                refresh_token: refresh_token,
+                client_id: client_id,
+                client_secret: client_secret,
+            },
+            json: true,
+        };
+
+        try {
+            const response = await axios.post(authOptions.url, null, {
+                headers: authOptions.headers,
+                params: authOptions.form,
+            });
+
+            const new_access_token = response.data.access_token;
+            const expires_in = response.data.expires_in;
+            const new_refresh_token =
+                response.data.refresh_token || refresh_token;
+
+            res.json({
+                access_token: new_access_token,
+                refresh_token: new_refresh_token,
+                expires_in: expires_in,
+            });
+        } catch (error) {
+            console.error('Error refreshing access token:', error);
+            res.status(500).send('Erreur lors du rafraîchissement du token');
+        }
+    });
 };
