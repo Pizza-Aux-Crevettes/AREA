@@ -34,6 +34,7 @@
                 >
                   <ion-select-option value="Weather">When it rains</ion-select-option>
                   <ion-select-option value="Email">When I receive an email</ion-select-option>
+                  <ion-select-option value="Alerts">When it is an alert</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
@@ -54,7 +55,23 @@
               </ion-list>
             </div>
 
-            <div *ngIf="area.selectedAction !== 'Weather'" class="input-div">
+            <div *ngIf="area.selectedAction === 'Alerts'" class="city-div">
+              <ion-list class="city-list">
+                <ion-item>
+                  <ion-select
+                    aria-label="City"
+                    interface="popover"
+                    placeholder="City"
+                    (ionChange)="onSelectCity($event, area)"
+                    [(ngModel)]="area.selectedCity"
+                  >
+                    <ion-select-option *ngFor="let city of cities_alerts" [value]="city.name">{{ city.name }}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+            </div>
+
+            <div *ngIf="area.selectedAction !== 'Weather' && area.selectedAction !== 'Alerts'" class="input-div">
               <ion-input
                 class="input-balise"
                 size="small"
