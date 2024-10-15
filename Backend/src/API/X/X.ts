@@ -1,4 +1,5 @@
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
+import { sendTweet } from './X.query';
 import axios from 'axios';
 
 const client_id = process.env.X_CLIENT_ID!;
@@ -97,5 +98,17 @@ module.exports = (app: Express) => {
             console.error('Error refreshing access token:', error);
             res.status(500).send('Erreur lors du rafraîchissement du token');
         }
+    });
+    app.post('/twitter/send', async (req: Request, res: Response) => {
+        res.setHeader('Content-Type', 'application/json');
+        const info = req.body;
+        const result = await sendTweet(info.token, info.tweetText);
+        if (result === null) {
+            res.status(500).json({
+                msg: 'Error when sending the tweet',
+            });
+            return;
+        }
+        res.status(200).json(result);
     });
 };
