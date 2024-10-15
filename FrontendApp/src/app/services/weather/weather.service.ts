@@ -18,8 +18,39 @@ export class WeatherService {
         const forJson = city;
 
         try {
-            return this.http.post<any>(
+            console.log(forJson, `${this.API_URL}/api/Weather`)
+            const res = this.http.post<any>(
                 `${this.API_URL}/api/Weather`,
+                JSON.stringify({
+                    forJson,
+                }),
+                {
+                    headers: headers,
+                }
+            );
+            return res
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+
+    getServicesAlerts(city: string | undefined): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+
+        const forJson = city;
+
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/api/alerts`,
                 JSON.stringify({
                     forJson,
                 }),
