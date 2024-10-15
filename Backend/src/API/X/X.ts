@@ -99,7 +99,7 @@ module.exports = (app: Express) => {
             res.status(500).send('Erreur lors du rafraîchissement du token');
         }
     });
-    app.post('/twitter/send', async (req: Request, res: Response) => {
+    app.post('/api/twitter/send', async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const info = req.body;
         const result = await sendTweet(info.token, info.tweetText);

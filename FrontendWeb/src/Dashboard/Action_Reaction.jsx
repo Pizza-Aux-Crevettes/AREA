@@ -25,7 +25,7 @@ const getGmailMsg = async (token) => {
 
 const SendEmail = async (token, dest) => {
     try {
-        const response = await fetch('http://localhost:3000/api/gmail/send', {
+        const response = await fetch('http://localhost:8080/api/gmail/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,6 +41,26 @@ const SendEmail = async (token, dest) => {
         console.log(error);
     }
 };
+
+const SendTweet = async (token, tweetText) => {
+    try {
+        const response = await fetch('http://localhost:8080/api/twitter/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token,
+                tweetText,
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 
 const getWeather = async (forJson) => {
     try {
@@ -64,7 +84,7 @@ const getWeather = async (forJson) => {
 const getAlerts = async (forJson) => {
     try {
         const response = await fetch (
-            'http://localhost:8080/api/alerts', {
+           'http://localhost:8080/api/alerts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,12 +140,15 @@ export const applyActions = async (action, forJson) => {
     }
 };
 
-export const applyReactions = (reaction) => {
+export const applyReactions = (reaction, contentReact) => {
     const google_token = Cookies.get('google_token');
+    const x_token = Cookies.get('x_token');
     if (reaction === 'Spotify') {
         playPreview();
     } else if (reaction === 'sendEmail') {
         SendEmail(google_token, "anast.bouby@icloud.com");
+    } else if (reaction === 'Tweet') {
+        SendTweet(x_token, contentReact);
     }
     return;
 };
