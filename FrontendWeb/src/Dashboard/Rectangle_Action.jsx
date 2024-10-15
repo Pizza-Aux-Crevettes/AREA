@@ -4,9 +4,9 @@ import {
     Menu,
     Button,
     TextInput,
-    Tooltip,
     Modal,
     MenuDivider,
+    Select
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
@@ -15,10 +15,10 @@ import { applyActions, applyReactions } from './Action_Reaction';
 
 
 const applyAcRea = async (action, reaction, input) => {
-    console.log("Apply!!")
+    console.log(input);
+
     if (action !== "Action" && reaction !== "Reaction") {
-        const forJson = input;
-        const dataAction = await applyActions(action, forJson);
+        const dataAction = await applyActions(action, input);
 
         if (dataAction) {
             applyReactions(reaction);
@@ -26,11 +26,10 @@ const applyAcRea = async (action, reaction, input) => {
     }
 };
 
-function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }) {
+function RectangleDashboard({ id, onRemove, input, inputChange }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
     const [reaction, setReaction] = useState('Reaction');
-    const [isOverflowing] = useState(false);
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
@@ -38,35 +37,71 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
         close();
     };
 
+    const changeActions = (action) => {
+        setAction(action);
+        inputChange(id, '');
+    }
+
     const handleWeather = () => {
+        const cities = [
+            { name: 'Paris' },
+            { name: 'Marseille' },
+            { name: 'Lyon' },
+            { name: 'Toulouse' },
+            { name: 'Nice' },
+            { name: 'Nantes' },
+            { name: 'Montpellier' },
+            { name: 'Strasbourg' },
+            { name: 'Bordeaux' },
+            { name: 'Lille' },
+        ];
 
         return (
             <>
-                <select
+                <Select
+                    placeholder="City"
                     value={input}
-                    onChange={(e) => inputChange(id, e.target.value)}
-                >
-                    <option value="" disabled hidden>Cities</option>
-                    <option value='Paris'>Paris</option>
-                    <option value='Marseille'>Marseille</option>
-                    <option value='Lyon'>Lyon</option>
-                    <option value='Toulouse'>Toulouse</option>
-                    <option value='Nice'>Nice</option>
-                    <option value='Nantes'>Nantes</option>
-                    <option value='Montpellier'>Montpellier</option>
-                    <option value='Strasbourg'>Strasbourg</option>
-                    <option value='Bordeaux'>Bordeaux</option>
-                    <option value='Lille'>Lille</option>
-                </select>
+                    onChange={(value) => inputChange(id, value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                />
             </>
         )
     }
 
-    const handleInput = (type) => {
+    const handleAlerts = () => {
+
+        const cities = [
+            { name: 'Tokyo' },
+            { name: 'Jakarta' },
+            { name: 'Manille' },
+            { name: 'Port-au-Prince' },
+            { name: 'Mexico City' },
+            { name: 'Los Angeles' },
+            { name: 'Calcutta' },
+            { name: 'Dhaka' },
+            { name: 'Caracas' },
+            { name: 'Christchurch' },
+        ];
+
+        return (
+            <>
+                <Select
+                    placeholder="City"
+                    value={input}
+                    onChange={(value) => inputChange(id, value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                />
+            </>
+        )
+    }
+
+    const handleInput = () => {
         return (
             <>
                 <TextInput
-                    placeholder={type}
+                    radius="md"
+                    size="lg"
+                    placeholder={"Enter your input"}
                     value={input}
                     onChange={(e) => inputChange(id, e.target.value)}
                 />
@@ -89,60 +124,51 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                 <div className='cont-rect'>
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Tooltip
-                                label={action}
-                                disabled={!isOverflowing}
-                                position="bottom"
-                                withArrow
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
                             >
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {action}
-                                    <IconChevronDown size={16} />
-                                </Button>
-                            </Tooltip>
+                                {action}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setAction('Weather')}>
+                            <Menu.Item onClick={() => changeActions('Weather')}>
                                 When it rains
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setAction('Email')}>
+                            <Menu.Item onClick={() => changeActions('Email')}>
                                 When I recieve an email
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeActions('Alerts')}>
+                                When it is alerts
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
+                    {action === 'Alerts' ? (
+                        handleAlerts()
+                    ) : (<></>)}
                     {action === 'Weather' ? (
                         handleWeather()
                     ) : (
-                        action === 'Action' ? (
-                            <></>
-                        ) : (
-                            handleInput(action)
-                        )
+                        action === 'Email' ? (
+                            handleInput()
+                        ) : (<></>)
                     )}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Tooltip
-                                label={reaction}
-                                disabled={!isOverflowing}
-                                position="bottom"
-                                withArrow
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
                             >
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {reaction}
-                                    <IconChevronDown size={16} />
-                                </Button>
-                            </Tooltip>
+                                {reaction}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
 
                         <Menu.Dropdown>
