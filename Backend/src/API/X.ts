@@ -13,7 +13,7 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        const scope = 'tweet.read users.read offline.access';
+        const scope = 'tweet.read users.read tweet.write offline.access';
         const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
         res.redirect(authUrl);
     });
