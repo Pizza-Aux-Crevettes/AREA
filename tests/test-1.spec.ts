@@ -10,8 +10,26 @@ test.beforeEach(async ({ page }) => {
   await page.getByRole('heading', { name: 'Dashboard' }).isVisible();
 });
 
-test.describe('check weather and spotify work', () => {
+test.describe('check weather raining and spotify work', () => {
+
+  // inscription login (X, google, spotify...)
+
+  test('connect to spotify', async ({ page }) => {
+    await page.getByRole('img', { name: 'Menu logo' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Dashboard' })).toBeVisible();
+    await page.getByRole('menuitem', { name: 'Service Connection' }).click();
+    await expect(page.getByRole('heading', { name: 'Service Connection' })).toBeVisible();
+    await page.getByRole('button', { name: 'Connect to Spotify' }).click();
+    await page.getByTestId('login-username').click();
+    await page.getByTestId('login-username').fill('areaepitech18@gmail.com');
+    await page.getByTestId('login-password').click();
+    await page.getByTestId('login-password').fill('AreaEpitech31.');
+    await page.getByTestId('login-button').click();
+  });
+
   test('select weather action', async ({ page }) => {
+    await page.getByRole('img', { name: 'Menu logo' }).click();
+    await page.getByRole('menuitem', { name: 'Dashboard' }).click();
     await page.getByRole('button', { name: 'Action', exact: true }).first().click();
     await expect(page.getByRole('menuitem', { name: 'When I recieve an email' })).toBeVisible();
     await page.getByRole('menuitem', { name: 'When it rains' }).click();
@@ -34,9 +52,24 @@ test.describe('check weather and spotify work', () => {
 
   test('apply weather/spotify', async ({ page }) => {
     await page.getByRole('button', { name: 'Apply' }).first().click();
+    //maybe check log
   });
+
 });
 
+test.describe('check weather alert and tweet', () => {
+
+});
+
+test.describe('check actualities send mail', () => {
+
+});
+
+test.describe('check mail reiceved send discord private message', () => {
+
+});
+
+//
 test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Apply' }).first().click();
   await page.getByRole('button', { name: 'City' }).click();
@@ -58,6 +91,7 @@ test('test', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Connect to Google' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Connect to Spotify' })).toBeVisible();
 
+  await expect(page.getByRole('heading', { name: 'Service Connection' })).toBeVisible();
   await page.getByRole('button', { name: 'Connect to Spotify' }).click();
   await page.getByTestId('login-username').click();
   await page.getByTestId('login-username').fill('areaepitech18@gmail.com');
