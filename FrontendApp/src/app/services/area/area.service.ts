@@ -15,7 +15,7 @@ export class AreaService {
         action: string,
         reaction: string,
         inputAct: string | undefined,
-        inputReact: string
+        inputReact: string | undefined
     ): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
