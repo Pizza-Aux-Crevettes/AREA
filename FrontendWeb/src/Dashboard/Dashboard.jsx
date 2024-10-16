@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mantine/core';
 import Title from '../Title/Title';
 import './Dashboard.css';
@@ -8,7 +8,7 @@ import Cookies from 'cookies-js';
 
 function AddRectangle({ addNewArea }) {
     return (
-        <div className='row_container'>
+        <div className="row_container">
             <Button className="rectangle-add" onClick={addNewArea}>
                 <img src={logo_plus} alt="Add new area" width={50} />
             </Button>
@@ -16,87 +16,51 @@ function AddRectangle({ addNewArea }) {
     );
 }
 
-// function StopArea({ areaId, onConfirm }) {
-//     const [opened, setOpened] = useState(false);
-
-//     const handleCloseModal = () => setOpened(false);
-//     const handleConfirm = () => {
-//         onConfirm(areaId);
-//         setOpened(false);
-//     };
-
-//     return (
-//         <>
-//             <Button
-//                 className="button-correct"
-//                 onClick={() => setOpened(true)}
-//             >
-//                 ■ Stop
-//             </Button>
-
-//             <Modal
-//                 opened={opened}
-//                 onClose={handleCloseModal}
-//                 title="Stopping area"
-//                 centered
-//             >
-//                 <p>Are you sure you want to stop this area?</p>
-//                 <Button onClick={handleConfirm}>Yes</Button>
-//             </Modal>
-//         </>
-//     );
-// }
-
 function Dashboard() {
     const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }]);
-    const [input, setInput] = useState([ { id: 1, contentAct: '', contentReact: '' }, { id: 2, contentAct: '', contentReact: '' }]);
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        fetch('http://localhost:8080/api/getArea', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token,
+            }),
+        })
+            .then((response) => {
+                console.log(response);
+                return response.json();
+            })
+            .then((json) => {
+                console.log(json);
+                setAreas(json);
+                console.log(areas);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
     const addNewArea = () => {
-
-        const maxId = areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
-        // const newArea = { id: maxId + 1, buttonText: 'Apply' };
-        const newArea = { id: maxId + 1 };
-        const newInput = { contentAct: '', contentReact: '', id: maxId + 1 };
+        const maxId =
+            areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+        const newArea = { id: maxId + 1, action: "Select action", reaction: "Select reaction", inputAction: '', inputReaction: '' };
         setAreas([...areas, newArea]);
-        setInput([...input, newInput]);
     };
 
     const inputChange = (id, field, value) => {
-        setInput((prevInputs) =>
+        setAreas((prevInputs) =>
             prevInputs.map((inp) =>
                 inp.id === id ? { ...inp, [field]: value } : inp
             )
         );
     };
 
-    // const handleApplyClick = (id) => {
-    //     setAreas((prevAreas) =>
-    //         prevAreas.map((area) =>
-    //             area.id === id
-    //                 ? {
-    //                     ...area,
-    //                     buttonText:
-    //                         area.buttonText === 'Apply' ? '■ Stop' : 'Apply',
-    //                 }
-    //                 : area
-    //         )
-    //     );
-
-    //     const area = areas.find((area) => area.id === id);
-    //     if (area.buttonText === 'Apply') {
-    //         applyAcRea(actionReaction, selectedCity);
-    //     }
-    // };
-
-    // const handleStopArea = (id) => {
-    //     setAreas((prevAreas) =>
-    //         prevAreas.map((area) =>
-    //             area.id === id ? { ...area, buttonText: 'Apply' } : area
-    //         )
-    //     );
-    // };
-
     const removeArea = (id, action, reaction, inputAction, inputReaction) => {
+        console.log(action, reaction, inputAction, inputReaction);
         fetch('http://localhost:8080/api/delArea', {
             method: 'POST',
             headers: {
@@ -131,10 +95,11 @@ function Dashboard() {
                                     <RectangleDashboard
                                         id={area.id}
                                         onRemove={removeArea}
-
-                                        contentAct={input.find((inp) => inp.id === area.id)?.contentAct || ''}
-                                        contentReact={input.find((inp) => inp.id === area.id)?.contentReact || ''}
+                                        contentAct={area.action}
+                                        contentReact={area.reaction}
                                         inputChange={inputChange}
+                                        inputContentAct={area.inputAction}
+                                        inputContentReact={area.inputReaction}
                                     />
                                 </div>
                             ))}
