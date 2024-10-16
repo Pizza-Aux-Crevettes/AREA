@@ -11,7 +11,7 @@ export async function manageArea(): Promise<void> {
                 config.inputAction,
                 config.userEmail
             );
-            if (result || result !== '') {
+            if (result && result !== '') {
                 await setReaction(
                     config.reaction,
                     config.inputReaction,
