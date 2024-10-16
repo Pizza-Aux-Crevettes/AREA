@@ -6,12 +6,11 @@ import {
     TextInput,
     Modal,
     MenuDivider,
-    Select
+    Select,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
 import logo_cross from '../assets/cross.png';
-import { applyActions, applyReactions } from './Action_Reaction';
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
@@ -34,24 +33,24 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         .catch((error) => {
             console.error(error);
         });
-    /*if (action !== 'Action' && reaction !== 'Reaction') {
-        const forJson = input;
-        const dataAction = await applyActions(action, forJson);
-
-        if (dataAction) {
-            applyReactions(reaction, contentReact);
-        }
-    }*/
 };
 
-function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChange }) {
+function RectangleDashboard({
+    id,
+    onRemove,
+    contentAct,
+    contentReact,
+    inputChange,
+    inputContentAct,
+    inputContentReact,
+}) {
     const [opened, { open, close }] = useDisclosure(false);
-    const [action, setAction] = useState('Action');
-    const [reaction, setReaction] = useState('Reaction');
+    const [action, setAction] = useState(contentAct);
+    const [reaction, setReaction] = useState(contentReact);
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
-        onRemove(id, action, reaction, input, '');
+        onRemove(id, action, reaction, inputContentAct, inputContentReact);
         close();
     };
 
@@ -89,9 +88,14 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
                     size="lg"
                     radius="md"
                     placeholder="City"
-                    value={contentAct}
-                    onChange={(value) => inputChange(id, 'contentAct', value)}
-                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                    value={inputContentAct}
+                    onChange={(value) =>
+                        inputChange(id, 'inputAction', value)
+                    }
+                    data={cities.map((city) => ({
+                        value: city.name,
+                        label: city.name,
+                    }))}
                 />
             </>
         );
@@ -115,9 +119,14 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
             <>
                 <Select
                     placeholder="City"
-                    value={contentAct}
-                    onChange={(value) => inputChange(id, 'contentAct', value)}
-                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                    value={inputContentAct}
+                    onChange={(value) =>
+                        inputChange(id, 'inputAction', value)
+                    }
+                    data={cities.map((city) => ({
+                        value: city.name,
+                        label: city.name,
+                    }))}
                 />
             </>
         );
@@ -148,15 +157,15 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => changeActions('Weather')}>
+                            <Menu.Item onClick={() => setAction('Weather')}>
                                 When it rains
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => changeActions('Email')}>
+                            <Menu.Item onClick={() => setAction('Email')}>
                                 When I receive an email
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => changeActions('Alerts')}>
+                            <Menu.Item onClick={() => setAction('Alerts')}>
                                 When it is alerts
                             </Menu.Item>
                         </Menu.Dropdown>
@@ -164,8 +173,12 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
-                    {action === 'Email' ? handleInput(contentAct, 'contentAct') : null}
-                    {reaction === 'Tweet' || reaction === "MP" ? handleInput(contentReact, 'contentReact') : null}
+                    {action === 'Email'
+                        ? handleInput(inputContentAct, 'inputAction')
+                        : null}
+                    {reaction === 'Tweet' || reaction === 'MP'
+                        ? handleInput(inputContentReact, 'inputReaction')
+                        : null}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
@@ -180,34 +193,38 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => changeReactions('Spotify')}>
+                            <Menu.Item onClick={() => setReaction('Spotify')}>
                                 sad music is played
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => changeReactions('sendEmail')}>
+                            <Menu.Item onClick={() => setReaction('sendEmail')}>
                                 send an email
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => changeReactions('Tweet')}>
+                            <Menu.Item onClick={() => setReaction('Tweet')}>
                                 tweet your input
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => changeReactions('MP')}>
+                            <Menu.Item onClick={() => setReaction('MP')}>
                                 send a mp
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-
                 </div>
                 <button className="button-cross" onClick={open}>
-                    <img src={logo_cross} width={35} height={35} alt="cross"/>
+                    <img src={logo_cross} width={35} height={35} alt="cross" />
                 </button>
             </div>
 
             <Button
                 className="button-correct"
                 onClick={() =>
-                    applyAcRea(action, reaction, contentAct, contentReact)
+                    applyAcRea(
+                        action,
+                        reaction,
+                        inputContentAct,
+                        inputContentReact
+                    )
                 }
             >
                 Apply
