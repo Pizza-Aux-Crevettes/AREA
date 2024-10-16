@@ -8,10 +8,12 @@ module.exports = {
         .setName('play')
         .setDescription('Plays a song in the voice channel you are in.'),
     async execute(interaction) {
+        console.log("je suis là?");
+
         const voiceChannel = interaction.member.voice.channel;
 
         if (!voiceChannel) {
-            return interaction.reply({ content: "You need to be in a voice channel for me to join you.", ephemeral: true });
+            return interaction.reply({ content: "Vous devez être dans un salon vocal.", ephemeral: true });
         }
 
         try {
@@ -21,9 +23,9 @@ module.exports = {
                 adapterCreator: interaction.guild.voiceAdapterCreator,
             });
 
-            const audioUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'; // Your audio file URL
+            const audioUrl = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
             const resource = createAudioResource(audioUrl);
-    
+
             player.on(AudioPlayerStatus.Playing, () => {
                 console.log('The player is now playing!');
             });
@@ -36,10 +38,10 @@ module.exports = {
             player.play(resource);
             connection.subscribe(player);
 
-            await interaction.reply(`I am now playing: **${audioUrl}** in your voice channel.`);
+            await interaction.reply(`Je joue maintenant : **${audioUrl}** dans votre salon vocal.`);
         } catch (error) {
             console.error(error);
-            await interaction.reply(`An error occurred: ${error.message}`);
+            await interaction.reply({ content: `Une erreur est survenue : ${error.message}`, ephemeral: true });
         }
     },
 };
