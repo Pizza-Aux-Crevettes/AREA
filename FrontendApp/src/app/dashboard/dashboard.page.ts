@@ -40,6 +40,19 @@ export class DashboardPage implements OnInit {
         { name: 'Lille' },
     ];
 
+    cities_alerts = [
+        { name: 'Tokyo' },
+        { name: 'Jakarta' },
+        { name: 'Manille' },
+        { name: 'Port-au-Prince' },
+        { name: 'Mexico City' },
+        { name: 'Los Angeles' },
+        { name: 'Calcutta' },
+        { name: 'Dhaka' },
+        { name: 'Caracas' },
+        { name: 'Christchurch' },
+    ];
+
     constructor(
         private localStorage: LocalStorageService,
         private router: Router,
