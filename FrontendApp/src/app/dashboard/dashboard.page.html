@@ -30,7 +30,7 @@
                   interface="popover"
                   placeholder="Action"
                   (ionChange)="onSelectAction($event, area)"
-                  [(ngModel)]="area.selectedAction"
+                  [(ngModel)]="area.action"
                 >
                   <ion-select-option value="Weather">When it rains</ion-select-option>
                   <ion-select-option value="Email">When I receive an email</ion-select-option>
@@ -38,7 +38,7 @@
               </ion-item>
             </ion-list>
 
-            <div *ngIf="area.selectedAction === 'Weather'" class="city-div">
+            <div *ngIf="area.action === 'Weather'" class="city-div">
               <ion-list class="city-list">
                 <ion-item>
                   <ion-select
@@ -46,7 +46,7 @@
                     interface="popover"
                     placeholder="City"
                     (ionChange)="onSelectCity($event, area)"
-                    [(ngModel)]="area.selectedCity"
+                    [(ngModel)]="area.inputAction"
                   >
                     <ion-select-option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</ion-select-option>
                   </ion-select>
@@ -54,11 +54,13 @@
               </ion-list>
             </div>
 
-            <div *ngIf="area.selectedAction !== 'Weather'" class="input-div">
+            <div *ngIf="area.action !== 'Weather'" class="input-div">
               <ion-input
                 class="input-balise"
                 size="small"
+                [(ngModel)]="area.inputAction"
                 placeholder="Enter a text"
+                value="{{area.inputAction}}"
               ></ion-input>
             </div>
 
@@ -69,7 +71,8 @@
                   interface="popover"
                   placeholder="Reaction"
                   (ionChange)="onSelectReaction($event, area)"
-                  [(ngModel)]="area.selectedReaction"
+                  [(ngModel)]="area.reaction"
+                  value="{{area.reaction}}"
                 >
                   <ion-select-option value="Spotify">Sad music is played</ion-select-option>
                   <ion-select-option value="sendEmail">send an email</ion-select-option>
@@ -77,8 +80,8 @@
               </ion-item>
             </ion-list>
 
-            <ion-button size="small" fill="solid" class="apply-button" (click)="ApplyArea(area.selectedAction, area.selectedReaction, area.selectedCity)">
-              {{ area.buttonText }}
+            <ion-button *ngIf="area.local" size="small" fill="solid" class="apply-button" (click)="ApplyArea(area.action, area.reaction, area.inputAction)">
+              Save
             </ion-button>
           </div>
 

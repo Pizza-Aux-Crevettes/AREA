@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { of } from "rxjs";
-import { environment } from "src/environments/environment";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class LoginService {
     private API_URL = environment.api;
@@ -13,7 +13,7 @@ export class LoginService {
 
     login(email: string, password: string) {
         const headers = new HttpHeaders({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         });
 
         try {
@@ -28,11 +28,11 @@ export class LoginService {
                 }
             );
         } catch (error) {
-            console.error("Error :", error);
+            console.error('Error :', error);
             return of({
                 status: 500,
                 error: true,
-                message: "Error",
+                message: 'Error',
                 data: {},
             });
         }

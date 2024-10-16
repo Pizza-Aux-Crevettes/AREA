@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import {
-    Button,
-} from '@mantine/core';
+import { Button } from '@mantine/core';
 import Title from '../Title/Title';
 import './Dashboard.css';
 import logo_plus from '../assets/plus.png';
-import RectangleDashboard from "./Rectangle_Action.jsx"
+import RectangleDashboard from './Rectangle_Action.jsx';
+import Cookies from 'cookies-js';
 
 function AddRectangle({ addNewArea }) {
     return (
@@ -59,7 +58,6 @@ function Dashboard() {
     const addNewArea = () => {
         const maxId =
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
-        // const newArea = { id: maxId + 1, buttonText: 'Apply' };
         const newArea = { id: maxId + 1 };
         const newInput = { content: '', id: maxId + 1 };
         setAreas([...areas, newArea]);
@@ -73,7 +71,6 @@ function Dashboard() {
             )
         );
     };
-
 
     // const handleApplyClick = (id) => {
     //     setAreas((prevAreas) =>
@@ -102,7 +99,26 @@ function Dashboard() {
     //     );
     // };
 
-    const removeArea = (id) => {
+    const removeArea = (id, action, reaction, inputAction, inputReaction) => {
+        fetch('http://localhost:8080/api/delArea', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+                action: action,
+                reaction: reaction,
+                inputAct: inputAction,
+                inputReact: inputReaction,
+            }),
+        })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
     };
 
@@ -118,7 +134,11 @@ function Dashboard() {
                                     <RectangleDashboard
                                         id={area.id}
                                         onRemove={removeArea}
-                                        input={input.find((inp) => inp.id === area.id)?.content || ''}
+                                        input={
+                                            input.find(
+                                                (inp) => inp.id === area.id
+                                            )?.content || ''
+                                        }
                                         inputChange={inputChange}
                                         actionReaction={actionReaction}
                                     />

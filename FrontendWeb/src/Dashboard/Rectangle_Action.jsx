@@ -12,21 +12,45 @@ import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
 import logo_cross from '../assets/cross.png';
 import { applyActions, applyReactions } from './Action_Reaction';
+import Cookies from 'cookies-js';
 
-
-const applyAcRea = async (action, reaction, input) => {
-    console.log("Apply!!")
-    if (action !== "Action" && reaction !== "Reaction") {
+const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
+    fetch('http://localhost:8080/api/setArea', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            token: Cookies.get('token'),
+            action: action,
+            reaction: reaction,
+            inputAct: inputAction,
+            inputReact: inputReaction,
+        }),
+    })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    /*if (action !== 'Action' && reaction !== 'Reaction') {
         const forJson = input;
         const dataAction = await applyActions(action, forJson);
 
         if (dataAction) {
             applyReactions(reaction);
         }
-    }
+    }*/
 };
 
-function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }) {
+function RectangleDashboard({
+    id,
+    onRemove,
+    input,
+    inputChange,
+    actionReaction,
+}) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
     const [reaction, setReaction] = useState('Reaction');
@@ -34,33 +58,34 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
-        onRemove(id);
+        onRemove(id, action, reaction, input, '');
         close();
     };
 
     const handleWeather = () => {
-
         return (
             <>
                 <select
                     value={input}
                     onChange={(e) => inputChange(id, e.target.value)}
                 >
-                    <option value="" disabled hidden>Cities</option>
-                    <option value='Paris'>Paris</option>
-                    <option value='Marseille'>Marseille</option>
-                    <option value='Lyon'>Lyon</option>
-                    <option value='Toulouse'>Toulouse</option>
-                    <option value='Nice'>Nice</option>
-                    <option value='Nantes'>Nantes</option>
-                    <option value='Montpellier'>Montpellier</option>
-                    <option value='Strasbourg'>Strasbourg</option>
-                    <option value='Bordeaux'>Bordeaux</option>
-                    <option value='Lille'>Lille</option>
+                    <option value="" disabled hidden>
+                        Cities
+                    </option>
+                    <option value="Paris">Paris</option>
+                    <option value="Marseille">Marseille</option>
+                    <option value="Lyon">Lyon</option>
+                    <option value="Toulouse">Toulouse</option>
+                    <option value="Nice">Nice</option>
+                    <option value="Nantes">Nantes</option>
+                    <option value="Montpellier">Montpellier</option>
+                    <option value="Strasbourg">Strasbourg</option>
+                    <option value="Bordeaux">Bordeaux</option>
+                    <option value="Lille">Lille</option>
                 </select>
             </>
-        )
-    }
+        );
+    };
 
     const handleInput = (type) => {
         return (
@@ -71,8 +96,8 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                     onChange={(e) => inputChange(id, e.target.value)}
                 />
             </>
-        )
-    }
+        );
+    };
 
     return (
         <>
@@ -86,7 +111,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                     <p>Are you sure you want to close this area?</p>
                     <Button onClick={handleRemove}>Yes</Button>
                 </Modal>
-                <div className='cont-rect'>
+                <div className="cont-rect">
                     <Menu width={200} shadow="md">
                         <Menu.Target>
                             <Tooltip
@@ -118,12 +143,10 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
 
                     {action === 'Weather' ? (
                         handleWeather()
+                    ) : action === 'Action' ? (
+                        <></>
                     ) : (
-                        action === 'Action' ? (
-                            <></>
-                        ) : (
-                            handleInput(action)
-                        )
+                        handleInput(action)
                     )}
 
                     <Menu width={200} shadow="md">
@@ -150,9 +173,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                                 sad music is played
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item
-                                onClick={() => setReaction('sendEmail')}
-                            >
+                            <Menu.Item onClick={() => setReaction('sendEmail')}>
                                 send an email
                             </Menu.Item>
                         </Menu.Dropdown>
@@ -170,9 +191,7 @@ function RectangleDashboard({ id, onRemove, input, inputChange, actionReaction }
                                     ) : ( */}
             <Button
                 className="button-correct"
-                onClick={() =>
-                    applyAcRea(action, reaction, input)
-                }
+                onClick={() => applyAcRea(action, reaction, input, '')}
             >
                 Apply
                 {/* {area.buttonText} */}
