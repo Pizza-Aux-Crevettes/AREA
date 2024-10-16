@@ -4,9 +4,9 @@ import {
     Menu,
     Button,
     TextInput,
-    Tooltip,
     Modal,
     MenuDivider,
+    Select
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
@@ -39,22 +39,15 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         const dataAction = await applyActions(action, forJson);
 
         if (dataAction) {
-            applyReactions(reaction);
+            applyReactions(reaction, contentReact);
         }
     }*/
 };
 
-function RectangleDashboard({
-    id,
-    onRemove,
-    input,
-    inputChange,
-    actionReaction,
-}) {
+function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChange }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState('Action');
     const [reaction, setReaction] = useState('Reaction');
-    const [isOverflowing] = useState(false);
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
@@ -62,38 +55,69 @@ function RectangleDashboard({
         close();
     };
 
-    const handleWeather = () => {
+    const handleInput = (field, fieldName) => {
         return (
             <>
-                <select
-                    value={input}
-                    onChange={(e) => inputChange(id, e.target.value)}
-                >
-                    <option value="" disabled hidden>
-                        Cities
-                    </option>
-                    <option value="Paris">Paris</option>
-                    <option value="Marseille">Marseille</option>
-                    <option value="Lyon">Lyon</option>
-                    <option value="Toulouse">Toulouse</option>
-                    <option value="Nice">Nice</option>
-                    <option value="Nantes">Nantes</option>
-                    <option value="Montpellier">Montpellier</option>
-                    <option value="Strasbourg">Strasbourg</option>
-                    <option value="Bordeaux">Bordeaux</option>
-                    <option value="Lille">Lille</option>
-                </select>
+                <TextInput
+                    radius="md"
+                    size="lg"
+                    placeholder="Enter your input"
+                    value={field}
+                    onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                />
             </>
         );
     };
 
-    const handleInput = (type) => {
+    const handleWeather = () => {
+        const cities = [
+            { name: 'Paris' },
+            { name: 'Marseille' },
+            { name: 'Lyon' },
+            { name: 'Toulouse' },
+            { name: 'Nice' },
+            { name: 'Nantes' },
+            { name: 'Montpellier' },
+            { name: 'Strasbourg' },
+            { name: 'Bordeaux' },
+            { name: 'Lille' },
+        ];
+
         return (
             <>
-                <TextInput
-                    placeholder={type}
-                    value={input}
-                    onChange={(e) => inputChange(id, e.target.value)}
+                <Select
+                    size="lg"
+                    radius="md"
+                    placeholder="City"
+                    value={contentAct}
+                    onChange={(value) => inputChange(id, 'contentAct', value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
+                />
+            </>
+        );
+    };
+
+    const handleAlerts = () => {
+        const cities = [
+            { name: 'Tokyo' },
+            { name: 'Jakarta' },
+            { name: 'Manille' },
+            { name: 'Port-au-Prince' },
+            { name: 'Mexico City' },
+            { name: 'Los Angeles' },
+            { name: 'Calcutta' },
+            { name: 'Dhaka' },
+            { name: 'Caracas' },
+            { name: 'Christchurch' },
+        ];
+
+        return (
+            <>
+                <Select
+                    placeholder="City"
+                    value={contentAct}
+                    onChange={(value) => inputChange(id, 'contentAct', value)}
+                    data={cities.map((city) => ({ value: city.name, label: city.name }))}
                 />
             </>
         );
@@ -114,89 +138,80 @@ function RectangleDashboard({
                 <div className="cont-rect">
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Tooltip
-                                label={action}
-                                disabled={!isOverflowing}
-                                position="bottom"
-                                withArrow
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
                             >
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {action}
-                                    <IconChevronDown size={16} />
-                                </Button>
-                            </Tooltip>
+                                {action}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setAction('Weather')}>
+                            <Menu.Item onClick={() => changeActions('Weather')}>
                                 When it rains
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setAction('Email')}>
-                                When I recieve an email
+                            <Menu.Item onClick={() => changeActions('Email')}>
+                                When I receive an email
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeActions('Alerts')}>
+                                When it is alerts
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
-                    {action === 'Weather' ? (
-                        handleWeather()
-                    ) : action === 'Action' ? (
-                        <></>
-                    ) : (
-                        handleInput(action)
-                    )}
+                    {action === 'Weather' ? handleWeather() : null}
+                    {action === 'Alerts' ? handleAlerts() : null}
+                    {action === 'Email' ? handleInput(contentAct, 'contentAct') : null}
+                    {reaction === 'Tweet' || reaction === "MP" ? handleInput(contentReact, 'contentReact') : null}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Tooltip
-                                label={reaction}
-                                disabled={!isOverflowing}
-                                position="bottom"
-                                withArrow
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
                             >
-                                <Button
-                                    className="button-menu"
-                                    size="lg"
-                                    ref={buttonRef}
-                                >
-                                    {reaction}
-                                    <IconChevronDown size={16} />
-                                </Button>
-                            </Tooltip>
+                                {reaction}
+                                <IconChevronDown size={16} />
+                            </Button>
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setReaction('Spotify')}>
+                            <Menu.Item onClick={() => changeReactions('Spotify')}>
                                 sad music is played
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('sendEmail')}>
+                            <Menu.Item onClick={() => changeReactions('sendEmail')}>
                                 send an email
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeReactions('Tweet')}>
+                                tweet your input
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => changeReactions('MP')}>
+                                send a mp
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
+
                 </div>
                 <button className="button-cross" onClick={open}>
-                    <img src={logo_cross} width={35} height={35}></img>
+                    <img src={logo_cross} width={35} height={35} alt="cross"/>
                 </button>
             </div>
-            {/* {area.buttonText === '■ Stop' ? (
-                                        <StopArea
-                                            areaId={area.id}
-                                            onConfirm={handleStopArea}
-                                        />
-                                    ) : ( */}
+
             <Button
                 className="button-correct"
-                onClick={() => applyAcRea(action, reaction, input, '')}
+                onClick={() =>
+                    applyAcRea(action, reaction, contentAct, contentReact)
+                }
             >
                 Apply
-                {/* {area.buttonText} */}
             </Button>
-            {/* )} */}
         </>
     );
 }

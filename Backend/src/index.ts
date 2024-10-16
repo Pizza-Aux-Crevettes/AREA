@@ -34,7 +34,8 @@ require('./routes/area/area')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
 require('./API/Discord')(app);
-require('./API/X')(app);
+require('./API/X/X')(app);
+require('./API/Discord/discord')(app);
 
 const swaggerOptions: swaggerJsDoc.Options = {
     swaggerDefinition: {

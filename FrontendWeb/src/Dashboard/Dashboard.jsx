@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@mantine/core';
 import Title from '../Title/Title';
 import './Dashboard.css';
@@ -8,7 +8,7 @@ import Cookies from 'cookies-js';
 
 function AddRectangle({ addNewArea }) {
     return (
-        <div>
+        <div className='row_container'>
             <Button className="rectangle-add" onClick={addNewArea}>
                 <img src={logo_plus} alt="Add new area" width={50} />
             </Button>
@@ -48,26 +48,23 @@ function AddRectangle({ addNewArea }) {
 // }
 
 function Dashboard() {
-    const [areas, setAreas] = useState([]);
-    const [actionReaction, setActionReaction] = useState({
-        action: '',
-        reaction: '',
-    });
-    const [input, setInput] = useState([]);
+    const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }]);
+    const [input, setInput] = useState([ { id: 1, contentAct: '', contentReact: '' }, { id: 2, contentAct: '', contentReact: '' }]);
 
     const addNewArea = () => {
-        const maxId =
-            areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+
+        const maxId = areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
+        // const newArea = { id: maxId + 1, buttonText: 'Apply' };
         const newArea = { id: maxId + 1 };
-        const newInput = { content: '', id: maxId + 1 };
+        const newInput = { contentAct: '', contentReact: '', id: maxId + 1 };
         setAreas([...areas, newArea]);
         setInput([...input, newInput]);
     };
 
-    const inputChange = (id, value) => {
+    const inputChange = (id, field, value) => {
         setInput((prevInputs) =>
             prevInputs.map((inp) =>
-                inp.id === id ? { ...inp, content: value } : inp
+                inp.id === id ? { ...inp, [field]: value } : inp
             )
         );
     };
@@ -134,13 +131,10 @@ function Dashboard() {
                                     <RectangleDashboard
                                         id={area.id}
                                         onRemove={removeArea}
-                                        input={
-                                            input.find(
-                                                (inp) => inp.id === area.id
-                                            )?.content || ''
-                                        }
+
+                                        contentAct={input.find((inp) => inp.id === area.id)?.contentAct || ''}
+                                        contentReact={input.find((inp) => inp.id === area.id)?.contentReact || ''}
                                         inputChange={inputChange}
-                                        actionReaction={actionReaction}
                                     />
                                 </div>
                             ))}
