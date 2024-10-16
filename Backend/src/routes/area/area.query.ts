@@ -28,18 +28,34 @@ export async function setNewArea(
 }
 
 export async function delArea(email: string, body: any): Promise<any> {
-    const { data, error } = await supabase.from('ActReact').delete().match({
-        userEmail: email,
-        action: body.action,
-        reaction: body.reaction,
-        inputAction: body.inputAct,
-        inputReaction: body.inputReact,
-    });
-    if (error) {
-        console.log(error);
-        return null;
+    console.log(email, body.action, body.reaction,  body.inputAct, body.inputReact);
+    if (body.inputReact) {
+        const { data, error } = await supabase.from('ActReact').delete().match({
+            userEmail: email,
+            action: body.action,
+            reaction: body.reaction,
+            inputAction: body.inputAct,
+            inputReaction: body.inputReact,
+        });
+        if (error) {
+            console.log(error);
+            return null;
+        } else {
+            return true;
+        }
     } else {
-        return data;
+        const { data, error } = await supabase.from('ActReact').delete().match({
+            userEmail: email,
+            action: body.action,
+            reaction: body.reaction,
+            inputAction: body.inputAct,
+        });
+        if (error) {
+            console.log(error);
+            return null;
+        } else {
+            return true;
+        }
     }
 }
 
