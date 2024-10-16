@@ -1,39 +1,41 @@
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
+import { sendTweet } from './X.query';
 import axios from 'axios';
 
-const client_id = process.env.DISCORD_CLIENT_ID!;
-const client_secret = process.env.DISCORD_CLIENT_SECRET!;
-const redirect_uri = 'http://localhost:8080/discord/callback';
+const client_id = process.env.X_CLIENT_ID!;
+const client_secret = process.env.X_CLIENT_SECRET!;
+const redirect_uri = 'http://localhost:8080/twitter/callback';
 
 module.exports = (app: Express) => {
-    app.get('/discord/login', (req, res) => {
+    app.get('/twitter/login', (req, res) => {
         let origin: string;
         if (req.headers.referer !== undefined) {
             origin = req.headers.referer;
         } else {
             origin = '';
         }
-        const scope = 'identify email';
-        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
+        const scope = 'tweet.read users.read offline.access';
+        const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
         res.redirect(authUrl);
     });
 
-    app.get('/discord/callback', async (req, res) => {
+    app.get('/twitter/callback', async (req, res) => {
         const code = req.query.code || null;
 
-        const tokenUrl = 'https://discord.com/api/oauth2/token';
+        const tokenUrl = 'https://api.twitter.com/2/oauth2/token';
         const authOptions = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString('base64')}`,
             },
         };
 
         const bodyParams = new URLSearchParams({
-            client_id: client_id,
-            client_secret: client_secret,
-            grant_type: 'authorization_code',
             code: code as string,
+            grant_type: 'authorization_code',
+            client_id: client_id,
             redirect_uri: redirect_uri,
+            code_verifier: 'challenge_code',
         });
 
         try {
@@ -44,9 +46,10 @@ module.exports = (app: Express) => {
             );
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
+
             const origin = req.query.state;
             res.redirect(
-                `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
+                `${origin}service?x_token=${access_token}&x_refresh=${refresh_token}`
             );
         } catch (error) {
             console.error('Error retrieving access token:', error);
@@ -54,11 +57,11 @@ module.exports = (app: Express) => {
         }
     });
 
-    app.get('/discord/refresh_token', async (req, res) => {
+    app.get('/twitter/refresh_token', async (req, res) => {
         const refresh_token = req.query.refresh_token || null;
 
         const authOptions = {
-            url: 'https://discord.com/api/oauth2/token',
+            url: 'https://api.twitter.com/2/oauth2/token',
             headers: {
                 Authorization:
                     'Basic ' +
@@ -95,5 +98,17 @@ module.exports = (app: Express) => {
             console.error('Error refreshing access token:', error);
             res.status(500).send('Erreur lors du rafraîchissement du token');
         }
+    });
+    app.post('/api/twitter/send', async (req: Request, res: Response) => {
+        res.setHeader('Content-Type', 'application/json');
+        const info = req.body;
+        const result = await sendTweet(info.token, info.tweetText);
+        if (result === null) {
+            res.status(500).json({
+                msg: 'Error when sending the tweet',
+            });
+            return;
+        }
+        res.status(200).json(result);
     });
 };
