@@ -35,6 +35,7 @@ require('./API/google/Google')(app);
 require('./API/google/gmail/Gmail')(app);
 require('./API/Discord')(app);
 require('./API/X/X')(app);
+require('./API/Discord/discord')(app);
 require('./API/openWeather/openWeather')(app);
 
 const swaggerOptions: swaggerJsDoc.Options = {

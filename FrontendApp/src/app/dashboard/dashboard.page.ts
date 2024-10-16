@@ -88,6 +88,19 @@ export class DashboardPage {
         { name: 'Lille' },
     ];
 
+    cities_alerts = [
+        { name: 'Tokyo' },
+        { name: 'Jakarta' },
+        { name: 'Manille' },
+        { name: 'Port-au-Prince' },
+        { name: 'Mexico City' },
+        { name: 'Los Angeles' },
+        { name: 'Calcutta' },
+        { name: 'Dhaka' },
+        { name: 'Caracas' },
+        { name: 'Christchurch' },
+    ];
+
     onSelectAction(event: any, area: Area) {
         area.selectedAction = event.detail.value;
     }
@@ -136,18 +149,22 @@ export class DashboardPage {
     ApplyActions(
         action: string,
         city: string | undefined,
-        me: string
-    ): Observable<boolean> {
+        me: string ) {
         if (action === 'Weather') {
             return this.weatherService.getServicesWeather(city).pipe(
                 map((response) => !!response),
                 catchError(() => of(false))
-            );
+            ).subscribe((res) => {return res});
         } else if (action === 'Email') {
             return this.gmailService.getGmailMsg(me).pipe(
                 map((response) => !!response),
                 catchError(() => of(false))
-            );
+            ).subscribe((res) => {});
+        } else if (action === 'Alerts') {
+            return this.weatherService.getServicesAlerts(city).pipe(
+                map((response) => !!response),
+                catchError(() => of(false))
+            ).subscribe((res) => {console.log("les arlerts: ", res)});
         } else {
             return of(false);
         }
@@ -185,6 +202,7 @@ export class DashboardPage {
                 me = response;
             });
         }
+        console.log("apply return: ", this.ApplyActions(action, city, me))
         if (this.ApplyActions(action, city, me)) {
             this.ApplyReaction(reaction, 'areaepitech18@gmail.com');
         }
