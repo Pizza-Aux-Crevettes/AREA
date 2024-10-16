@@ -15,7 +15,7 @@ export async function setActions(
         case 'Weather':
             result = await getWeatherDatas(inputAction);
             break;
-        case 'WeatherAlert':
+        case 'Alert':
             result = await getAlertsDatas(inputAction);
             break;
         case 'Email':

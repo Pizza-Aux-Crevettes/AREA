@@ -1,6 +1,7 @@
 import { getTokens } from '../DB/tokens/token';
 import { sendMail } from '../API/gmail/Gmail';
 import { playSong } from '../API/spotify/spotify';
+import { discordSendMP } from '../API/Discord/discord';
 
 export async function setReaction(
     reaction: string,
@@ -15,6 +16,9 @@ export async function setReaction(
             break;
         case 'sendEmail':
             result = await sendMail(token[0].google_token, inputReaction);
+            break;
+        case 'MP':
+            result = await discordSendMP(inputReaction, "Un message discord");
             break;
         default:
             break;

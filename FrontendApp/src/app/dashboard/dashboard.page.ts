@@ -129,11 +129,11 @@ export class DashboardPage implements OnInit {
         this.areas = this.areas.filter((area) => area.id !== id);
     }
 
-    ApplyArea(action: string, reaction: string, city: string | undefined) {
+    ApplyArea(action: string, reaction: string, inputAction: string | undefined, inputReaction: string | undefined) {
         let token = this.localStorage.getItem('token');
         if (token !== null) {
             this.areaService
-                .setArea(token, action, reaction, city, '')
+                .setArea(token, action, reaction, inputAction, inputReaction)
                 .subscribe((response) => {
                     console.log(response);
                 });
