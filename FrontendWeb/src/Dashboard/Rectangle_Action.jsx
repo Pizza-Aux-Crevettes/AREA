@@ -12,17 +12,36 @@ import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
 import logo_cross from '../assets/cross.png';
 import { applyActions, applyReactions } from './Action_Reaction';
+import Cookies from 'cookies-js';
 
-
-const applyAcRea = async (action, reaction, contentAct, contentReact) => {
-
-    if (action !== "Action" && reaction !== "Reaction") {
-        const dataAction = await applyActions(action, contentAct);
+const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
+    fetch('http://localhost:8080/api/setArea', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            token: Cookies.get('token'),
+            action: action,
+            reaction: reaction,
+            inputAct: inputAction,
+            inputReact: inputReaction,
+        }),
+    })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    /*if (action !== 'Action' && reaction !== 'Reaction') {
+        const forJson = input;
+        const dataAction = await applyActions(action, forJson);
 
         if (dataAction) {
             applyReactions(reaction, contentReact);
         }
-    }
+    }*/
 };
 
 function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChange }) {
@@ -32,19 +51,9 @@ function RectangleDashboard({ id, onRemove, contentAct, contentReact, inputChang
     const buttonRef = useRef(null);
 
     const handleRemove = () => {
-        onRemove(id);
+        onRemove(id, action, reaction, input, '');
         close();
     };
-
-    const changeActions = (action) => {
-        setAction(action);
-        inputChange(id, 'contentAct', '');
-    };
-
-    const changeReactions = (reaction) => {
-        setReaction(reaction);
-        inputChange(id, 'contentReact', '');
-    }
 
     const handleInput = (field, fieldName) => {
         return (

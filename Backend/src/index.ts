@@ -30,13 +30,12 @@ require('./routes/users/users')(app);
 require('./routes/services/services')(app);
 require('./routes/login/login')(app);
 require('./routes/register/register')(app);
+require('./routes/area/area')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
-require('./API/google/gmail/Gmail')(app);
 require('./API/Discord')(app);
 require('./API/X/X')(app);
 require('./API/Discord/discord')(app);
-require('./API/openWeather/openWeather')(app);
 
 const swaggerOptions: swaggerJsDoc.Options = {
     swaggerDefinition: {
