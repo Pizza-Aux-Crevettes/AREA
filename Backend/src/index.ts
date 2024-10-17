@@ -33,9 +33,8 @@ require('./routes/register/register')(app);
 require('./routes/area/area')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
-require('./API/Discord')(app);
 require('./API/X/X')(app);
-require('./API/Discord/discord')(app);
+require('./API/Discord')(app);
 
 const swaggerOptions: swaggerJsDoc.Options = {
     swaggerDefinition: {

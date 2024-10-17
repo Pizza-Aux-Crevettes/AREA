@@ -23,12 +23,11 @@ export async function updateService(
     token: string,
     service: string
 ): Promise<any> {
-    const tokenName = service + '_token';
     const { data, error } = await supabase
         .from('Service')
         .update([
             {
-                [tokenName]: token,
+                [service]: token,
             },
         ])
         .eq('user_email', user_email)
