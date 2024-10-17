@@ -7,7 +7,7 @@ const redirect_uri = 'http://localhost:8080/spotify/callback';
 
 module.exports = (app: Express) => {
     app.get('/spotify/login', (req, res) => {
-        const scope = 'user-read-private user-read-email';
+        const scope = 'user-read-private user-read-email user-modify-playback-state';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
             scope
         )}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
@@ -51,47 +51,6 @@ module.exports = (app: Express) => {
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
-        }
-    });
-
-    app.get('/spotify/refresh_token', async (req, res) => {
-        const refresh_token = req.query.refresh_token;
-
-        const authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
-            headers: {
-                Authorization:
-                    'Basic ' +
-                    Buffer.from(`${client_id}:${client_secret}`).toString(
-                        'base64'
-                    ),
-            },
-            form: {
-                grant_type: 'refresh_token',
-                refresh_token: refresh_token,
-            },
-            json: true,
-        };
-
-        try {
-            const response = await axios.post(authOptions.url, null, {
-                headers: authOptions.headers,
-                params: authOptions.form,
-            });
-
-            const new_access_token = response.data.access_token;
-            const expires_in = response.data.expires_in;
-            const new_refresh_token =
-                response.data.refresh_token || refresh_token;
-
-            res.json({
-                access_token: new_access_token,
-                refresh_token: new_refresh_token,
-                expires_in: expires_in,
-            });
-        } catch (error) {
-            console.error('Error refreshing access token:', error);
-            res.status(500).send('Error during token refresh');
         }
     });
 };

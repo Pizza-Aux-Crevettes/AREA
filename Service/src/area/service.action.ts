@@ -20,7 +20,7 @@ export async function setActions(
             break;
         case 'Email':
             const token = await getTokens(email);
-            result = await haveMail(token[0].google_token);
+            result = await haveMail(email, token[0].google_token);
             break;
         default:
             break;

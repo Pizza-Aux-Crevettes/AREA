@@ -18,10 +18,7 @@ function RectangleService({ text, logo, Click }) {
         </div>
     );
 }
-const getSubstringBeforeCharacter = (word, char) => {
-    const index = word.indexOf(char);
-    return index !== -1 ? word.substring(0, index) : word;
-};
+
 const registerService = async (service) => {
     try {
         const response = await fetch('http://localhost:8080/api/user/me', {
@@ -39,7 +36,6 @@ const registerService = async (service) => {
         if (json && json.email) {
             const token = Cookies.get(service);
             const userEmail = json.email;
-            const newService = getSubstringBeforeCharacter(service, '_');
             fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
                 headers: {
@@ -48,7 +44,7 @@ const registerService = async (service) => {
                 body: JSON.stringify({
                     userEmail: userEmail,
                     token: token,
-                    service: newService,
+                    service: service,
                 }),
             })
                 .then((response) => {
@@ -80,6 +76,9 @@ function Service() {
             'x_token',
             'google_token',
             'discord_token',
+            'discord_refresh',
+            "spotify_refresh",
+            "google_refresh"
         ];
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
