@@ -12,10 +12,11 @@ export async function setReaction(
     const token = await getTokens(email);
     switch (reaction) {
         case 'Spotify':
-            result = await playSong(token[0].spotify_token);
+            console.log(token[0].spotify_token)
+            result = await playSong(email, token[0].spotify_token);
             break;
         case 'sendEmail':
-            result = await sendMail(token[0].google_token, inputReaction);
+            result = await sendMail(email, token[0].google_token, inputReaction);
             break;
         case 'MP':
             result = await discordSendMP(inputReaction, "Un message discord");
