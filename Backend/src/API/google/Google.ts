@@ -94,4 +94,49 @@ module.exports = (app: Express) => {
             res.status(500).send('Erreur lors du rafraîchissement du token');
         }
     });
+
+    app.post('/google/revoke', async (req, res) => {
+        const token = req.body.token;
+        if (!token) {
+            return res
+                .status(400)
+                .send('Le token est requis pour la révocation.');
+        }
+
+        const revokeUrl = 'https://oauth2.googleapis.com/revoke';
+
+        try {
+            const response = await axios.post(revokeUrl, null, {
+                params: {
+                    token: token,
+                },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    Authorization: `Bearer ${token}`, // Authentification via Bearer Token
+                },
+            });
+
+            if (response.status === 200) {
+                console.log('Token révoqué avec succès pour Google.');
+                return res.json({
+                    message: 'Token révoqué avec succès pour Google.',
+                });
+            } else {
+                console.error(
+                    'Erreur lors de la révocation du token pour Google.'
+                );
+                return res
+                    .status(500)
+                    .send('Erreur lors de la révocation du token pour Google.');
+            }
+        } catch (error) {
+            console.error(
+                'Erreur lors de la révocation du token pour Google :',
+                error
+            );
+            return res
+                .status(500)
+                .send('Erreur lors de la révocation du token pour Google.');
+        }
+    });
 };
