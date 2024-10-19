@@ -28,23 +28,23 @@
     <div class="flex-rectangle">
       <div class="main-rectangle">
           <img src="assets/discord.png" class="icon-container" />
-          <ion-text class="connection-rect"
-          (click)="connectService('discord')"><h3>Connect to Discord</h3></ion-text>
+          <ion-text class="connection-rect"  [style.background-color]="discord_status"
+          (click)="connectService('discord')"><h3>{{ this.discord_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/X.png" class="icon-container" />
-        <ion-text class="connection-rect"
-        (click)="connectService('twitter')"><h3>Connect to X</h3></ion-text>
+        <ion-text class="connection-rect"  [style.background-color]="x_status"
+        (click)="connectService('twitter')"><h3>{{ this.x_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/google.png" class="icon-container" />
-        <ion-text class="connection-rect"
-        (click)="connectService('google')"><h3>Connect to Google</h3></ion-text>
+        <ion-text class="connection-rect"  [style.background-color]="google_status"
+        (click)="connectService('google')"><h3>{{ this.google_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/spotify.png" class="icon-container" />
-        <ion-text class="connection-rect"
-        (click)="connectService('spotify')"><h3>Connect to Spotify</h3></ion-text>
+        <ion-text class="connection-rect"  [style.background-color]="spotify_status"
+        (click)="connectService('spotify')"><h3>{{ this.spotify_text }}</h3></ion-text>
       </div>
   </div>
   

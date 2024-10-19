@@ -17,6 +17,16 @@ export class ServicePage implements OnInit {
         'discord_token',
     ];
 
+    public spotify_text: string = '';
+    public google_text: string = '';
+    public x_text: string = '';
+    public discord_text: string = '';
+
+    public spotify_status: string = '';
+    public google_status: string = '';
+    public x_status: string = '';
+    public discord_status: string = '';
+
     constructor(
         private localStorage: LocalStorageService,
         private router: Router,
@@ -28,6 +38,36 @@ export class ServicePage implements OnInit {
         const params = new URLSearchParams(search);
         let email = '';
         let token = '';
+
+        if (this.localStorage.getItem('spotify_token')) {
+            this.spotify_text = 'disconnection of Spotify';
+            this.spotify_status = '#3AB700';
+        } else {
+            this.spotify_text = 'Connect to Spotify';
+            this.spotify_status = '8cb3ff';
+        }
+        if (this.localStorage.getItem('x_token')) {
+            this.x_text = 'disconnection of X';
+            this.x_status = '#3AB700';
+        } else {
+            this.x_text = 'Connect to X';
+            this.x_status = '8cb3ff';
+        }
+        if (this.localStorage.getItem('google_token')) {
+            this.google_text = 'disconnection of Google';
+            this.google_status = '#3AB700';
+        } else {
+            this.google_text = 'Connect to Google';
+            this.google_status = '8cb3ff';
+        }
+        if (this.localStorage.getItem('discord_token')) {
+            this.discord_text = 'disconnection of Discord';
+            this.discord_status = '#3AB700';
+        } else {
+            this.discord_text = 'Connect to Discord';
+            this.discord_status = '8cb3ff';
+        }
+
         let userToken = this.localStorage.getItem('token');
         for (let i = 0; i < this.serviceList.length; i++) {
             if (params.get(this.serviceList[i]) && userToken !== null) {
