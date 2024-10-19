@@ -29,22 +29,22 @@
       <div class="main-rectangle">
           <img src="assets/discord.png" class="icon-container" />
           <ion-text class="connection-rect"  [style.background-color]="discord_status"
-          (click)="connectService('discord')"><h3>{{ this.discord_text }}</h3></ion-text>
+          (click)="ManageService('discord', discord_connect)"><h3>{{ discord_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/X.png" class="icon-container" />
         <ion-text class="connection-rect"  [style.background-color]="x_status"
-        (click)="connectService('twitter')"><h3>{{ this.x_text }}</h3></ion-text>
+        (click)="ManageService('twitter', x_connect)"><h3>{{ x_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/google.png" class="icon-container" />
         <ion-text class="connection-rect"  [style.background-color]="google_status"
-        (click)="connectService('google')"><h3>{{ this.google_text }}</h3></ion-text>
+        (click)="ManageService('google', google_connect)"><h3>{{ google_text }}</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/spotify.png" class="icon-container" />
         <ion-text class="connection-rect"  [style.background-color]="spotify_status"
-        (click)="connectService('spotify')"><h3>{{ this.spotify_text }}</h3></ion-text>
+        (click)="ManageService('spotify', spotify_connect)"><h3>{{ spotify_text }}</h3></ion-text>
       </div>
   </div>
   

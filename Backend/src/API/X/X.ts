@@ -99,6 +99,53 @@ module.exports = (app: Express) => {
             res.status(500).send('Erreur lors du rafraîchissement du token');
         }
     });
+
+    app.post('/twitter/revoke', async (req, res) => {
+        const token = req.body.token;
+
+        if (!token) {
+            return res
+                .status(400)
+                .send('Le token est requis pour la révocation.');
+        }
+
+        const revokeUrl = 'https://api.twitter.com/1.1/oauth2/invalidate_token'; // URL fictive, veuillez vérifier la bonne URL dans la documentation officielle
+
+        try {
+            const response = await axios.post(revokeUrl, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Authentification via Bearer Token
+                },
+            });
+
+            if (response.status === 200) {
+                console.log('Token révoqué avec succès pour X (Twitter).');
+                return res.json({
+                    message: 'Token révoqué avec succès pour X (Twitter).',
+                });
+            } else {
+                console.error(
+                    'Erreur lors de la révocation du token pour X (Twitter).'
+                );
+                return res
+                    .status(500)
+                    .send(
+                        'Erreur lors de la révocation du token pour X (Twitter).'
+                    );
+            }
+        } catch (error) {
+            console.error(
+                'Erreur lors de la révocation du token pour X (Twitter) :',
+                error
+            );
+            return res
+                .status(500)
+                .send(
+                    'Erreur lors de la révocation du token pour X (Twitter).'
+                );
+        }
+    });
+
     app.post('/api/twitter/send', async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const info = req.body;

@@ -70,8 +70,6 @@ export class TokenService {
         userEmail: string,
         service: string
     ): Observable<any> {
-        const newService = this.getSubstringBeforeCharacter(service, '_');
-        console.log(service);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
@@ -83,7 +81,35 @@ export class TokenService {
                     JSON.stringify({
                         userEmail: userEmail,
                         token: token,
-                        service: newService,
+                        service: service,
+                    })
+                ),
+                {
+                    headers: headers,
+                }
+            );
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+    revokeToken(service: string, token: string): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+        console.log('route =', `${this.API_URL}/${service}/revoke`);
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/${service}/revoke`,
+                JSON.parse(
+                    JSON.stringify({
+                        token: token,
                     })
                 ),
                 {

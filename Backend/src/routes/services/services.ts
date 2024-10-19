@@ -35,7 +35,6 @@ module.exports = (app: Express) => {
     app.post('/api/setNewToken', async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const service_infos = req.body;
-        console.log(req.body);
         const result = await updateService(
             service_infos.userEmail,
             service_infos.token,
