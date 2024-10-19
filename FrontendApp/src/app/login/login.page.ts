@@ -20,6 +20,10 @@ export class LoginPage implements OnInit {
         'google_token',
         'x_token',
         'discord_token',
+        'spotify_refresh',
+        'google_refresh',
+        'x_refresh',
+        'discord_refresh',
     ];
 
     constructor(
