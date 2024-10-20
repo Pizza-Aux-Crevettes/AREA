@@ -26,6 +26,16 @@ interface Area {
 })
 export class DashboardPage implements OnInit {
     areas: Area[] = [];
+    serviceList: string[] = [
+        'spotify_token',
+        'x_token',
+        'google_token',
+        'discord_token',
+        'spotify_refresh',
+        'google_refresh',
+        'x_refresh',
+        'discord_refresh',
+    ];
 
     cities: any[] = [
         { name: 'Paris' },
@@ -74,7 +84,12 @@ export class DashboardPage implements OnInit {
 
     deleteCookies() {
         this.localStorage.removeItem('token');
-        this.router.navigate(['/login']);
+        for (let i = 0; i < this.serviceList.length; i++) {
+            if (this.localStorage.getItem(this.serviceList[i])) {
+                this.localStorage.removeItem(this.serviceList[i]);
+            }
+        }
+        this.router.navigate(['/']);
     }
 
     moveToService() {
@@ -129,7 +144,12 @@ export class DashboardPage implements OnInit {
         this.areas = this.areas.filter((area) => area.id !== id);
     }
 
-    ApplyArea(action: string, reaction: string, inputAction: string | undefined, inputReaction: string | undefined) {
+    ApplyArea(
+        action: string,
+        reaction: string,
+        inputAction: string | undefined,
+        inputReaction: string | undefined
+    ) {
         let token = this.localStorage.getItem('token');
         if (token !== null) {
             this.areaService
