@@ -32,6 +32,5 @@ export default function createTestServer() {
 
     require('../API/Spotify')(app);
     require('../API/google/Google')(app);
-    require('../../../Service/src/API/openWeather/openWeather')(app);
     return app;
 }

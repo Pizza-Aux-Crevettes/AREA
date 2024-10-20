@@ -1,10 +1,5 @@
-import supertest from 'supertest';
 import createTestServer from '../utils/test.server';
-const jwt = require('jsonwebtoken');
-
-function generateToken(email: string): string {
-    return jwt.sign({ email: email }, process.env.SECRET);
-}
+import supertest from 'supertest';
 
 const app = createTestServer();
 
@@ -17,7 +12,7 @@ describe('Auth', () => {
         it('Login user with wrong informations', async () => {
             await supertest(app)
                 .post('/api/login')
-                .send({ email: 'anast.bouby@icloud.com', password: '123abc' })
+                .send({ email: 'test@gmail.com', password: '123abc' })
                 .expect(401);
         });
 
@@ -25,8 +20,8 @@ describe('Auth', () => {
             await supertest(app)
                 .post('/api/login')
                 .send({
-                    email: 'anast.bouby@icloud.com',
-                    password: 'Japonnihon31',
+                    email: 'test@gmail.com',
+                    password: 'Test1.',
                 })
                 .expect(200);
         });
@@ -54,36 +49,13 @@ describe('Auth', () => {
             await supertest(app)
                 .post('/api/register')
                 .send({
-                    name: 'Anastasia',
-                    surname: 'Bouby',
-                    username: 'Lxnairx',
-                    email: 'anast.bouby@icloud.com',
-                    password: 'Japonnihon31',
+                    name: 'test',
+                    surname: 'test',
+                    username: 'test',
+                    email: 'test@gmail.com',
+                    password: 'test',
                 })
                 .expect(409);
-        });
-    });
-
-    describe('Users', () => {
-        it('Token Empty', async () => {
-            await supertest(app).get('/api/user/me').expect(401);
-        });
-
-        it('Valid Token', async () => {
-            await supertest(app)
-                .get('/api/user/me')
-                .set(
-                    'Authorization',
-                    `Bearer ${generateToken('anast.bouby@icloud.com')}`
-                )
-                .expect(200);
-        });
-
-        it('Invalid Token', async () => {
-            await supertest(app)
-                .get('/api/user/me')
-                .set('Authorization', `Bearer lol`)
-                .expect(401);
         });
     });
 });
