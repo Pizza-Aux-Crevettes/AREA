@@ -14,6 +14,10 @@ function Login() {
         'google_token',
         'x_token',
         'discord_token',
+        'spotify_refresh',
+        'google_refresh',
+        'x_refresh',
+        'discord_refresh',
     ];
 
     function CreationMsg() {
@@ -59,7 +63,9 @@ function Login() {
             );
             const data = await resultToken.json();
             for (let i = 0; i < services.length; i++) {
-                Cookies.set(services[i], data[0][`${services[i]}`]);
+                if (data[0][`${services[i]}`] !== null) {
+                    Cookies.set(services[i], data[0][`${services[i]}`]);
+                }
             }
             window.location.reload();
         } else {
