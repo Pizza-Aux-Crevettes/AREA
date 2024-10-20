@@ -81,7 +81,7 @@
             ></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Tweet'" class="input-div">
+          <div *ngIf="area.reaction === 'DMDiscord' || area.reaction === 'DMX' || area.reaction === 'Tweet'" class="input-div">
             <ion-input
               class="input-balise"
               size="small"
@@ -103,8 +103,9 @@
               >
                 <ion-select-option value="Spotify">Sad music is played</ion-select-option>
                 <ion-select-option value="sendEmail">send an email</ion-select-option>
-                <ion-select-option value="MP">send a discord mp</ion-select-option>
-                <ion-select-option value="Tweet">post a tweet</ion-select-option>
+                <ion-select-option value="DMDiscord">send a discord mp</ion-select-option>
+                <ion-select-option value="Tweet">tweet on X</ion-select-option>
+                <ion-select-option value="DMX">send a x mp</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-list>

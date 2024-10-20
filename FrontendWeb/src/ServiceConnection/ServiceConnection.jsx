@@ -70,6 +70,7 @@ function Service() {
         }
         const search = window.location.search;
         const params = new URLSearchParams(search);
+        console.log(params);
         let token = '';
         const serviceList = [
             'spotify_token',

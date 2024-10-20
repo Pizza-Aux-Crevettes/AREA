@@ -2,7 +2,7 @@ import { getTokens } from '../DB/tokens/token';
 import { sendMail } from '../API/gmail/Gmail';
 import { playSong } from '../API/spotify/spotify';
 import { discordSendMP } from '../API/Discord/discord';
-import { sendTweet } from '../API/twitter/twitter';
+import { sendTweet, xSendMP } from '../API/twitter/twitter';
 
 export async function setReaction(
     reaction: string,
@@ -19,10 +19,13 @@ export async function setReaction(
         case 'sendEmail':
             result = await sendMail(email, token[0].google_token, inputReaction);
             break;
-        case 'MP':
-            result = await discordSendMP(inputReaction, "Un message discord");
+        case 'DMDiscord':
+            result = await discordSendMP(inputReaction, "Pouet");
             break;
-        case 'Twitter':
+        case 'DMX':
+            result = await xSendMP(token[0].x_token, inputReaction, "Un message Twitter");
+            break;
+        case 'Tweet':
             console.log("Appel de sendTweet imminent");
             result = await sendTweet(token[0].x_token, inputReaction);
             break;
