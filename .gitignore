@@ -8,6 +8,8 @@ node_modules
 bower_components
 .angular
 .env
+output.json
+
 
 *.sublime*
 

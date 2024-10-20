@@ -21,7 +21,7 @@ module.exports = (app: Express) => {
             });
             return;
         }
-        res.status(201).json(result);
+        res.status(201).json({ msg: 'area was successfully created' });
     });
 
     app.post('/api/delArea', async (req, res) => {
@@ -35,10 +35,21 @@ module.exports = (app: Express) => {
             });
             return;
         }
-        res.status(201).json(result);
+        res.status(201).json({ msg: 'area was successfully deleted' });
     });
 
     app.post('/api/getArea', async (req, res) => {
+        /*
+        #swagger.responses[200] = {
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/getArea"
+                    }
+                }
+            }
+        }
+         */
         res.setHeader('Content-Type', 'application/json');
         const area = req.body;
         const token: any = jwt.verify(area.token, process.env.SECRET);
@@ -49,6 +60,6 @@ module.exports = (app: Express) => {
             });
             return;
         }
-        res.status(201).json(result);
+        res.status(200).json(result);
     });
 };
