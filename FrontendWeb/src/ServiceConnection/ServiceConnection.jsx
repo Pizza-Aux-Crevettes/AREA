@@ -8,11 +8,17 @@ import logo_google from '../assets/google.png';
 import './ServiceConnection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function RectangleService({ text, logo, Click }) {
+function RectangleService({ text, logo, Click, color_status }) {
     return (
         <div className="rectangle">
-            <button onClick={Click} className="button-style">
-                <h3 dangerouslySetInnerHTML={{ __html: text }} />
+            <button
+                onClick={Click}
+                className="button-style"
+                style={{ backgroundColor: color_status }}
+            >
+                <h3>
+                    <strong>{text}</strong>
+                </h3>
             </button>
             <img src={logo} className="logo-rect" />
         </div>
@@ -62,8 +68,21 @@ const registerService = async (service) => {
 function Service() {
     const navigate = useNavigate();
     const location = useLocation();
+    const [spotifyText, setSpotifyText] = useState('');
+    const [googleText, setGoogleText] = useState('');
+    const [xText, setXText] = useState('');
+    const [discordText, setDiscordText] = useState('');
+
+    const [spotifyStatus, setSpotifyStatus] = useState('');
+    const [googleStatus, setGoogleStatus] = useState('');
+    const [xStatus, setXStatus] = useState('');
+    const [discordStatus, setDiscordStatus] = useState('');
+
+    const [spotifyConnect, setSpotifyConnect] = useState(false);
+    const [googleConnect, setGoogleConnect] = useState(false);
+    const [xConnect, setXConnect] = useState(false);
+    const [discordConnect, setDiscordConnect] = useState(false);
     useEffect(() => {
-        console.log('COOKIES = ', Cookies.get('token'));
         if (Cookies.get('token') === null) {
             navigate('/');
             location.pathname = '/';
@@ -77,9 +96,10 @@ function Service() {
             'google_token',
             'discord_token',
             'discord_refresh',
-            "spotify_refresh",
-            "google_refresh"
+            'spotify_refresh',
+            'google_refresh',
         ];
+
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
@@ -88,11 +108,167 @@ function Service() {
                     registerService(serviceList[i]);
             }
         }
+        clearUrl();
         window.history.replaceState(null, '', window.location.pathname);
-    }, []);
+        if (Cookies.get('spotify_token')) {
+            console.log(Cookies.get('spotify_token'));
+            setSpotifyText('disconnection of Spotify');
+            setSpotifyStatus('#3AB700');
+            setSpotifyConnect(true);
+        } else {
+            setSpotifyText('Connect to Spotify');
+            setSpotifyStatus('#33478f');
+            setSpotifyConnect(false);
+        }
 
-    const handleClick = (service, origin) => {
-        window.location.href = 'http://localhost:8080/' + service + '/login/';
+        if (Cookies.get('x_token')) {
+            setXText('disconnection of X');
+            setXStatus('#3AB700');
+            setXConnect(true);
+        } else {
+            setXText('Connect to X');
+            setXStatus('#33478f');
+            setXConnect(false);
+        }
+
+        if (Cookies.get('google_token')) {
+            setGoogleText('disconnection of Google');
+            setGoogleStatus('#3AB700');
+            setGoogleConnect(true);
+        } else {
+            setGoogleText('Connect to Google');
+            setGoogleStatus('#33478f');
+            setGoogleConnect(false);
+        }
+
+        if (Cookies.get('discord_token')) {
+            setDiscordText('disconnection of Discord');
+            setDiscordStatus('#3AB700');
+            setDiscordConnect(true);
+        } else {
+            setDiscordText('Connect to Discord');
+            setDiscordStatus('#33478f');
+            setDiscordConnect(false);
+        }
+    }, [navigate, location]);
+
+    const clearUrl = () => {
+        const url = window.location.href.split('?')[0];
+        window.history.replaceState({}, document.title, url);
+    };
+
+    const handleClick = (service, isConnected) => {
+        if (isConnected) {
+            let userToken = Cookies.get('token');
+            if (userToken) {
+                fetch('http://localhost:8080/api/user/me', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('token'),
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((json) => {
+                        const email = json.email;
+                        const tokenService = Cookies.get(service + '_token');
+                        if (tokenService && service !== 'spotify') {
+                            fetch(`http://localhost:8080/${service}/revoke`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    token: tokenService,
+                                }),
+                            }).then((response) => {
+                                if (response.ok) {
+                                    Cookies.set(service + '_token', '', {
+                                        expires: -1,
+                                    });
+                                    Cookies.set(service + '_refresh', '', {
+                                        expires: -1,
+                                    });
+                                    fetch(
+                                        'http://localhost:8080/api/setNewToken',
+                                        {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type':
+                                                    'application/json',
+                                            },
+                                            body: JSON.stringify({
+                                                userEmail: email,
+                                                token: '',
+                                                service: service + '_token',
+                                            }),
+                                        }
+                                    ).then((response) => {
+                                        if (response.ok) {
+                                            fetch(
+                                                'http://localhost:8080/api/setNewToken',
+                                                {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type':
+                                                            'application/json',
+                                                    },
+                                                    body: JSON.stringify({
+                                                        userEmail: email,
+                                                        token: '',
+                                                        service:
+                                                            service +
+                                                            '_refresh',
+                                                    }),
+                                                }
+                                            ).then(() => {
+                                                window.location.reload();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else if (tokenService && service === 'spotify') {
+                            Cookies.set(service + '_token', '', {
+                                expires: -1,
+                            });
+                            Cookies.set(service + '_refresh', '', {
+                                expires: -1,
+                            });
+                            fetch('http://localhost:8080/api/setNewToken', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    userEmail: email,
+                                    token: '',
+                                    service: service + '_token',
+                                }),
+                            }).then(() => {
+                                fetch('http://localhost:8080/api/setNewToken', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        userEmail: email,
+                                        token: '',
+                                        service: service + '_refresh',
+                                    }),
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            });
+                        }
+                    });
+            }
+        } else {
+            window.location.href =
+                'http://localhost:8080/' + service + '/login/';
+        }
     };
 
     return (
@@ -103,46 +279,36 @@ function Service() {
                     <div className="back-rectangle">
                         <div className="column-container">
                             <RectangleService
-                                text="<b>Connect to<br />discord<b\>"
+                                text={discordText}
                                 logo={logo_discord}
                                 Click={() =>
-                                    handleClick(
-                                        'discord',
-                                        'http://localhost:8081'
-                                    )
+                                    handleClick('discord', discordConnect)
                                 }
+                                color_status={discordStatus}
                             />
                             <RectangleService
-                                text="<b>Connect to<br />Google<b\>"
+                                text={googleText}
                                 logo={logo_google}
                                 Click={() =>
-                                    handleClick(
-                                        'google',
-                                        'http://localhost:8081'
-                                    )
+                                    handleClick('google', googleConnect)
                                 }
+                                color_status={googleStatus}
                             />
                         </div>
                         <div className="column-container">
                             <RectangleService
-                                text="<b>Connect to<br />Twitter (X)<b\>"
+                                text={xText}
                                 logo={logo_X}
-                                Click={() =>
-                                    handleClick(
-                                        'twitter',
-                                        'http://localhost:8081'
-                                    )
-                                }
+                                Click={() => handleClick('twitter', xConnect)}
+                                color_status={xStatus}
                             />
                             <RectangleService
-                                text="<b>Connect to<br />Spotify<b\>"
+                                text={spotifyText}
                                 logo={logo_spotify}
                                 Click={() =>
-                                    handleClick(
-                                        'spotify',
-                                        'http://localhost:8081'
-                                    )
+                                    handleClick('spotify', spotifyConnect)
                                 }
+                                color_status={spotifyStatus}
                             />
                         </div>
                     </div>
