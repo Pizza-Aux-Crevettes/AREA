@@ -5,7 +5,8 @@
     "scripts": {
         "test": "jest --coverage",
         "build": "tsc",
-        "dev": "tsc && node build/index.js"
+        "dev": "tsc && node build/index.js",
+        "generate-doc": "ts-node swagger.ts"
     },
     "author": "",
     "license": "ISC",
