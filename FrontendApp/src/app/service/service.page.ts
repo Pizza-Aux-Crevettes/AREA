@@ -123,6 +123,11 @@ export class ServicePage implements OnInit {
 
     deleteCookies() {
         this.localStorage.removeItem('token');
+        for (let i = 0; i < this.serviceList.length; i++) {
+            if (this.localStorage.getItem(this.serviceList[i])) {
+                this.localStorage.removeItem(this.serviceList[i]);
+            }
+        }
         this.router.navigate(['/']);
     }
 
