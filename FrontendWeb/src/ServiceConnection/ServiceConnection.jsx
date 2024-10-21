@@ -99,6 +99,7 @@ function Service() {
             'discord_refresh',
             'spotify_refresh',
             'google_refresh',
+            'twitch_refresh',
         ];
 
         for (let i = 0; i < serviceList.length; i++) {
