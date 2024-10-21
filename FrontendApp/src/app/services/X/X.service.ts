@@ -7,32 +7,32 @@ import { environment } from '../../../environments/environment';
 @Injectable({
     providedIn: 'root',
 })
-export class XService {
+export class TwitchService {
     private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
 
-    sendTweet(token: string, tweetText: string): Observable<any> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-        });
+    // sendTweet(token: string, tweetText: string): Observable<any> {
+    //     const headers = new HttpHeaders({
+    //         'Content-Type': 'application/json',
+    //     });
 
-        return this.http
-            .post<any>(
-                `${this.API_URL}/twitter/send`,
-                { token, text: tweetText },
-                { headers }
-            )
-            .pipe(
-                catchError((error) => {
-                    console.error('Error:', error);
-                    return of({
-                        status: 500,
-                        error: true,
-                        message: 'Failed to send tweet',
-                        data: {},
-                    });
-                })
-            );
-    }
+    //     return this.http
+    //         .post<any>(
+    //             `${this.API_URL}/twitter/send`,
+    //             { token, text: tweetText },
+    //             { headers }
+    //         )
+    //         .pipe(
+    //             catchError((error) => {
+    //                 console.error('Error:', error);
+    //                 return of({
+    //                     status: 500,
+    //                     error: true,
+    //                     message: 'Failed to send tweet',
+    //                     data: {},
+    //                 });
+    //             })
+    //         );
+    // }
 }
