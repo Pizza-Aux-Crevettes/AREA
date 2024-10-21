@@ -65,6 +65,7 @@ const registerService = async (service) => {
     }
 };
 
+
 function Service() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -107,8 +108,21 @@ function Service() {
                 if (Cookies.get(serviceList[i])) {
                     registerService(serviceList[i]);
                     if (serviceList[i] === 'discord_token') {
-                        const username = UserMeDiscord();
-                        setUsernameDiscordInDB(username);
+                        fetch('http://localhost:8080/discord/me', {
+                            method: 'GET',
+                            headers: {
+                                Authorization: 'Bearer ' + Cookies.get('discord_token'),
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((json) => {
+                                setUsernameDiscordInDB(json.userData.username);
+                            });
+
+
                     }
                 }
             }
@@ -156,21 +170,7 @@ function Service() {
         }
     }, [navigate, location]);
 
-    const UserMeDiscord = () => {
-        fetch('http://localhost:8080/discord/me', {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer ' + Cookies.get('discord_token'),
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((json) => {
-                return json.userData.username;
-            });
-    };
+
     const setUsernameDiscordInDB = (userName) => {
         fetch('http://localhost:8080/discord/setUsername', {
             method: 'POST',

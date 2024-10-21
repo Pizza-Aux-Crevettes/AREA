@@ -168,7 +168,8 @@ module.exports = (app: Express) => {
                 "Erreur lors de la récupération des infos de l'utilisateur:",
                 error
             );
-            throw error;
+            res.status(500)
+                .send('Erreur lors de la récupération des informations utilisateur (discord)');
         }
     });
     app.post('/discord/setUsername', async (req, res) => {
