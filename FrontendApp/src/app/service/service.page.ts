@@ -12,28 +12,28 @@ import { TokenService } from 'src/app/services/token/token.service';
 export class ServicePage implements OnInit {
     serviceList: string[] = [
         'spotify_token',
-        'x_token',
+        'twitch_token',
         'google_token',
         'discord_token',
         'spotify_refresh',
         'google_refresh',
-        'x_refresh',
+        'twitch_refresh',
         'discord_refresh',
     ];
 
     public spotify_text: string = '';
     public google_text: string = '';
-    public x_text: string = '';
+    public twitch_text: string = '';
     public discord_text: string = '';
 
     public spotify_status: string = '';
     public google_status: string = '';
-    public x_status: string = '';
+    public twitch_status: string = '';
     public discord_status: string = '';
 
     public spotify_connect: boolean = false;
     public google_connect: boolean = false;
-    public x_connect: boolean = false;
+    public twitch_connect: boolean = false;
     public discord_connect: boolean = false;
 
     constructor(
@@ -79,16 +79,16 @@ export class ServicePage implements OnInit {
             this.spotify_connect = false;
         }
         if (
-            this.localStorage.getItem('x_token') &&
-            this.localStorage.getItem('x_token') !== 'null'
+            this.localStorage.getItem('twitch_token') &&
+            this.localStorage.getItem('twitch_token') !== 'null'
         ) {
-            this.x_text = 'disconnection of X';
-            this.x_status = '#3AB700';
-            this.x_connect = true;
+            this.twitch_text = 'disconnection of Twitch';
+            this.twitch_status = '#3AB700';
+            this.twitch_connect = true;
         } else {
-            this.x_text = 'Connect to X';
-            this.x_status = '8cb3ff';
-            this.x_connect = false;
+            this.twitch_text = 'Connect to Twitch';
+            this.twitch_status = '8cb3ff';
+            this.twitch_connect = false;
         }
         if (
             this.localStorage.getItem('google_token') &&

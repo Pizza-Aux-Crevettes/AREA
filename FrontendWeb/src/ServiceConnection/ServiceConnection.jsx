@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'cookies-js';
 import Title from '../Title/Title';
 import logo_discord from '../assets/discord.png';
-import logo_X from '../assets/X.png';
+import logo_twitch from '../assets/twitch.png';
 import logo_spotify from '../assets/spotify.png';
 import logo_google from '../assets/google.png';
 import './ServiceConnection.css';
@@ -70,17 +70,17 @@ function Service() {
     const location = useLocation();
     const [spotifyText, setSpotifyText] = useState('');
     const [googleText, setGoogleText] = useState('');
-    const [xText, setXText] = useState('');
+    const [twitchText, setTwitchText] = useState('');
     const [discordText, setDiscordText] = useState('');
 
     const [spotifyStatus, setSpotifyStatus] = useState('');
     const [googleStatus, setGoogleStatus] = useState('');
-    const [xStatus, setXStatus] = useState('');
+    const [twitchStatus, setTwitchStatus] = useState('');
     const [discordStatus, setDiscordStatus] = useState('');
 
     const [spotifyConnect, setSpotifyConnect] = useState(false);
     const [googleConnect, setGoogleConnect] = useState(false);
-    const [xConnect, setXConnect] = useState(false);
+    const [twitchConnect, setTwitchConnect] = useState(false);
     const [discordConnect, setDiscordConnect] = useState(false);
     useEffect(() => {
         if (Cookies.get('token') === null) {
@@ -92,7 +92,7 @@ function Service() {
         let token = '';
         const serviceList = [
             'spotify_token',
-            'x_token',
+            'twitch_token',
             'google_token',
             'discord_token',
             'discord_refresh',
@@ -121,14 +121,14 @@ function Service() {
             setSpotifyConnect(false);
         }
 
-        if (Cookies.get('x_token')) {
-            setXText('disconnection of X');
-            setXStatus('#3AB700');
-            setXConnect(true);
+        if (Cookies.get('twitch_token')) {
+            setTwitchText('disconnection of Twitch');
+            setTwitchStatus('#3AB700');
+            setTwitchConnect(true);
         } else {
-            setXText('Connect to X');
-            setXStatus('#33478f');
-            setXConnect(false);
+            setTwitchText('Connect to Twitch');
+            setTwitchStatus('#33478f');
+            setTwitchConnect(false);
         }
 
         if (Cookies.get('google_token')) {
@@ -297,10 +297,10 @@ function Service() {
                         </div>
                         <div className="column-container">
                             <RectangleService
-                                text={xText}
-                                logo={logo_X}
-                                Click={() => handleClick('twitter', xConnect)}
-                                color_status={xStatus}
+                                text={twitchText}
+                                logo={logo_twitch}
+                                Click={() => handleClick('twitch', twitchConnect)}
+                                color_status={twitchStatus}
                             />
                             <RectangleService
                                 text={spotifyText}

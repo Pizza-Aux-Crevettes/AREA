@@ -28,12 +28,12 @@ export class DashboardPage implements OnInit {
     areas: Area[] = [];
     serviceList: string[] = [
         'spotify_token',
-        'x_token',
+        'twitch_token',
         'google_token',
         'discord_token',
         'spotify_refresh',
         'google_refresh',
-        'x_refresh',
+        'twitch_refresh',
         'discord_refresh',
     ];
 

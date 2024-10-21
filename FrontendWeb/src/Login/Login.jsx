@@ -12,11 +12,11 @@ function Login() {
     const services = [
         'spotify_token',
         'google_token',
-        'x_token',
+        'twitch_token',
         'discord_token',
         'spotify_refresh',
         'google_refresh',
-        'x_refresh',
+        'twitch_refresh',
         'discord_refresh',
     ];
 
