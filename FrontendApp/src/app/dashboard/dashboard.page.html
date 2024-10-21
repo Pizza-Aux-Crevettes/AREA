@@ -82,7 +82,7 @@
             ></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'MP'" class="input-div">
+          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip'" class="input-div">
             <ion-input
               class="input-balise"
               size="small"
@@ -105,6 +105,7 @@
                 <ion-select-option value="Spotify">Sad music is played</ion-select-option>
                 <ion-select-option value="sendEmail">send an email</ion-select-option>
                 <ion-select-option value="MP">send a discord mp</ion-select-option>
+                <ion-select-option value="Clip">Create a clip twitch</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-list>
