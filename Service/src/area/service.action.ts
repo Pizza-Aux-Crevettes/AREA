@@ -4,6 +4,7 @@ import {
 } from '../API/openWeather/openWeather';
 import { haveMail } from '../API/gmail/Gmail';
 import { getTokens } from '../DB/tokens/token';
+import { ifChangeUsername, discordUserMe } from '../API/Discord/discord';
 
 export async function setActions(
     action: string,
@@ -11,6 +12,7 @@ export async function setActions(
     email: string
 ): Promise<any> {
     let result;
+    const token = await getTokens(email);
     switch (action) {
         case 'Weather':
             result = await getWeatherDatas(inputAction);
@@ -19,8 +21,10 @@ export async function setActions(
             result = await getAlertsDatas(inputAction);
             break;
         case 'Email':
-            const token = await getTokens(email);
             result = await haveMail(email, token[0].google_token);
+            break;
+        case 'DiscordUsername':
+            result = await ifChangeUsername(inputAction, email);
             break;
         default:
             break;
