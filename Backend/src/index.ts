@@ -35,7 +35,7 @@ require('./routes/area/area')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
 require('./API/Twitch/Twitch')(app);
-require('./API/Discord')(app);
+require('./API/discord/Discord')(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
 

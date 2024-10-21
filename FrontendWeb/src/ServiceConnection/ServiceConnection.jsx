@@ -65,6 +65,7 @@ const registerService = async (service) => {
     }
 };
 
+
 function Service() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -104,14 +105,31 @@ function Service() {
             token = params.get(serviceList[i]);
             if (token) {
                 Cookies.set(serviceList[i], token);
-                if (Cookies.get(serviceList[i]))
+                if (Cookies.get(serviceList[i])) {
                     registerService(serviceList[i]);
+                    if (serviceList[i] === 'discord_token') {
+                        fetch('http://localhost:8080/discord/me', {
+                            method: 'GET',
+                            headers: {
+                                Authorization: 'Bearer ' + Cookies.get('discord_token'),
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((json) => {
+                                setUsernameDiscordInDB(json.userData.username);
+                            });
+
+
+                    }
+                }
             }
         }
         clearUrl();
         window.history.replaceState(null, '', window.location.pathname);
         if (Cookies.get('spotify_token')) {
-            console.log(Cookies.get('spotify_token'));
             setSpotifyText('disconnection of Spotify');
             setSpotifyStatus('#3AB700');
             setSpotifyConnect(true);
@@ -151,6 +169,20 @@ function Service() {
             setDiscordConnect(false);
         }
     }, [navigate, location]);
+
+
+    const setUsernameDiscordInDB = (userName) => {
+        fetch('http://localhost:8080/discord/setUsername', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+                username: userName,
+            }),
+        });
+    };
 
     const clearUrl = () => {
         const url = window.location.href.split('?')[0];
@@ -299,7 +331,9 @@ function Service() {
                             <RectangleService
                                 text={twitchText}
                                 logo={logo_twitch}
-                                Click={() => handleClick('twitch', twitchConnect)}
+                                Click={() =>
+                                    handleClick('twitch', twitchConnect)
+                                }
                                 color_status={twitchStatus}
                             />
                             <RectangleService

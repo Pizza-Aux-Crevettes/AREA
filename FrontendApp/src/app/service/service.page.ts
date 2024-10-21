@@ -3,6 +3,7 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
+import {UtilsService} from 'src/app/services/utils/utils.service'
 
 @Component({
     selector: 'app-service',
@@ -39,7 +40,8 @@ export class ServicePage implements OnInit {
     constructor(
         private localStorage: LocalStorageService,
         private router: Router,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private utilsService: UtilsService
     ) {}
 
     ngOnInit() {
@@ -61,8 +63,18 @@ export class ServicePage implements OnInit {
                             .setTokenInDb(token, email, this.serviceList[i])
                             .subscribe((response) => {
                                 this.clearUrl();
-                                console.log(response);
                             });
+                        const discord_token = this.localStorage.getItem('discord_token');
+                        if (discord_token !== null) {
+                            this.utilsService.getDiscordMe(discord_token).subscribe((response) => {
+                                const token = this.localStorage.getItem('token');
+                                if (token !== null) {
+                                    console.log(response.userData.username);
+                                    this.utilsService.setUsernameDiscordInDB(token, response.userData.username).subscribe((response) => {window.location.reload()})
+                                }
+                            })
+
+                        }
                     });
             }
         }
