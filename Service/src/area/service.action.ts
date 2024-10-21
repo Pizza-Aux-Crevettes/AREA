@@ -4,7 +4,7 @@ import {
 } from '../API/openWeather/openWeather';
 import { haveMail } from '../API/gmail/Gmail';
 import { getTokens } from '../DB/tokens/token';
-import { ifChangeUsername, discordUserMe } from '../API/Discord/discord';
+import { ifChangeUsername } from '../API/Discord/discord';
 
 export async function setActions(
     action: string,
@@ -24,7 +24,7 @@ export async function setActions(
             result = await haveMail(email, token[0].google_token);
             break;
         case 'DiscordUsername':
-            result = await ifChangeUsername(inputAction, email);
+            result = await ifChangeUsername(email);
             break;
         default:
             break;
