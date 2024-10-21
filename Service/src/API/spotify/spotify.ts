@@ -17,7 +17,6 @@ export async function playSong(email: string, token: string): Promise<boolean> {
                 }
             }
         );
-        console.log(response.status);
         return response.status === 204;
     } catch (e) {
         console.error(e);
@@ -34,7 +33,6 @@ export async function refreshSpotifyToken(email: string) {
 
         if (response.data) {
             const new_access_token = response.data.access_token;
-            console.log(new_access_token);
             await updateSpotifyToken(email, new_access_token);
         }
     } catch (error) {

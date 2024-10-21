@@ -86,3 +86,17 @@ export async function getUserName(email: string): Promise<any> {
         return false;
     }
 }
+
+export async function getService(user_email: string): Promise<any> {
+    const { data: user_info, error } = await supabase
+        .from('Service')
+        .select('*')
+        .eq('user_email', user_email);
+    if (error) {
+        return null;
+    }
+    if (user_info.length === 0) {
+        return null;
+    }
+    return user_info;
+}

@@ -5,6 +5,7 @@ import {
     updateDiscordToken,
     updateUserName,
     getUserName,
+    getService
 } from './discord.query';
 import axios from 'axios';
 import qs from 'qs';
@@ -32,21 +33,6 @@ export async function discordSendMP(
     userId: string,
     message: string
 ): Promise<any> {
-    try {
-        const result = await sendDM(userId, message, discordClient);
-        if (result === null) {
-            console.error('Error when send discord mp');
-            return false;
-        }
-        return result;
-    } catch (e) {
-        console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
-        return false;
-    }
-}
-
-export async function getUserMe(userId: string, message: string): Promise<any> {
     try {
         const result = await sendDM(userId, message, discordClient);
         if (result === null) {
@@ -136,14 +122,46 @@ export async function getUsername(email: string): Promise<any> {
 }
 
 export async function ifChangeUsername(
-    newUsername: string,
     email: string
 ): Promise<boolean> {
+    const result = await discordUserMe(email);
+    const newUsername = result.global_name;
     const username = await getUsername(email);
-    if (username !== newUsername) {
-        const result = await updateUsername(newUsername, email);
+    if (username[0].username !== newUsername) {
+        console.log("username = ",username[0].username);
+        console.log("newUsername = ",newUsername);
+        const result = await updateUsername(email, newUsername);
         return true;
     } else {
         return false;
     }
+}
+
+export async function discordUserMe (email:string) {
+    const result = await getTokensServices(email);
+    if (result !== null) {
+        try {
+            const response = await axios.get(
+                'https://discord.com/api/users/@me',
+                {
+                    headers: {
+                        Authorization: `Bearer ${result[0].discord_token}`,
+                    },
+                }
+            );
+
+            return response.data;
+
+        } catch (error) {
+            console.error(
+                "Erreur lors de la récupération des infos de l'utilisateur:",
+                error
+            );
+        }
+    }
+}
+
+export async function getTokensServices (email:string) {
+    const result = await getService(email);
+    return result;
 }
