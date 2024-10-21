@@ -143,19 +143,23 @@ module.exports = (app: Express) => {
     });
     app.get('/discord/me', async (req, res) => {
         const accessToken = req.header('Authorization');
+        if (!accessToken) {
+            res.status(500).send('Pas de token');
+            return;
+        }
+        let webToken = accessToken.toString().split(' ')[1];
         try {
             const response = await axios.get(
                 'https://discord.com/api/users/@me',
                 {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${webToken}`,
                     },
                 }
             );
 
             const userData = response.data;
 
-            console.log('User info:', userData);
             res.status(200).json({
                 userData,
             });
@@ -167,7 +171,8 @@ module.exports = (app: Express) => {
             throw error;
         }
     });
-    app.get('/discord/setUsername', async (req, res) => {
+    app.post('/discord/setUsername', async (req, res) => {
+        console.log(req.body);
         const user_info = req.body;
         const decoded = jwt.verify(user_info.token, process.env.SECRET);
 
