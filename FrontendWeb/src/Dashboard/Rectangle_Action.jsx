@@ -179,7 +179,7 @@ function RectangleDashboard({
                     {action === 'Email'
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
-                    {reaction === 'Tweet' || reaction === 'MP' || reaction === 'Clip'
+                    {reaction === 'MP' || reaction === 'Clip'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -210,6 +210,10 @@ function RectangleDashboard({
                             <MenuDivider />
                             <Menu.Item onClick={() => setReaction('Clip')}>
                                 Create a clip twitch
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => setReaction('Event')}>
+                                Create an event on Google Calendar
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
