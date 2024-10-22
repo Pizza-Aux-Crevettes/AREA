@@ -62,11 +62,10 @@ async function updateUserNews(email: string, user_data: any, news_author: string
         } else {
             return true;
         }
-
     }
 }
 
-async function getDataUser(email: string, article: Article): Promise<any> {
+async function getDataUser(email: string): Promise<any> {
     const { data: user_data, error } = await supabase
         .from("NewsArticle")
         .select("*")
@@ -97,7 +96,7 @@ export async function getArticle(email: string, title: string): Promise<any> {
         console.log("Author:", article.author);
         console.log("Title:", article.title);
         if (article.author !== undefined && article.title !== undefined) {
-            const user_data = await getDataUser(email, article);
+            const user_data = await getDataUser(email);
             if (user_data.length === 0) {
                 const register = await registerUserNews(email, article.author, article.title);
                 return register;
