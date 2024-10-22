@@ -92,6 +92,7 @@
 
 .apply-button {
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .add-button {
@@ -113,5 +114,15 @@
     border: 1px solid black;
     width: 30vh;
     height: 5vh;
+}
+
+.menu-button {
+    width: 24px;
+    height: 24px;
+    margin-top: 100%;
+}
+
+.Dashboard-title-bar ion-list {
+    background-color: transparent;
 }
 

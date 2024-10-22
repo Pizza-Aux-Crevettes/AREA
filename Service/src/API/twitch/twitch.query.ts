@@ -55,3 +55,38 @@ export async function clipTwitch(username: string, token: string) {
     console.log(data)
     return data;
 }
+
+export async function getRefreshTwitchToken(email: string): Promise<any> {
+    try {
+        const { data, error } = await supabase
+            .from('Service')
+            .select('twitch_refresh')
+            .eq('user_email', email);
+        if (error) {
+            return '';
+        }
+        return data[0].twitch_refresh;
+    } catch (e) {
+        console.error('getRefreshTwitchToken', e);
+        return '';
+    }
+}
+
+export async function updateTwitchToken(
+    email: string,
+    access_token: string
+): Promise<boolean> {
+    try {
+        const { error } = await supabase
+            .from('Service')
+            .update({
+                twitch_token: access_token,
+            })
+            .eq('user_email', email)
+            .select();
+        return !error;
+    } catch (error) {
+        console.error('updateTwitchToken', e);
+        return false;
+    }
+}

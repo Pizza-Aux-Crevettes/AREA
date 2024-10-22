@@ -1,5 +1,5 @@
 import { getTokens } from '../DB/tokens/token';
-import { sendMail } from '../API/gmail/Gmail';
+import { sendMail, createCalEvent } from '../API/gmail/Gmail';
 import { playSong } from '../API/spotify/spotify';
 import { discordSendMP } from '../API/Discord/discord';
 import { createClipTwitch } from '../API/twitch/twitch';
@@ -13,7 +13,6 @@ export async function setReaction(
     const token = await getTokens(email);
     switch (reaction) {
         case 'Spotify':
-            console.log(token[0].spotify_token)
             result = await playSong(email, token[0].spotify_token);
             break;
         case 'sendEmail':
@@ -24,6 +23,9 @@ export async function setReaction(
             break;
         case 'Clip':
             result = await createClipTwitch(inputReaction, token[0].twitch_token);
+            break;
+        case 'Event':
+            result = await createCalEvent(token[0].google_token, email);
             break;
         default:
             break;

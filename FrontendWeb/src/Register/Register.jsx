@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, LoadingOverlay } from '@mantine/core';
 import './Register.css';
+import Cookies from 'cookies-js';
 
 function Register() {
     const [email, setEmail] = useState('');

@@ -1,6 +1,5 @@
 require('dotenv').config();
 import { Express } from 'express';
-import { newsApi } from './API/News';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
 

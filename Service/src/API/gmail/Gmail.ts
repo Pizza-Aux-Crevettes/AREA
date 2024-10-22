@@ -1,4 +1,4 @@
-import { getGmailMsg, getRefreshGoogleToken, sendGmail, updateGoogleToken } from './Gmail.query';
+import { getGmailMsg, getRefreshGoogleToken, sendGmail, updateGoogleToken, insertCalEvent } from './Gmail.query';
 import axios from 'axios';
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -22,6 +22,16 @@ export async function sendMail(email: string, token: string, emailDest: string):
     const result = await sendGmail(token, emailDest);
     if (result === null) {
         console.error('Error when send email');
+        await refreshGmailToken(email);
+        return;
+    }
+    return result;
+}
+
+export async function createCalEvent(token: string, email: string) {
+    const result = await insertCalEvent(token, email);
+    if (result === null) {
+        console.error('Error when set event');
         await refreshGmailToken(email);
         return;
     }

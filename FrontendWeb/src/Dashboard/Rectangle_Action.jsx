@@ -18,6 +18,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`,
         },
         body: JSON.stringify({
             token: Cookies.get('token'),
@@ -322,9 +323,8 @@ function RectangleDashboard({
                     {action === 'Email'
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
-                    {reaction === 'Tweet' ||
-                    reaction === 'MP' ||
-                    reaction === 'Clip'
+
+                    {reaction === 'MP' || reaction === 'Clip'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -374,6 +374,7 @@ function RectangleDashboard({
                                     )}
                                 </Fragment>
                             ))}
+
                         </Menu.Dropdown>
                     </Menu>
                 </div>

@@ -51,7 +51,17 @@
     cursor: pointer;
 }
 
+.menu-button {
+    width: 24px;
+    height: 24px;
+    margin-top: 100%;
+}
+
 .Service-div .icon-container {
     width: 40px;
     height: auto;
+}
+
+.Service-title-bar ion-list{
+    background-color: transparent;
 }

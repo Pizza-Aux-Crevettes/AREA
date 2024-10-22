@@ -30,7 +30,5 @@ export async function getAdaptability(user_email: string): Promise<any> {
     if (data.length === 0) {
         return null;
     }
-    console.log(data);
-    // console.log("je suis gentil" + user_info[0].adaptabilityText);
     return data;
 }
