@@ -1,9 +1,10 @@
 import { Express, Request, Response, Router } from 'express';
 import { setNewArea, delArea, getArea } from './area.query';
+import { auth } from '../../middleware/auth';
 const jwt = require('jsonwebtoken');
 
 module.exports = (app: Express) => {
-    app.post('/api/setArea', async (req, res) => {
+    app.post('/api/setArea', auth, async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         const area = req.body;
         console.log(req.body);
@@ -24,7 +25,7 @@ module.exports = (app: Express) => {
         res.status(201).json({ msg: 'area was successfully created' });
     });
 
-    app.post('/api/delArea', async (req, res) => {
+    app.post('/api/delArea', auth, async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         const area = req.body;
         const email: any = jwt.verify(area.token, process.env.SECRET);
@@ -38,7 +39,7 @@ module.exports = (app: Express) => {
         res.status(201).json({ msg: 'area was successfully deleted' });
     });
 
-    app.post('/api/getArea', async (req, res) => {
+    app.post('/api/getArea', auth, async (req, res) => {
         /*
         #swagger.responses[200] = {
             content: {

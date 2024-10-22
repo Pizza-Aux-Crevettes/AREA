@@ -18,6 +18,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`,
         },
         body: JSON.stringify({
             token: Cookies.get('token'),

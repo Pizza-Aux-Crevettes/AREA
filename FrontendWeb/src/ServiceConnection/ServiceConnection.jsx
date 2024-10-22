@@ -231,6 +231,7 @@ function Service() {
                                             headers: {
                                                 'Content-Type':
                                                     'application/json',
+                                                'Authorization': `Bearer ${Cookies.get('token')}`,
                                             },
                                             body: JSON.stringify({
                                                 userEmail: email,
@@ -247,6 +248,7 @@ function Service() {
                                                     headers: {
                                                         'Content-Type':
                                                             'application/json',
+                                                        'Authorization': `Bearer ${Cookies.get('token')}`,
                                                     },
                                                     body: JSON.stringify({
                                                         userEmail: email,
@@ -274,6 +276,7 @@ function Service() {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${Cookies.get('token')}`,
                                 },
                                 body: JSON.stringify({
                                     userEmail: email,
@@ -285,6 +288,7 @@ function Service() {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${Cookies.get('token')}`,
                                     },
                                     body: JSON.stringify({
                                         userEmail: email,
