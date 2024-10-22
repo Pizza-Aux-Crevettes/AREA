@@ -7,6 +7,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 const app: Express = require('express')();
 const port = 8080;
 const bodyParser = require('body-parser');
+const doc = require('../output.json');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -30,38 +31,13 @@ require('./routes/users/users')(app);
 require('./routes/services/services')(app);
 require('./routes/login/login')(app);
 require('./routes/register/register')(app);
+require('./routes/area/area')(app);
 require('./API/Spotify')(app);
 require('./API/google/Google')(app);
-require('./API/google/gmail/Gmail')(app);
-require('./API/Discord')(app);
-require('./API/X')(app);
-require('./API/openWeather/openWeather')(app);
+require('./API/Twitch/Twitch')(app);
+require('./API/discord/Discord')(app);
 
-const swaggerOptions: swaggerJsDoc.Options = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'API Documentation',
-            version: '1.0.0',
-            description: 'API Documentation',
-        },
-        servers: [
-            {
-                url: 'http://localhost:8080',
-            },
-        ],
-    },
-    apis: [
-        './src/routes/**/*.ts',
-        './src/API/google/*.ts',
-        './src/API/openWeather/*.ts',
-        './src/API/*.ts',
-    ],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
 
 //newsApi();
 

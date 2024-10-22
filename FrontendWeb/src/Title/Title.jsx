@@ -1,71 +1,104 @@
-import logo_menu from "../assets/menu.png";
-import logo_exit from "../assets/exit.png";
-import { Menu, MenuDivider } from "@mantine/core";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./Title.css";
-import Cookies from "cookies-js";
+import { Menu, MenuDivider, MenuItem, Tooltip } from '@mantine/core';
+import { IconSettings, IconMenu2 } from '@tabler/icons-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import './Title.css';
+import Cookies from 'cookies-js';
+import { browser } from 'globals';
 
-function NavigateMenu () {
+function Parameters() {
+    function deleteCookies() {
+        Cookies.set('token', '', { expires: -1 });
+        Cookies.set('spotify_token', '', { expires: -1 });
+        Cookies.set('google_token', '', { expires: -1 });
+        Cookies.set('discord_token', '', { expires: -1 });
+        Cookies.set('twitch_token', '', { expires: -1 });
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+
+    const toggleFont = () => {
+        fetch('http://localhost:8080/api/setAdaptabilityUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+            }),
+        })
+        .then((response) => {
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la requête POST:", error);
+        });
+    };
+
+
+    return (
+        <div>
+            <Menu width={200} shadow="md">
+                <Tooltip label="Parameters" position="left">
+                    <Menu.Target className="button-style">
+                        <IconSettings size={45} color='black'/>
+                    </Menu.Target>
+                </Tooltip>
+                <Menu.Dropdown>
+                    <Menu.Item onClick={deleteCookies}>Log out</Menu.Item>
+                    <MenuDivider />
+                    <MenuItem onClick={toggleFont}>
+                        Dislexic font
+                    </MenuItem>
+                </Menu.Dropdown>
+            </Menu>
+        </div>
+    );
+}
+
+function NavigateMenu() {
     const navigate = useNavigate();
     const location = useLocation();
 
     function goToDashboard() {
-        navigate("/");
-        location.pathname === "/";
+        navigate('/');
+        location.pathname === '/';
     }
 
     function goToService() {
-        navigate("/service");
-        location.pathname === "/service";
+        navigate('/service');
+        location.pathname === '/service';
     }
 
     return (
         <div>
             <Menu width={200} shadow="md">
-                <Menu.Target>
-                    <img
-                        src={logo_menu}
-                        alt="Menu logo"
-                        height="30vh"
-                    />
-                </Menu.Target>
+                <Tooltip label="Navigate" position="right">
+                    <Menu.Target className="button-style">
+                        <IconMenu2 size={45} color='black'/>
+                    </Menu.Target>
+                </Tooltip>
                 <Menu.Dropdown>
-                    <Menu.Item
-                        onClick={goToDashboard}>
-                        Dashboard
-                    </Menu.Item>
+                    <Menu.Item onClick={goToDashboard}>Dashboard</Menu.Item>
                     <MenuDivider />
-                    <Menu.Item
-                        onClick={goToService}>
+                    <Menu.Item onClick={goToService}>
                         Service Connection
                     </Menu.Item>
                 </Menu.Dropdown>
-                </Menu>
+            </Menu>
         </div>
-    )
+    );
 }
 
-
 function Title({ title }) {
-    function deleteCookies() {
-        Cookies.set("token", "", { expires: -1 });
-        Cookies.set("spotify_token", "", { expires: -1 });
-        Cookies.set("google_token", "", { expires: -1 });
-        window.location.reload();
-    }
     return (
         <div>
             <div className="top-part">
                 <NavigateMenu />
                 <h1>{title}</h1>
-                <button className="button-style" onClick={deleteCookies}>
-                    <img
-                        src={logo_exit}
-                        className="logo exit"
-                        alt="Exit logo"
-                        height="35vh"
-                    />
-                </button>
+                <Parameters />
             </div>
         </div>
     );

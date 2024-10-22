@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import * as base64 from 'base64-url';
+import supabase from '../../config/db';
+import e from 'express';
 
 dotenv.config();
 
@@ -42,11 +44,11 @@ export async function getGmailMsg(token: string) {
 
         data = await result.json();
         res = await getLastMsg(data.messages[0].threadId, token);
+        return res;
     } catch (error) {
         console.error('error', error);
         return null;
     }
-    return res;
 }
 
 export async function sendGmail(token: string, dest: string) {
@@ -81,5 +83,34 @@ export async function sendGmail(token: string, dest: string) {
     } catch (error) {
         console.error('error when sending the email:', error);
         return null;
+    }
+}
+
+export async function getRefreshGoogleToken(email: string): Promise<any> {
+    try {
+        const {data, error} = await supabase
+            .from('Service')
+            .select('google_refresh')
+            .eq('user_email', email);
+        if (error) {
+            return "";
+        }
+        return data[0].google_refresh;
+    } catch (e) {
+        console.error('getRefreshGoogleToken', e);
+        return "";
+    }
+}
+
+export async function updateGoogleToken(email: string, access_token: string): Promise<boolean> {
+    try {
+        const {data, error} = await supabase.from('Service').update({
+            google_token: access_token
+        }).eq('user_email', email).select();
+        return !error;
+
+    } catch (error) {
+        console.error('updateGoogleToken', e);
+        return false;
     }
 }

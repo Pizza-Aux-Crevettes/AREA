@@ -8,58 +8,18 @@ function generateToken(email: string): string {
 }
 
 module.exports = (app: Express) => {
-    /**
-     * @swagger
-     * /api/login:
-     *   post:
-     *     summary: Login route
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               email:
-     *                 type: string
-     *                 description: Email of the user
-     *               password:
-     *                 type: string
-     *                 description: User password
-     *     responses:
-     *       200:
-     *         description: Returns a JWT token
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 own_token:
-     *                   type: string
-     *                   description: The JWT token for authentication
-     *       400:
-     *         description: Bad Request - Missing or invalid email/password
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "Missing email or password"
-     *       401:
-     *         description: Unauthorized - Incorrect email or password
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: object
-     *               properties:
-     *                 message:
-     *                   type: string
-     *                   example: "Incorrect email or password"
-     */
-
     app.post('/api/login', async (req: Request, res: Response) => {
+        /*
+        #swagger.responses[200] = {
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/login"
+                    }
+                }
+            }
+        }
+         */
         res.setHeader('Content-Type', 'application/json');
         const user_infos = req.body;
         const result = await loginUsers(lowercaseFirstLetter(user_infos.email));

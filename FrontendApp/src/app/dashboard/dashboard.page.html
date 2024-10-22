@@ -1,93 +1,126 @@
 <ion-content>
-    <div class="Dashboard-div">
-      <div class="Dashboard-title-bar">
-        <!--<div>
-          <img
-            src="assets/menu.png"
-            style="width: 24px; height: 24px; margin-top: 100%;"
-            (click)="moveToService()"
-          />
-        </div>-->
-        <ion-text color="dark">
-          <h1>Dashboard</h1>
-        </ion-text>
-        <div>
-          <img
-            src="assets/exit.png"
-            style="width: 24px; height: 24px; margin-top: 100%;"
-            (click)="deleteCookies()"
-          />
-        </div>
+  <div class="Dashboard-div">
+    <div class="Dashboard-title-bar">
+      <div>
+        <img
+          src="assets/menu.png"
+          style="width: 24px; height: 24px; margin-top: 100%;"
+          (click)="moveToService()"
+        />
       </div>
+      <ion-text color="dark">
+        <h1>Dashboard</h1>
+      </ion-text>
+      <div>
+        <img
+          src="assets/exit.png"
+          style="width: 24px; height: 24px; margin-top: 100%;"
+          (click)="deleteCookies()"
+        />
+      </div>
+    </div>
 
-      <div class="flex-rectangle" *ngFor="let area of areas">
-        <div class="main-rectangle">
-          <div class="actionReaction-rect">
-            <ion-list class="action-list">
+    <div class="flex-rectangle" *ngFor="let area of areas">
+      <div class="main-rectangle">
+        <div class="actionReaction-rect">
+          <ion-list class="action-list">
+            <ion-item>
+              <ion-select
+                aria-label="Action"
+                interface="popover"
+                placeholder="Action"
+                (ionChange)="onSelectAction($event, area)"
+                [(ngModel)]="area.action"
+              >
+                <ion-select-option value="Weather">When it rains</ion-select-option>
+                <ion-select-option value="Email">When I receive an email</ion-select-option>
+                <ion-select-option value="Alert">When it is an alert</ion-select-option>
+                  <ion-select-option value="DiscordUsername">When my discord username change</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <div *ngIf="area.action === 'Weather'" class="city-div">
+            <ion-list class="city-list">
               <ion-item>
                 <ion-select
-                  aria-label="Action"
+                  aria-label="City"
                   interface="popover"
-                  placeholder="Action"
-                  (ionChange)="onSelectAction($event, area)"
-                  [(ngModel)]="area.selectedAction"
+                  placeholder="City"
+                  (ionChange)="onSelectCity($event, area)"
+                  [(ngModel)]="area.inputAction"
                 >
-                  <ion-select-option value="Weather">When it rains</ion-select-option>
-                  <ion-select-option value="Email">When I receive an email</ion-select-option>
+                  <ion-select-option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-
-            <div *ngIf="area.selectedAction === 'Weather'" class="city-div">
-              <ion-list class="city-list">
-                <ion-item>
-                  <ion-select
-                    aria-label="City"
-                    interface="popover"
-                    placeholder="City"
-                    (ionChange)="onSelectCity($event, area)"
-                    [(ngModel)]="area.selectedCity"
-                  >
-                    <ion-select-option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</ion-select-option>
-                  </ion-select>
-                </ion-item>
-              </ion-list>
-            </div>
-
-            <div *ngIf="area.selectedAction !== 'Weather'" class="input-div">
-              <ion-input
-                class="input-balise"
-                size="small"
-                placeholder="Enter a text"
-              ></ion-input>
-            </div>
-
-            <ion-list class="reaction-list">
-              <ion-item>
-                <ion-select
-                  aria-label="Reaction"
-                  interface="popover"
-                  placeholder="Reaction"
-                  (ionChange)="onSelectReaction($event, area)"
-                  [(ngModel)]="area.selectedReaction"
-                >
-                  <ion-select-option value="Spotify">Sad music is played</ion-select-option>
-                  <ion-select-option value="sendEmail">send an email</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </ion-list>
-
-            <ion-button size="small" fill="solid" class="apply-button" (click)="ApplyArea(area.selectedAction, area.selectedReaction, area.selectedCity)">
-              {{ area.buttonText }}
-            </ion-button>
           </div>
 
-          <ion-button size="small" class="close-button" (click)="DelArea(area.id)">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          <div *ngIf="area.action === 'Alert'" class="city-div">
+            <ion-list class="city-list">
+              <ion-item>
+                <ion-select
+                  aria-label="City"
+                  interface="popover"
+                  placeholder="City"
+                  (ionChange)="onSelectCity($event, area)"
+                  [(ngModel)]="area.inputAction"
+                >
+                  <ion-select-option *ngFor="let city of cities_alerts" [value]="city.name">{{ city.name }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <div *ngIf="area.action !== 'Weather' && area.action !== 'Alert'" class="input-div">
+            <ion-input
+              class="input-balise"
+              size="small"
+              [(ngModel)]="area.inputAction"
+              placeholder="Enter a text"
+              value="{{area.inputAction}}"
+            ></ion-input>
+          </div>
+
+          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip'" class="input-div">
+            <ion-input
+              class="input-balise"
+              size="small"
+              [(ngModel)]="area.inputReaction"
+              placeholder="Enter a text"
+              value="{{area.inputReaction}}"
+            ></ion-input>
+          </div>
+
+          <ion-list class="reaction-list">
+            <ion-item>
+              <ion-select
+                aria-label="Reaction"
+                interface="popover"
+                placeholder="Reaction"
+                (ionChange)="onSelectReaction($event, area)"
+                [(ngModel)]="area.reaction"
+                value="{{area.reaction}}"
+              >
+                <ion-select-option value="Spotify">Sad music is played</ion-select-option>
+                <ion-select-option value="sendEmail">send an email</ion-select-option>
+                <ion-select-option value="MP">send a discord mp</ion-select-option>
+                <ion-select-option value="Clip">Create a clip twitch</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <ion-button *ngIf="area.local" size="small" fill="solid" class="apply-button" (click)="ApplyArea(area.action, area.reaction, area.inputAction, area.inputReaction)">
+            Save
           </ion-button>
         </div>
-      </div>
 
-      <ion-button class="add-button" (click)="addNewArea()">+</ion-button>
+        <ion-button size="small" class="close-button" (click)="DelArea(area.id)">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </div>
     </div>
-  </ion-content>
+
+    <ion-button class="add-button" (click)="addNewArea()">+</ion-button>
+  </div>
+</ion-content>

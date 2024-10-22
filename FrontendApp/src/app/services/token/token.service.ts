@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TokenService {
-    private API_URL = 'http://localhost:8080';
+    private API_URL = environment.api;
 
     constructor(private http: HttpClient) {}
 
-    getServicesTokens(email: any, service: string): Observable<any> {
+    getServicesTokens(email: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
@@ -21,7 +22,6 @@ export class TokenService {
                 JSON.parse(
                     JSON.stringify({
                         user_email: email,
-                        service,
                     })
                 ),
                 {
@@ -49,6 +49,73 @@ export class TokenService {
             return this.http.get<any>(`${this.API_URL}/api/user/me`, {
                 headers: headers,
             });
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+    getSubstringBeforeCharacter(word: string, char: string): string {
+        const index = word.indexOf(char);
+        return index !== -1 ? word.substring(0, index) : word;
+    }
+
+    setTokenInDb(
+        token: string,
+        userEmail: string,
+        service: string
+    ): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/api/setNewToken`,
+                JSON.parse(
+                    JSON.stringify({
+                        userEmail: userEmail,
+                        token: token,
+                        service: service,
+                    })
+                ),
+                {
+                    headers: headers,
+                }
+            );
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+    revokeToken(service: string, token: string): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+        console.log('route =', `${this.API_URL}/${service}/revoke`);
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/${service}/revoke`,
+                JSON.parse(
+                    JSON.stringify({
+                        token: token,
+                    })
+                ),
+                {
+                    headers: headers,
+                }
+            );
         } catch (error) {
             console.error('Error :', error);
             return of({
