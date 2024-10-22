@@ -1,19 +1,25 @@
 import supabase from "../../config/db";
 
-export async function setAdaptability(user_email: string, needAdaptability: boolean): Promise<any> {
-    const { data: user_info, error } = await supabase
+export async function setAdaptability(user_email: string): Promise<any> {
+    const user_info = await getAdaptability(user_email);
+    const newAdaptabilityText = !user_info[0].adaptabilityText;
+
+    const { data: updateResult, error } = await supabase
         .from("User")
-        .insert({adaptabilityText: needAdaptability})
+        .update({ adaptabilityText: newAdaptabilityText })
         .eq("email", user_email);
+
     if (error) {
-        console.error(error);
+        console.error('Erreur mise à jour utilisateur:', error);
         return null;
     }
-    return user_info;
+
+    return updateResult;
 }
 
+
 export async function getAdaptability(user_email: string): Promise<any> {
-    const { data: user_info, error } = await supabase
+    const { data, error } = await supabase
         .from("User")
         .select("adaptabilityText")
         .eq("email", user_email);
@@ -21,8 +27,10 @@ export async function getAdaptability(user_email: string): Promise<any> {
         console.error(error);
         return null;
     }
-    if (user_info.length === 0) {
+    if (data.length === 0) {
         return null;
     }
-    return user_info;
+    console.log(data);
+    // console.log("je suis gentil" + user_info[0].adaptabilityText);
+    return data;
 }
