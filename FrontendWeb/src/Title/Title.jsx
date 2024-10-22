@@ -2,7 +2,6 @@ import logo_menu from '../assets/menu.png';
 import logo_exit from '../assets/exit.png';
 import { Menu, MenuDivider, MenuItem } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import './Title.css';
 import Cookies from 'cookies-js';
 import { browser } from 'globals';
@@ -10,10 +9,24 @@ import { browser } from 'globals';
 function NavigateMenu() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [isDyslexicFont, setIsDyslexicFont] = useState(false);
 
     const toggleFont = () => {
-        setIsDyslexicFont(!isDyslexicFont);
+        fetch('http://localhost:8080/api/setAdaptabilityUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+            }),
+        })
+        .then((response) => {
+            window.location.reload();
+            console.log(response)
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la requête POST:", error);
+        });
     };
 
     function goToDashboard() {
@@ -27,7 +40,7 @@ function NavigateMenu() {
     }
 
     return (
-        <div style={{ fontFamily: isDyslexicFont ? 'OpenDyslexic, Arial, sans-serif' : 'Arial, sans-serif'}}>
+        <div>
             <Menu width={200} shadow="md">
                 <Menu.Target>
                     <img src={logo_menu} alt="Menu logo" height="30vh" />
