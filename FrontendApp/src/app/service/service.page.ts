@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import {UtilsService} from 'src/app/services/utils/utils.service'
-
+import { IonSelect } from '@ionic/angular';
 @Component({
     selector: 'app-service',
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
 export class ServicePage implements OnInit {
+    @ViewChild('menu', { static: false }) menu!: IonSelect;
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -41,7 +42,7 @@ export class ServicePage implements OnInit {
         private localStorage: LocalStorageService,
         private router: Router,
         private tokenService: TokenService,
-        private utilsService: UtilsService
+        private utilsService: UtilsService,
     ) {}
 
     ngOnInit() {
@@ -146,6 +147,23 @@ export class ServicePage implements OnInit {
     moveToDashboard() {
         this.router.navigate(['/dashboard']);
     }
+
+    openMenu() {
+        this.menu.open();
+      }
+    
+      moveToPage(navigate: string) {
+        this.router.navigate([navigate]);
+      }
+
+    onSelectNavigate(event: any) {
+        const selectedValue = event.detail.value;
+        if (selectedValue === 'Dashboard') {
+          this.moveToPage('/dashboard');
+        } else if (selectedValue === 'Service') {
+          this.moveToPage('/service');
+        }
+      }
 
     ManageService(service: string, status: boolean) {
         if (!status) {

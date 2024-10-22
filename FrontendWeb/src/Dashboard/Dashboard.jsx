@@ -82,7 +82,6 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
-        {/* <div className="dashboard" style={{fontFamily: adaptability ? 'OpenDyslexic, Arial, sans-serif' : 'Arial, sans-serif'}}> */}
             <div className="all-container">
                 <Title title="Dashboard" />
                 <div className="container">

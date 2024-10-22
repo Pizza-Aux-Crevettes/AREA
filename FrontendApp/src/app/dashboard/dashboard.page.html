@@ -2,11 +2,17 @@
   <div class="Dashboard-div">
     <div class="Dashboard-title-bar">
       <div>
-        <img
-          src="assets/menu.png"
-          style="width: 24px; height: 24px; margin-top: 100%;"
-          (click)="moveToService()"
-        />
+        <ion-list>
+          <img
+            src="assets/menu.png"
+            class="menu-button"
+            (click)="openMenu()"
+          />
+          <ion-select #menu interface="action-sheet" (ionChange)="onSelectNavigate($event)" style="display: none;">
+            <ion-select-option value="Dashboard">Dashboard</ion-select-option>
+            <ion-select-option value="Service">Service Connection</ion-select-option>
+          </ion-select>
+        </ion-list>
       </div>
       <ion-text color="dark">
         <h1>Dashboard</h1>
