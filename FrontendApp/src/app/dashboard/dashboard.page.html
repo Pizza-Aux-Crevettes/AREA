@@ -20,7 +20,11 @@
       </div>
     </div>
 
+
     <div class="flex-rectangle" *ngFor="let area of areas">
+        <div *ngIf="hoverText" class="popUp">
+            {{ hoverText }}
+        </div>
       <div class="main-rectangle">
         <div class="actionReaction-rect">
           <ion-list class="action-list">
@@ -32,10 +36,13 @@
                 (ionChange)="onSelectAction($event, area)"
                 [(ngModel)]="area.action"
               >
-                <ion-select-option value="Weather">When it rains</ion-select-option>
-                <ion-select-option value="Email">When I receive an email</ion-select-option>
-                <ion-select-option value="Alert">When it is an alert</ion-select-option>
-                  <ion-select-option value="DiscordUsername">When my discord username change</ion-select-option>
+                  <ion-select-option
+                      *ngFor="let item of menuItemsAction"
+                      [value]="item.action"
+                      [disabled]="area.action === item.action || !item.connected"
+                  >
+                      {{ item.label }}
+                  </ion-select-option>
               </ion-select>
             </ion-item>
           </ion-list>
@@ -102,10 +109,13 @@
                 [(ngModel)]="area.reaction"
                 value="{{area.reaction}}"
               >
-                <ion-select-option value="Spotify">Sad music is played</ion-select-option>
-                <ion-select-option value="sendEmail">send an email</ion-select-option>
-                <ion-select-option value="MP">send a discord mp</ion-select-option>
-                <ion-select-option value="Clip">Create a clip twitch</ion-select-option>
+                      <ion-select-option
+                          *ngFor="let item of menuItemsReaction"
+                          [value]="item.reaction"
+                          [disabled]="area.reaction === item.reaction || !item.connected"
+                      >
+                          {{ item.label }}
+                      </ion-select-option>
               </ion-select>
             </ion-item>
           </ion-list>

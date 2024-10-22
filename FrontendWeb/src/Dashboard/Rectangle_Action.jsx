@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, Fragment, useEffect } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import {
     Menu,
@@ -48,10 +48,121 @@ function RectangleDashboard({
     const [action, setAction] = useState(contentAct);
     const [reaction, setReaction] = useState(contentReact);
     const buttonRef = useRef(null);
+    const [menuItemsAction, setMenuItemsAction] = useState([
+        { action: 'Weather', label: 'When it rains', connected: false },
+        { action: 'Email', label: 'When I receive an email', connected: false },
+        { action: 'Alerts', label: 'When it is alerts', connected: false },
+        {
+            action: 'DiscordUsername',
+            label: 'When my discord username changes',
+            connected: false,
+        },
+    ]);
+
+    const [menuItemsReaction, setMenuItemsReaction] = useState([
+        { reaction: 'Spotify', label: 'Sad music is played', connected: false },
+        { reaction: 'sendEmail', label: 'Send an email', connected: false },
+        { reaction: 'MP', label: 'Send a mp', connected: false },
+        { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
+    ]);
+
+    const [hoverText, setHoverText] = useState('');
+
+    useEffect(() => {
+        const checkConnection = async () => {
+            for (let i = 0; i < menuItemsAction.length; i++) {
+                const res = await checkServicesConnexion(
+                    menuItemsAction[i].action
+                );
+                changeConnexionAction(i, res);
+            }
+            for (let i = 0; i < menuItemsReaction.length; i++) {
+                const res = await checkServicesConnexion(
+                    menuItemsReaction[i].reaction
+                );
+                changeConnexionReaction(i, res);
+            }
+        };
+        checkConnection();
+    }, [action, reaction]);
+
+    const checkServicesConnexion = async (area) => {
+        switch (area) {
+            case 'Email':
+                if (!Cookies.get('google_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordUsername':
+                if (!Cookies.get('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'Spotify':
+                if (!Cookies.get('spotify_token')) {
+                    return false;
+                }
+                break;
+            case 'sendEmail':
+                if (!Cookies.get('google_token')) {
+                    return false;
+                }
+                break;
+            case 'Clip':
+                if (!Cookies.get('twitch_token')) {
+                    return false;
+                }
+                break;
+            default:
+                return true;
+        }
+        return true;
+    };
+
+    const changeConnexionAction = (index, result) => {
+        let newItemAction = [...menuItemsAction];
+        newItemAction[index].connected = result;
+        setMenuItemsAction(newItemAction);
+    };
+    const changeConnexionReaction = (index, result) => {
+        let newItemReaction = [...menuItemsReaction];
+        newItemReaction[index].connected = result;
+        setMenuItemsReaction(newItemReaction);
+    };
 
     const handleRemove = () => {
         onRemove(id, action, reaction, inputContentAct, inputContentReact);
         close();
+    };
+
+    const MouseHover = (service, isConnected) => {
+        if (isConnected === true) {
+            setHoverText('');
+            return;
+        }
+        let text = '';
+        switch (service) {
+            case 'Email':
+                text = 'Please log in to google';
+                break;
+            case 'DiscordUsername':
+                text = 'Please log in to discord';
+                break;
+            case 'Spotify':
+                text = 'Please log in to spotify';
+                break;
+            case 'sendEmail':
+                text = 'Please log in to Google';
+                break;
+            case 'Clip':
+                text = 'Please log in to Twitch';
+                break;
+        }
+        setHoverText(text);
+    };
+
+    const handleMouseLeave = () => {
+        setHoverText('');
     };
 
     const handleInput = (field, fieldName) => {
@@ -89,9 +200,7 @@ function RectangleDashboard({
                     radius="md"
                     placeholder="City"
                     value={inputContentAct}
-                    onChange={(value) =>
-                        inputChange(id, 'inputAction', value)
-                    }
+                    onChange={(value) => inputChange(id, 'inputAction', value)}
                     data={cities.map((city) => ({
                         value: city.name,
                         label: city.name,
@@ -120,9 +229,7 @@ function RectangleDashboard({
                 <Select
                     placeholder="City"
                     value={inputContentAct}
-                    onChange={(value) =>
-                        inputChange(id, 'inputAction', value)
-                    }
+                    onChange={(value) => inputChange(id, 'inputAction', value)}
                     data={cities.map((city) => ({
                         value: city.name,
                         label: city.name,
@@ -134,6 +241,23 @@ function RectangleDashboard({
 
     return (
         <>
+            {hoverText ? (
+                <div
+                    className="popUp"
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                        zIndex: 100,
+                    }}
+                >
+                    {hoverText}
+                </div>
+            ) : (
+                <></>
+            )}
             <div className="rectangle">
                 <Modal
                     opened={opened}
@@ -157,20 +281,39 @@ function RectangleDashboard({
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setAction('Weather')}>
-                                When it rains
-                            </Menu.Item>
-                            <MenuDivider />
-                            <Menu.Item onClick={() => setAction('Email')}>
-                                When I receive an email
-                            </Menu.Item>
-                            <MenuDivider />
-                            <Menu.Item onClick={() => setAction('Alerts')}>
-                                When it is alerts
-                            </Menu.Item>
-                            <Menu.Item onClick={() => setAction('DiscordUsername')}>
-                                When my discord username change
-                            </Menu.Item>
+                            {menuItemsAction.map((item, index) => (
+                                <Fragment key={item.action}>
+                                    <div
+                                        onMouseOver={() =>
+                                            MouseHover(
+                                                item.action,
+
+                                                item.connected
+                                            )
+                                        }
+                                        onMouseLeave={handleMouseLeave}
+                                        style={{
+                                            display: 'inline-block',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <Menu.Item
+                                            onClick={() =>
+                                                setAction(item.action)
+                                            }
+                                            disabled={
+                                                action === item.action ||
+                                                item.connected === false
+                                            }
+                                        >
+                                            {item.label}
+                                        </Menu.Item>
+                                    </div>
+                                    {index !== menuItemsAction.length - 1 && (
+                                        <MenuDivider />
+                                    )}
+                                </Fragment>
+                            ))}
                         </Menu.Dropdown>
                     </Menu>
 
@@ -179,7 +322,9 @@ function RectangleDashboard({
                     {action === 'Email'
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
-                    {reaction === 'Tweet' || reaction === 'MP' || reaction === 'Clip'
+                    {reaction === 'Tweet' ||
+                    reaction === 'MP' ||
+                    reaction === 'Clip'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -196,21 +341,39 @@ function RectangleDashboard({
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => setReaction('Spotify')}>
-                                sad music is played
-                            </Menu.Item>
-                            <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('sendEmail')}>
-                                send an email
-                            </Menu.Item>
-                            <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('MP')}>
-                                send a mp
-                            </Menu.Item>
-                            <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('Clip')}>
-                                Create a clip twitch
-                            </Menu.Item>
+                            {menuItemsReaction.map((item, index) => (
+                                <Fragment key={item.reaction}>
+                                    <div
+                                        onMouseOver={() =>
+                                            MouseHover(
+                                                item.reaction,
+
+                                                item.connected
+                                            )
+                                        }
+                                        onMouseLeave={handleMouseLeave}
+                                        style={{
+                                            display: 'inline-block',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <Menu.Item
+                                            onClick={() =>
+                                                setAction(item.reaction)
+                                            }
+                                            disabled={
+                                                action === item.reaction ||
+                                                item.connected === false
+                                            }
+                                        >
+                                            {item.label}
+                                        </Menu.Item>
+                                    </div>
+                                    {index !== menuItemsAction.length - 1 && (
+                                        <MenuDivider />
+                                    )}
+                                </Fragment>
+                            ))}
                         </Menu.Dropdown>
                     </Menu>
                 </div>

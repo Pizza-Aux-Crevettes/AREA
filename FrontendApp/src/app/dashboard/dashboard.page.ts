@@ -25,6 +25,8 @@ interface Area {
     providers: [AreaService],
 })
 export class DashboardPage implements OnInit {
+    hoverText: string = '';
+
     areas: Area[] = [];
     serviceList: string[] = [
         'spotify_token',
@@ -63,6 +65,24 @@ export class DashboardPage implements OnInit {
         { name: 'Christchurch' },
     ];
 
+    menuItemsAction = [
+        { action: 'Weather', label: 'When it rains', connected: false },
+        { action: 'Email', label: 'When I receive an email', connected: false },
+        { action: 'Alerts', label: 'When it is alerts', connected: false },
+        {
+            action: 'DiscordUsername',
+            label: 'When my discord username changes',
+            connected: false,
+        },
+    ];
+
+    menuItemsReaction = [
+        { reaction: 'Spotify', label: 'Sad music is played', connected: false },
+        { reaction: 'sendEmail', label: 'Send an email', connected: false },
+        { reaction: 'MP', label: 'Send a mp', connected: false },
+        { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
+    ];
+
     constructor(
         private localStorage: LocalStorageService,
         private router: Router,
@@ -80,6 +100,52 @@ export class DashboardPage implements OnInit {
                     this.addNewArea();
                 }
             });
+        this.checkConnection();
+    }
+
+    checkServicesConnexion(area: string): boolean {
+        switch (area) {
+            case 'Email':
+                if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordUsername':
+                if (!this.localStorage.getItem('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'Spotify':
+                if (!this.localStorage.getItem('spotify_token')) {
+                    return false;
+                }
+                break;
+            case 'sendEmail':
+                if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'Clip':
+                if (!this.localStorage.getItem('twitch_token')) {
+                    return false;
+                }
+                break;
+            default:
+                return true;
+        }
+        return true;
+    }
+    checkConnection() {
+        for (let i = 0; i < this.menuItemsAction.length; i++) {
+            this.menuItemsAction[i].connected = this.checkServicesConnexion(
+                this.menuItemsAction[i].action
+            );
+        }
+        for (let i = 0; i < this.menuItemsReaction.length; i++) {
+            this.menuItemsReaction[i].connected = this.checkServicesConnexion(
+                this.menuItemsReaction[i].reaction
+            );
+        }
     }
 
     deleteCookies() {
@@ -107,7 +173,6 @@ export class DashboardPage implements OnInit {
             local: true,
         };
         this.areas.push(newArea);
-        console.log(this.areas);
     }
 
     onSelectAction(event: any, area: Area) {
