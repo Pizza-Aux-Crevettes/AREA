@@ -19,6 +19,7 @@ export class AreaService {
     ): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(
@@ -40,6 +41,7 @@ export class AreaService {
     delArea(token: string, body: any) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(
@@ -69,6 +71,7 @@ export class AreaService {
     getArea(token: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(

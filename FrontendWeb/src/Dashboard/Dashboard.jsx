@@ -25,6 +25,7 @@ function Dashboard() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token,
@@ -62,6 +63,7 @@ function Dashboard() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token: Cookies.get('token'),

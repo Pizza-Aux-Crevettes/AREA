@@ -1,11 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TokenService } from 'src/app/services/token/token.service';
-import { SpotifyService } from 'src/app/services/spotify/spotify.service';
-import { WeatherService } from 'src/app/services/weather/weather.service';
-import { GmailService } from 'src/app/services/gmail/gmail.service';
 import { AreaService } from 'src/app/services/area/area.service';
-import { of, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { Router } from '@angular/router';
 import { IonSelect } from '@ionic/angular';
