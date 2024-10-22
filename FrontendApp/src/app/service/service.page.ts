@@ -3,6 +3,7 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
+import {UtilsService} from 'src/app/services/utils/utils.service'
 
 @Component({
     selector: 'app-service',
@@ -12,34 +13,35 @@ import { TokenService } from 'src/app/services/token/token.service';
 export class ServicePage implements OnInit {
     serviceList: string[] = [
         'spotify_token',
-        'x_token',
+        'twitch_token',
         'google_token',
         'discord_token',
         'spotify_refresh',
         'google_refresh',
-        'x_refresh',
+        'twitch_refresh',
         'discord_refresh',
     ];
 
     public spotify_text: string = '';
     public google_text: string = '';
-    public x_text: string = '';
+    public twitch_text: string = '';
     public discord_text: string = '';
 
     public spotify_status: string = '';
     public google_status: string = '';
-    public x_status: string = '';
+    public twitch_status: string = '';
     public discord_status: string = '';
 
     public spotify_connect: boolean = false;
     public google_connect: boolean = false;
-    public x_connect: boolean = false;
+    public twitch_connect: boolean = false;
     public discord_connect: boolean = false;
 
     constructor(
         private localStorage: LocalStorageService,
         private router: Router,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private utilsService: UtilsService
     ) {}
 
     ngOnInit() {
@@ -61,8 +63,18 @@ export class ServicePage implements OnInit {
                             .setTokenInDb(token, email, this.serviceList[i])
                             .subscribe((response) => {
                                 this.clearUrl();
-                                console.log(response);
                             });
+                        const discord_token = this.localStorage.getItem('discord_token');
+                        if (discord_token !== null) {
+                            this.utilsService.getDiscordMe(discord_token).subscribe((response) => {
+                                const token = this.localStorage.getItem('token');
+                                if (token !== null) {
+                                    console.log(response.userData.username);
+                                    this.utilsService.setUsernameDiscordInDB(token, response.userData.username).subscribe((response) => {window.location.reload()})
+                                }
+                            })
+
+                        }
                     });
             }
         }
@@ -79,16 +91,16 @@ export class ServicePage implements OnInit {
             this.spotify_connect = false;
         }
         if (
-            this.localStorage.getItem('x_token') &&
-            this.localStorage.getItem('x_token') !== 'null'
+            this.localStorage.getItem('twitch_token') &&
+            this.localStorage.getItem('twitch_token') !== 'null'
         ) {
-            this.x_text = 'disconnection of X';
-            this.x_status = '#3AB700';
-            this.x_connect = true;
+            this.twitch_text = 'disconnection of Twitch';
+            this.twitch_status = '#3AB700';
+            this.twitch_connect = true;
         } else {
-            this.x_text = 'Connect to X';
-            this.x_status = '8cb3ff';
-            this.x_connect = false;
+            this.twitch_text = 'Connect to Twitch';
+            this.twitch_status = '8cb3ff';
+            this.twitch_connect = false;
         }
         if (
             this.localStorage.getItem('google_token') &&

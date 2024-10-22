@@ -54,7 +54,7 @@ function Title({ title }) {
         Cookies.set('spotify_token', '', { expires: -1 });
         Cookies.set('google_token', '', { expires: -1 });
         Cookies.set('discord_token', '', { expires: -1 });
-        Cookies.set('x_token', '', { expires: -1 });
+        Cookies.set('twitch_token', '', { expires: -1 });
 
         setTimeout(() => {
             window.location.reload();

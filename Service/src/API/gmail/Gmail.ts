@@ -36,7 +36,6 @@ export async function refreshGmailToken(email: string) {
 
         if (response.data) {
             const new_access_token = response.data.access_token;
-            console.log(new_access_token);
             await updateGoogleToken(email, new_access_token);
         }
     } catch (error) {

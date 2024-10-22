@@ -168,6 +168,9 @@ function RectangleDashboard({
                             <Menu.Item onClick={() => setAction('Alerts')}>
                                 When it is alerts
                             </Menu.Item>
+                            <Menu.Item onClick={() => setAction('DiscordUsername')}>
+                                When my discord username change
+                            </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
@@ -176,7 +179,7 @@ function RectangleDashboard({
                     {action === 'Email'
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
-                    {reaction === 'Tweet' || reaction === 'MP'
+                    {reaction === 'Tweet' || reaction === 'MP' || reaction === 'Clip'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -201,12 +204,12 @@ function RectangleDashboard({
                                 send an email
                             </Menu.Item>
                             <MenuDivider />
-                            <Menu.Item onClick={() => setReaction('Tweet')}>
-                                tweet your input
-                            </Menu.Item>
-                            <MenuDivider />
                             <Menu.Item onClick={() => setReaction('MP')}>
                                 send a mp
+                            </Menu.Item>
+                            <MenuDivider />
+                            <Menu.Item onClick={() => setReaction('Clip')}>
+                                Create a clip twitch
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>

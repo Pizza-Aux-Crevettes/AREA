@@ -54,7 +54,7 @@ test('test', async ({ page }) => {
   await page.getByRole('menuitem', { name: 'Service Connection' }).click();
   await expect(page.getByRole('heading', { name: 'Service Connection' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Connect to discord' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Connect to Twitter (X)' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Connect to Twitch' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Connect to Google' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Connect to Spotify' })).toBeVisible();
 
