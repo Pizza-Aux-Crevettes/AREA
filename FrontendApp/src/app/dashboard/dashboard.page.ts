@@ -79,6 +79,7 @@ export class DashboardPage implements OnInit {
         { reaction: 'sendEmail', label: 'Send an email', connected: false },
         { reaction: 'MP', label: 'Send a mp', connected: false },
         { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
+        { reaction: 'Event', label: 'Create a Event on Google Calendar', connected: false },
     ];
 
     constructor(
@@ -125,6 +126,11 @@ export class DashboardPage implements OnInit {
                 break;
             case 'Clip':
                 if (!this.localStorage.getItem('twitch_token')) {
+                    return false;
+                }
+                break;
+            case 'Event':
+                if (!this.localStorage.getItem('google_token')) {
                     return false;
                 }
                 break;

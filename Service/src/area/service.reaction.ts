@@ -25,7 +25,7 @@ export async function setReaction(
             result = await createClipTwitch(inputReaction, token[0].twitch_token);
             break;
         case 'Event':
-            result = await createCalEvent(token[0].google_token, email);
+            result = await createCalEvent(token[0].google_token, email, inputReaction);
             break;
         default:
             break;
