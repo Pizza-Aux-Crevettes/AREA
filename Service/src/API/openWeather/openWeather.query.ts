@@ -40,9 +40,9 @@ export async function getWeather(userCity: string): Promise<any> {
 
             const data = await response.json();
             console.log(`Description: ${data.weather[0].description}`);
-            console.log(`Température: ${data.main.temp}°C`);
-            console.log(`Humidité: ${data.main.humidity}%`);
-            console.log(`Vent: ${data.wind.speed} m/s`);
+            // console.log(`Température: ${data.main.temp}°C`);
+            // console.log(`Humidité: ${data.main.humidity}%`);
+            // console.log(`Vent: ${data.wind.speed} m/s`);
 
             let Word;
             for (let i = 0; i <= data.weather.length; i++) {
