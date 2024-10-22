@@ -25,12 +25,15 @@ async function getUserId(username: string, token: string) {
         console.error('error', error);
         return null;
     }
-    return response.data[0].id;
+    return response.data?.[0]?.id || null;;
 }
 
 export async function clipTwitch(username: string, token: string) {
     const idUsername = await getUserId(username, token);
     let data;
+    if (idUsername === null) {
+        return;
+    }
     try {
         const result = await fetch(
             `https://api.twitch.tv/helix/clips?broadcaster_id=${idUsername}`,
