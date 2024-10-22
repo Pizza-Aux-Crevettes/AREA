@@ -92,6 +92,7 @@
 
 .apply-button {
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .add-button {
@@ -103,4 +104,14 @@
 
 .close-button {
     height: 5%;
+}
+
+.menu-button {
+    width: 24px;
+    height: 24px;
+    margin-top: 100%;
+}
+
+.Dashboard-title-bar ion-list {
+    background-color: transparent;
 }
