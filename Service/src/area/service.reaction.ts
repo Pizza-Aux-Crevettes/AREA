@@ -13,7 +13,6 @@ export async function setReaction(
     const token = await getTokens(email);
     switch (reaction) {
         case 'Spotify':
-            console.log(token[0].spotify_token)
             result = await playSong(email, token[0].spotify_token);
             break;
         case 'sendEmail':
