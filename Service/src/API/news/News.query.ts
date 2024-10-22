@@ -43,8 +43,8 @@ async function registerUserNews(email: string, news_author: string, news_title: 
 }
 
 async function updateUserNews(email: string, user_data: any, news_author: string, news_title: string): Promise<any> {
-    if (user_data.Author === news_author && user_data.Title === news_title) {
-        return true;
+    if (user_data[0].Author === news_author && user_data[0].Title === news_title) {
+        return false;
     } else {
         const {error} = await supabase
             .from('NewsArticle')
@@ -69,7 +69,7 @@ async function updateUserNews(email: string, user_data: any, news_author: string
 async function getDataUser(email: string, article: Article): Promise<any> {
     const { data: user_data, error } = await supabase
         .from("NewsArticle")
-        .select("Email")
+        .select("*")
         .eq("Email", email);
 
     if (error) {
@@ -86,13 +86,14 @@ export async function getArticle(email: string, title: string): Promise<any> {
     const formattedDate = today.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
     console.log(formattedDate);
     const urlTranslate =
-        `https://newsapi.org/v2/everything?pageSize=1&qInTitle="${title}"&from=${formattedDate}&sortBy=publishedAt&apiKey=${newsKey}`;
+        `https://newsapi.org/v2/everything?pageSize=1&qInTitle="${title}"&sortBy=publishedAt&apiKey=${newsKey}`;
 
     try {
         const result = await fetch(urlTranslate);
 
         const jsonData = await result.text();
-        const article = await parseArticle(jsonData);
+        const article = parseArticle(jsonData);
+        console.log("email:", email);
         console.log("Author:", article.author);
         console.log("Title:", article.title);
         if (article.author !== undefined && article.title !== undefined) {
