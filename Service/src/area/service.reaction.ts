@@ -2,6 +2,7 @@ import { getTokens } from '../DB/tokens/token';
 import { sendMail } from '../API/gmail/Gmail';
 import { playSong } from '../API/spotify/spotify';
 import { discordSendMP } from '../API/Discord/discord';
+import { createClipTwitch } from '../API/twitch/twitch';
 
 export async function setReaction(
     reaction: string,
@@ -20,6 +21,9 @@ export async function setReaction(
             break;
         case 'MP':
             result = await discordSendMP(inputReaction, "Un message discord");
+            break;
+        case 'Clip':
+            result = await createClipTwitch(inputReaction, token[0].twitch_token);
             break;
         default:
             break;
