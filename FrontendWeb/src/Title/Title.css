@@ -11,15 +11,12 @@
   color: black;
 }
 
-.menu-navigate:hover {
-  background-color: #5f76cc;
-}
-
 .top-part .button-style {
   background-color: transparent;
   border: none;
   cursor: pointer;
-
+  display: flex;
+  align-items: center;
 }
 
 .top-part .button-style:hover {

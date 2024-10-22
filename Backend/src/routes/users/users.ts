@@ -69,12 +69,10 @@ module.exports = (app: Express) => {
             console.error('JWT verification failed:', error);
             res.status(401).json({ msg: 'Invalid or expired token' });
         }
-        console.log(decoded.email);
         const result = await getAdaptability(decoded.email);
         if (!result) {
             res.status(400).json({ msg: 'invalid email' });
         }
-        console.log(result)
         res.status(200).json(result);
     });
 };
