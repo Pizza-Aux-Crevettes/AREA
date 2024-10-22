@@ -23,8 +23,8 @@ export async function setActions(
         case 'Email':
             result = await haveMail(email, token[0].google_token);
             break;
-        // case 'DiscordUsername':
-            // result = await ifChangeUsername(email);
+        case 'DiscordUsername':
+            result = await ifChangeUsername(email);
             break;
         default:
             break;
