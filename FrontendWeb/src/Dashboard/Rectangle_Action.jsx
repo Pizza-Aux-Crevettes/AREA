@@ -65,6 +65,7 @@ function RectangleDashboard({
         { reaction: 'sendEmail', label: 'Send an email', connected: false },
         { reaction: 'MP', label: 'Send a mp', connected: false },
         { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
+        { reaction: 'Event', label: 'Create a Event on Google Calendar', connected: false },
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -111,6 +112,11 @@ function RectangleDashboard({
                 break;
             case 'Clip':
                 if (!Cookies.get('twitch_token')) {
+                    return false;
+                }
+                break;
+            case 'Event':
+                if (!Cookies.get('google_token')) {
                     return false;
                 }
                 break;
@@ -320,11 +326,8 @@ function RectangleDashboard({
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
-                    {action === 'Email'
-                        ? handleInput(inputContentAct, 'inputAction')
-                        : null}
 
-                    {reaction === 'MP' || reaction === 'Clip'
+                    {reaction === 'MP' || reaction === 'Clip' || reaction === 'Event'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -359,7 +362,7 @@ function RectangleDashboard({
                                     >
                                         <Menu.Item
                                             onClick={() =>
-                                                setAction(item.reaction)
+                                                setReaction(item.reaction)
                                             }
                                             disabled={
                                                 action === item.reaction ||

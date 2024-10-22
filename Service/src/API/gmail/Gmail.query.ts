@@ -86,7 +86,7 @@ export async function sendGmail(token: string, dest: string) {
     }
 }
 
-export async function insertCalEvent(token: string, idCalendar: string) {
+export async function insertCalEvent(token: string, idCalendar: string, title: string) {
     const start = new Date();
     start.setDate(start.getDate() + 1);
     const end = new Date(start);
@@ -104,7 +104,7 @@ export async function insertCalEvent(token: string, idCalendar: string) {
     };
 
     const content = {
-        summary: 'AreaEpitechToulouse',
+        summary: title,
         start: {
             dateTime: formatDate(start),
             timeZone: 'Europe/Paris',
