@@ -1,7 +1,8 @@
 import logo_menu from '../assets/menu.png';
 import logo_exit from '../assets/exit.png';
-import { Menu, MenuDivider } from '@mantine/core';
+import { Menu, MenuDivider, MenuItem } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import './Title.css';
 import Cookies from 'cookies-js';
 import { browser } from 'globals';
@@ -9,6 +10,11 @@ import { browser } from 'globals';
 function NavigateMenu() {
     const navigate = useNavigate();
     const location = useLocation();
+    const [isDyslexicFont, setIsDyslexicFont] = useState(false);
+
+    const toggleFont = () => {
+        setIsDyslexicFont(!isDyslexicFont);
+    };
 
     function goToDashboard() {
         navigate('/');
@@ -21,7 +27,7 @@ function NavigateMenu() {
     }
 
     return (
-        <div>
+        <div style={{ fontFamily: isDyslexicFont ? 'OpenDyslexic, Arial, sans-serif' : 'Arial, sans-serif'}}>
             <Menu width={200} shadow="md">
                 <Menu.Target>
                     <img src={logo_menu} alt="Menu logo" height="30vh" />
@@ -32,6 +38,10 @@ function NavigateMenu() {
                     <Menu.Item onClick={goToService}>
                         Service Connection
                     </Menu.Item>
+                    <MenuDivider/>
+                    <MenuItem onClick={toggleFont}>
+                        Activate dislexic font
+                    </MenuItem>
                 </Menu.Dropdown>
             </Menu>
         </div>
