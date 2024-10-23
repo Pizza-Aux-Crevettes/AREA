@@ -120,7 +120,8 @@ function Service() {
                                 return response.json();
                             })
                             .then((json) => {
-                                setUsernameDiscordInDB(json.userData.username);
+                                console.log("json: ", json);
+                                setUsernameDiscordInDB(json.userData.username, json.guildCount);
                             });
 
 
@@ -172,7 +173,8 @@ function Service() {
     }, [navigate, location]);
 
 
-    const setUsernameDiscordInDB = (userName) => {
+    const setUsernameDiscordInDB = (userName, nbGuilds) => {
+        console.log(nbGuilds, userName)
         fetch('http://localhost:8080/discord/setUsername', {
             method: 'POST',
             headers: {
@@ -181,6 +183,7 @@ function Service() {
             body: JSON.stringify({
                 token: Cookies.get('token'),
                 username: userName,
+                nbGuilds: nbGuilds,
             }),
         });
     };

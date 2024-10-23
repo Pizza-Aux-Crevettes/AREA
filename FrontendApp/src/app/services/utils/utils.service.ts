@@ -34,7 +34,7 @@ export class UtilsService {
         }
     }
 
-    setUsernameDiscordInDB(token: string, username: string): Observable<any> {
+    setUsernameDiscordInDB(token: string, username: string, nbGuilds: number): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
@@ -44,7 +44,8 @@ export class UtilsService {
                 JSON.parse(
                     JSON.stringify({
                         token: token,
-                        username: username
+                        username: username,
+                        nbGuilds: nbGuilds
                     })
                 ),
                 {

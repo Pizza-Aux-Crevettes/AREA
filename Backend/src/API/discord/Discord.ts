@@ -15,7 +15,7 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        const scope = 'identify email';
+        const scope = 'identify email guilds guilds.members.read bot';
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
     });
@@ -158,10 +158,20 @@ module.exports = (app: Express) => {
                 }
             );
 
-            const userData = response.data;
+            const responseGuilds = await axios.get(
+                'https://discord.com/api/users/@me/guilds',
+                {
+                    headers: {
+                        Authorization: `Bearer ${webToken}`,
+                    },
+                }
+            );
 
+            const userData = response.data;
+            const guildCount = responseGuilds.data.length;
             res.status(200).json({
                 userData,
+                guildCount,
             });
         } catch (error) {
             console.error(
@@ -177,7 +187,7 @@ module.exports = (app: Express) => {
         const user_info = req.body;
         const decoded = jwt.verify(user_info.token, process.env.SECRET);
 
-        const result = await setUserName(decoded.email, user_info.username);
+        const result = await setUserName(decoded.email, user_info.username, user_info.nbGuilds);
         if (!result) {
             res.status(400).json({
                 msg: "Erreur lors de l'insertion du nom Discord de l'utilisateur ",
