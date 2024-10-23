@@ -171,12 +171,18 @@ function RectangleDashboard({
                             <Menu.Item onClick={() => setAction('DiscordUsername')}>
                                 When my discord username change
                             </Menu.Item>
+                            <Menu.Item onClick={() => setAction('News')}>
+                                When news with selected title is posted
+                            </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
                     {action === 'Email'
+                        ? handleInput(inputContentAct, 'inputAction')
+                        : null}
+                    {action === 'News'
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
                     {reaction === 'MP' || reaction === 'Clip'
