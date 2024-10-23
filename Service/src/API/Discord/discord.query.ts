@@ -101,17 +101,13 @@ export async function discordUserMe(token: string) {
             );
 
             return response.data;
-
         } catch (error) {
-            console.error(
-                "Erreur lors de la récupération des infos de l'utilisateur:",
-                error
-            );
+            console.error('Error when get user informations', error);
         }
     }
 }
 
-export async function getNbGuilds(email: string) : Promise<any> {
+export async function getNbGuilds(email: string): Promise<any> {
     try {
         const { data } = await supabase
             .from('DiscordUserDatas')
@@ -125,7 +121,7 @@ export async function getNbGuilds(email: string) : Promise<any> {
     }
 }
 
-export async function updateBDGuilds(email: string, nb: number) : Promise<any> {
+export async function updateDBGuilds(email: string, nb: number): Promise<any> {
     try {
         const { error } = await supabase
             .from('DiscordUserDatas')
@@ -136,7 +132,10 @@ export async function updateBDGuilds(email: string, nb: number) : Promise<any> {
             .select();
         return !error;
     } catch (error) {
-        console.error('update Discord Username', e);
+        console.error(
+            'Error when update the actual number of discord guilds ',
+            e
+        );
         return false;
     }
 }
@@ -156,11 +155,11 @@ export async function getActualNbGuilds(token: string) {
             return response.data;
         } catch (error) {
             console.error(
-                "Error when change the user name: ",
+                'Error when get the actual number of discord guilds ',
                 error
             );
         }
     } else {
-        console.error("Token is null or undefined");
+        console.error('Token is null or undefined');
     }
 }
