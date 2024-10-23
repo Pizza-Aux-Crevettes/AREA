@@ -25,7 +25,7 @@ export class DashboardPage implements OnInit {
     @ViewChild('menu', { static: false }) menu!: IonSelect;
 
     areas: Area[] = [];
-    
+
     serviceList: string[] = [
       'spotify_token',
       'twitch_token',
@@ -36,7 +36,7 @@ export class DashboardPage implements OnInit {
       'twitch_refresh',
       'discord_refresh',
     ];
-  
+
     cities: any[] = [
       { name: 'Paris' },
       { name: 'Marseille' },
@@ -49,7 +49,7 @@ export class DashboardPage implements OnInit {
       { name: 'Bordeaux' },
       { name: 'Lille' },
     ];
-  
+
     cities_alerts = [
       { name: 'Tokyo' },
       { name: 'Jakarta' },
@@ -67,6 +67,7 @@ export class DashboardPage implements OnInit {
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
         { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
             label: 'When my discord username changes',
@@ -87,7 +88,7 @@ export class DashboardPage implements OnInit {
       private router: Router,
       private areaService: AreaService
     ) {}
-  
+
     ngOnInit() {
         this.areaService
             .getArea(`${this.localStorage.getItem('token')}`)
@@ -163,7 +164,7 @@ export class DashboardPage implements OnInit {
       }
 
     }
-  
+
     deleteCookies() {
       this.localStorage.removeItem('token');
       this.serviceList.forEach(service => {
@@ -173,11 +174,11 @@ export class DashboardPage implements OnInit {
       });
       this.router.navigate(['/']);
     }
-  
+
     moveToPage(navigate: string) {
       this.router.navigate([navigate]);
     }
-  
+
     addNewArea(): void {
       const newArea: Area = {
         id: this.areas.length,
@@ -191,19 +192,19 @@ export class DashboardPage implements OnInit {
       this.areas.push(newArea);
 
     }
-  
+
     onSelectAction(event: any, area: Area) {
       area.action = event.detail.value;
     }
-  
+
     onSelectReaction(event: any, area: Area) {
       area.reaction = event.detail.value;
     }
-  
+
     onSelectCity(event: any, area: Area) {
       area.inputAction = event.detail.value;
     }
-  
+
     openMenu(menu: IonSelect) {
         if (menu) {
           menu.open();
@@ -211,7 +212,7 @@ export class DashboardPage implements OnInit {
           console.log("Menu not found");
         }
     }
-  
+
     onSelectNavigate(event: any) {
       const selectedValue = event.detail.value;
       if (selectedValue === 'Dashboard') {
@@ -234,7 +235,7 @@ export class DashboardPage implements OnInit {
     DelArea(id: number) {
       const token = this.localStorage.getItem('token');
       if (!token) return;
-  
+
       const area = this.areas.find(area => area.id === id);
       if (area) {
         const body = {
@@ -248,7 +249,7 @@ export class DashboardPage implements OnInit {
         });
       }
     }
-  
+
     ApplyArea(action: string, reaction: string, inputAction?: string, inputReaction?: string) {
       const token = this.localStorage.getItem('token');
       if (token) {
