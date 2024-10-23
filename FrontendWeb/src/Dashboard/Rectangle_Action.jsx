@@ -58,6 +58,7 @@ function RectangleDashboard({
             label: 'When my discord username changes',
             connected: false,
         },
+        { action: 'DiscordGuilds', label: 'When my number of discord guilds change', connected: false },
     ]);
 
     const [menuItemsReaction, setMenuItemsReaction] = useState([
@@ -96,6 +97,11 @@ function RectangleDashboard({
                 }
                 break;
             case 'DiscordUsername':
+                if (!Cookies.get('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordGuilds':
                 if (!Cookies.get('discord_token')) {
                     return false;
                 }
@@ -288,48 +294,53 @@ function RectangleDashboard({
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            {menuItemsAction.map((item, index) => (
-                                <Fragment key={item.action}>
-                                    <div
-                                        onMouseOver={() =>
-                                            MouseHover(
-                                                item.action,
+                            {
+                                menuItemsAction.map((item, index) => (
+                                    <Fragment key={item.action}>
+                                        <div
+                                            onMouseOver={() =>
+                                                MouseHover(
+                                                    item.action,
 
-                                                item.connected
-                                            )
-                                        }
-                                        onMouseLeave={handleMouseLeave}
-                                        style={{
-                                            display: 'inline-block',
-                                            position: 'relative',
-                                        }}
-                                    >
-                                        <Menu.Item
-                                            onClick={() =>
-                                                setAction(item.action)
+                                                    item.connected
+                                                )
                                             }
-                                            disabled={
-                                                action === item.action ||
-                                                item.connected === false
-                                            }
+                                            onMouseLeave={handleMouseLeave}
+                                            style={{
+                                                display: 'inline-block',
+                                                position: 'relative',
+                                            }}
                                         >
-                                            {item.label}
-                                        </Menu.Item>
-                                    </div>
-                                    {index !== menuItemsAction.length - 1 && (
-                                        <MenuDivider />
-                                    )}
-                                </Fragment>
-                            ))}
-                        </Menu.Dropdown>
-                    </Menu>
+                                            <Menu.Item
+                                                onClick={() =>
+                                                    setAction(item.action)
+                                                }
+                                                disabled={
+                                                    action === item.action ||
+                                                    item.connected === false
+                                                }
+                                            >
+                                                {item.label}
+                                            </Menu.Item>
+                                        </div>
+                                        {index !== menuItemsAction.length - 1 && (
+                                            <MenuDivider />
+                                        )}
+                                    </Fragment>
+                                ))
+                            }
+                        </Menu.Dropdown >
+                    </Menu >
 
-                    {action === 'Weather' ? handleWeather() : null}
+                    {action === 'Weather' ? handleWeather() : null
+                    }
                     {action === 'Alerts' ? handleAlerts() : null}
 
-                    {reaction === 'MP' || reaction === 'Clip' || reaction === 'Event'
-                        ? handleInput(inputContentReact, 'inputReaction')
-                        : null}
+                    {
+                        reaction === 'MP' || reaction === 'Clip' || reaction === 'Event'
+                            ? handleInput(inputContentReact, 'inputReaction')
+                            : null
+                    }
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
@@ -380,11 +391,11 @@ function RectangleDashboard({
 
                         </Menu.Dropdown>
                     </Menu>
-                </div>
+                </div >
                 <button className="button-cross" onClick={open}>
                     <img src={logo_cross} width={35} height={35} alt="cross" />
                 </button>
-            </div>
+            </div >
 
             <Button
                 className="button-correct"
