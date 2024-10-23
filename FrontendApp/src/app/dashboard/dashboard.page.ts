@@ -72,6 +72,7 @@ export class DashboardPage implements OnInit {
             label: 'When my discord username changes',
             connected: false,
         },
+        { action: 'DiscordGuilds', label: 'When my number of discord guilds change', connected: false }
     ];
 
     menuItemsReaction = [
@@ -110,6 +111,11 @@ export class DashboardPage implements OnInit {
                 }
                 break;
             case 'DiscordUsername':
+                if (!this.localStorage.getItem('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordGuilds':
                 if (!this.localStorage.getItem('discord_token')) {
                     return false;
                 }
