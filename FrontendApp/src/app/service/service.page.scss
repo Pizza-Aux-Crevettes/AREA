@@ -13,7 +13,8 @@
     padding: 10px;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 5px;
+    // margin-bottom: 5px;
+    align-items: center;
 }
 
 .Service-div .flex-rectangle {
@@ -52,9 +53,9 @@
 }
 
 .menu-button {
-    width: 24px;
-    height: 24px;
-    margin-top: 100%;
+    width: 35px;
+    height: 35px;
+    color: black;
 }
 
 .Service-div .icon-container {
@@ -64,4 +65,11 @@
 
 .Service-title-bar ion-list{
     background-color: transparent;
+}
+
+.title {
+    color: black;
+    margin-bottom: 15px;
+    display: flex;
+    align-self: center;
 }

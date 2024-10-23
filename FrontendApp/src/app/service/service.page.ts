@@ -148,9 +148,13 @@ export class ServicePage implements OnInit {
         this.router.navigate(['/dashboard']);
     }
 
-    openMenu() {
-        this.menu.open();
-      }
+    openMenu(menu: IonSelect) {
+        if (menu) {
+          menu.open();
+        } else {
+          console.log("Menu not found");
+        }
+    }
     
       moveToPage(navigate: string) {
         this.router.navigate([navigate]);
@@ -164,6 +168,16 @@ export class ServicePage implements OnInit {
           this.moveToPage('/service');
         }
       }
+
+      onSelectParam(event: any) {
+        const selectedValue = event.detail.value;
+        if (selectedValue === 'Log out') {
+          this.deleteCookies();
+        } else if (selectedValue === 'Dislexic font') {
+          this.moveToPage('/dashboard');
+        }
+      }
+
 
     ManageService(service: string, status: boolean) {
         if (!status) {
