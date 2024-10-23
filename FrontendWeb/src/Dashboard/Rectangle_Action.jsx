@@ -18,7 +18,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${Cookies.get('token')}`,
+            Authorization: `Bearer ${Cookies.get('token')}`,
         },
         body: JSON.stringify({
             token: Cookies.get('token'),
@@ -58,7 +58,11 @@ function RectangleDashboard({
             label: 'When my discord username changes',
             connected: false,
         },
-        { action: 'DiscordGuilds', label: 'When my number of discord guilds change', connected: false },
+        {
+            action: 'DiscordGuilds',
+            label: 'When my number of discord guilds change',
+            connected: false,
+        },
     ]);
 
     const [menuItemsReaction, setMenuItemsReaction] = useState([
@@ -66,7 +70,11 @@ function RectangleDashboard({
         { reaction: 'sendEmail', label: 'Send an email', connected: false },
         { reaction: 'MP', label: 'Send a mp', connected: false },
         { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
-        { reaction: 'Event', label: 'Create a Event on Google Calendar', connected: false },
+        {
+            reaction: 'Event',
+            label: 'Create a Event on Google Calendar',
+            connected: false,
+        },
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -155,20 +163,26 @@ function RectangleDashboard({
         }
         let text = '';
         switch (service) {
-            case 'Email':
-                text = 'Please log in to google';
-                break;
             case 'DiscordUsername':
+                text = 'Please log in to discord';
+                break;
+            case 'DiscordGuilds':
                 text = 'Please log in to discord';
                 break;
             case 'Spotify':
                 text = 'Please log in to spotify';
                 break;
             case 'sendEmail':
-                text = 'Please log in to Google';
+                text = 'Please log in to google';
+                break;
+            case 'Event':
+                text = 'Please log in to google';
+                break;
+            case 'Email':
+                text = 'Please log in to google';
                 break;
             case 'Clip':
-                text = 'Please log in to Twitch';
+                text = 'Please log in to twitch';
                 break;
         }
         setHoverText(text);
@@ -294,53 +308,50 @@ function RectangleDashboard({
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            {
-                                menuItemsAction.map((item, index) => (
-                                    <Fragment key={item.action}>
-                                        <div
-                                            onMouseOver={() =>
-                                                MouseHover(
-                                                    item.action,
+                            {menuItemsAction.map((item, index) => (
+                                <Fragment key={item.action}>
+                                    <div
+                                        onMouseOver={() =>
+                                            MouseHover(
+                                                item.action,
 
-                                                    item.connected
-                                                )
+                                                item.connected
+                                            )
+                                        }
+                                        onMouseLeave={handleMouseLeave}
+                                        style={{
+                                            display: 'inline-block',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <Menu.Item
+                                            onClick={() =>
+                                                setAction(item.action)
                                             }
-                                            onMouseLeave={handleMouseLeave}
-                                            style={{
-                                                display: 'inline-block',
-                                                position: 'relative',
-                                            }}
+                                            disabled={
+                                                action === item.action ||
+                                                item.connected === false
+                                            }
                                         >
-                                            <Menu.Item
-                                                onClick={() =>
-                                                    setAction(item.action)
-                                                }
-                                                disabled={
-                                                    action === item.action ||
-                                                    item.connected === false
-                                                }
-                                            >
-                                                {item.label}
-                                            </Menu.Item>
-                                        </div>
-                                        {index !== menuItemsAction.length - 1 && (
-                                            <MenuDivider />
-                                        )}
-                                    </Fragment>
-                                ))
-                            }
-                        </Menu.Dropdown >
-                    </Menu >
+                                            {item.label}
+                                        </Menu.Item>
+                                    </div>
+                                    {index !== menuItemsAction.length - 1 && (
+                                        <MenuDivider />
+                                    )}
+                                </Fragment>
+                            ))}
+                        </Menu.Dropdown>
+                    </Menu>
 
-                    {action === 'Weather' ? handleWeather() : null
-                    }
+                    {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
 
-                    {
-                        reaction === 'MP' || reaction === 'Clip' || reaction === 'Event'
-                            ? handleInput(inputContentReact, 'inputReaction')
-                            : null
-                    }
+                    {reaction === 'MP' ||
+                    reaction === 'Clip' ||
+                    reaction === 'Event'
+                        ? handleInput(inputContentReact, 'inputReaction')
+                        : null}
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
@@ -388,14 +399,13 @@ function RectangleDashboard({
                                     )}
                                 </Fragment>
                             ))}
-
                         </Menu.Dropdown>
                     </Menu>
-                </div >
+                </div>
                 <button className="button-cross" onClick={open}>
                     <img src={logo_cross} width={35} height={35} alt="cross" />
                 </button>
-            </div >
+            </div>
 
             <Button
                 className="button-correct"
