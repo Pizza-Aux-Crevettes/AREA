@@ -3,6 +3,7 @@ import { getArticle } from './News.query';
 dotenv.config();
 
 export async function getNewsDatas(email: string, title: string): Promise<any> {
+    console.log("News :")
     const result = await getArticle(email, title);
     if (result !== null) {
         return result;

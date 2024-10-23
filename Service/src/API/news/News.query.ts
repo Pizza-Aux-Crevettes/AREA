@@ -93,10 +93,12 @@ export async function getArticle(email: string, title: string): Promise<any> {
         const jsonData = await result.text();
         const article = parseArticle(jsonData);
         console.log("email:", email);
-        console.log("Author:", article.author);
-        console.log("Title:", article.title);
+        console.log("article Author:", article.author);
+        console.log("article Title:", article.title);
         if (article.author !== undefined && article.title !== undefined) {
             const user_data = await getDataUser(email);
+            console.log("DB Author:", user_data[0].Author);
+            console.log("DB Title:", user_data[0].Title, "End news\n");
             if (user_data.length === 0) {
                 const register = await registerUserNews(email, article.author, article.title);
                 return register;
@@ -105,6 +107,7 @@ export async function getArticle(email: string, title: string): Promise<any> {
                 return update;
             }
         } else {
+            console.log("End news\n");
             return false;
         }
     } catch (error) {
