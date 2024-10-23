@@ -37,6 +37,7 @@ module.exports = (app: Express) => {
         let decoded : any;
         res.setHeader('Content-Type', 'application/json');
         const userInfo = req.body;
+        console.log(userInfo);
         if (!userInfo.token) {
             res.status(401).json();
             return;

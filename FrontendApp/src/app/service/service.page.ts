@@ -11,6 +11,7 @@ import { IonSelect } from '@ionic/angular';
     styleUrls: ['./service.page.scss'],
 })
 export class ServicePage implements OnInit {
+    isDislexicFontEnabled: boolean = false;
     @ViewChild('menu', { static: false }) menu!: IonSelect;
     serviceList: string[] = [
         'spotify_token',
@@ -65,6 +66,10 @@ export class ServicePage implements OnInit {
                             .subscribe((response) => {
                                 this.clearUrl();
                             });
+                        this.tokenService.getAdaptabilityUser(userToken).subscribe((adaptabilityResponse) => {
+                            console.log('Adaptability Response:', adaptabilityResponse);
+                            this.isDislexicFontEnabled = adaptabilityResponse.adadptibilyText;
+                        });
                         const discord_token = this.localStorage.getItem('discord_token');
                         if (discord_token !== null) {
                             this.utilsService.getDiscordMe(discord_token).subscribe((response) => {
@@ -129,6 +134,28 @@ export class ServicePage implements OnInit {
         }
     }
 
+    toggleDislexicFont() {
+        const userToken = localStorage.getItem('token');
+    
+        this.tokenService.setAdaptabilityUser(userToken).subscribe(
+            (response) => {
+                console.log('Updated adaptability response:', response);
+                this.tokenService.getAdaptabilityUser(userToken).subscribe(
+                    (adaptabilityResponse) => {
+                        this.isDislexicFontEnabled = adaptabilityResponse[0].adaptabilityText;;
+                        console.log('Adaptability response:', adaptabilityResponse);
+                    },
+                    (error) => {
+                        console.error('Error fetching adaptability:', error);
+                    }
+                );
+            },
+            (error) => {
+                console.error('Error updating adaptability:', error);
+            }
+        );
+    }
+
     clearUrl() {
         const url = window.location.href.split('?')[0];
         window.history.replaceState({}, document.title, url);
@@ -165,7 +192,7 @@ export class ServicePage implements OnInit {
         if (selectedValue === 'Dashboard') {
           this.moveToPage('/dashboard');
         } else if (selectedValue === 'Service') {
-          this.moveToPage('/service');
+            this.moveToPage('/service');
         }
       }
 
@@ -174,7 +201,7 @@ export class ServicePage implements OnInit {
         if (selectedValue === 'Log out') {
           this.deleteCookies();
         } else if (selectedValue === 'Dislexic font') {
-          this.moveToPage('/dashboard');
+          this.toggleDislexicFont();
         }
       }
 
