@@ -8,7 +8,7 @@ import {
     discordUserMe,
     getActualNbGuilds,
     getNbGuilds,
-    updateBDGuilds
+    updateDBGuilds,
 } from './discord.query';
 import axios from 'axios';
 import qs from 'qs';
@@ -27,7 +27,7 @@ const discordClient = new Client({
 
 discordClient
     .login(process.env.DISCORD_TOKEN)
-    .then(() => { })
+    .then(() => {})
     .catch((err) => {
         console.error('Error connection :', err);
     });
@@ -83,14 +83,17 @@ export async function getUsername(email: string): Promise<any> {
     }
 }
 
-export async function ifChangeUsername(token: string, email: string): Promise<boolean> {
+export async function ifChangeUsername(
+    token: string,
+    email: string
+): Promise<boolean> {
     const result = await discordUserMe(token);
-    console.log(result)
+    console.log(result);
     const newUsername = result.global_name;
     const username = await getUsername(email);
     if (username[0].username !== newUsername) {
-        console.log("username = ", username[0].username);
-        console.log("newUsername = ", newUsername);
+        console.log('username = ', username[0].username);
+        console.log('newUsername = ', newUsername);
         await updateUsername(email, newUsername);
         return true;
     } else {
@@ -103,7 +106,7 @@ export async function updateNbGuilds(
     newNbGuilds: number
 ): Promise<any> {
     try {
-        const result = await updateBDGuilds(email, newNbGuilds);
+        const result = await updateDBGuilds(email, newNbGuilds);
         if (!result) {
             console.error('Error when update nb of Guilds');
             return;
@@ -136,12 +139,12 @@ export async function ifNumberOfGuildsChange(token: string, email: string) {
     const nbGuilds = await getGuilds(email);
 
     if (nbGuilds[0].nbGuilds !== result.length) {
-        console.log("nbGuilds = ", nbGuilds[0].nbGuilds);
-        console.log("newNbGuilds = ", result.length);
+        console.log('nbGuilds = ', nbGuilds[0].nbGuilds);
+        console.log('newNbGuilds = ', result.length);
         await updateNbGuilds(email, result.length);
         return true;
     }
-    console.log("false");
+    console.log('false');
     return false;
 }
 
