@@ -135,3 +135,9 @@
     width: 30vh;
     height: 5vh;
 }
+
+select:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+}
