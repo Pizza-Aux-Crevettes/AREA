@@ -30,6 +30,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
     })
         .then((response) => {
             console.log(response);
+            window.location.reload();
         })
         .catch((error) => {
             console.error(error);
@@ -44,6 +45,7 @@ function RectangleDashboard({
     inputChange,
     inputContentAct,
     inputContentReact,
+    alreadyExist,
 }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState(contentAct);
@@ -196,6 +198,7 @@ function RectangleDashboard({
         return (
             <>
                 <TextInput
+                    disabled={alreadyExist}
                     radius="md"
                     size="lg"
                     placeholder="Enter your input"
@@ -223,6 +226,7 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    disabled={alreadyExist}
                     size="lg"
                     radius="md"
                     placeholder="City"
@@ -254,6 +258,7 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    disabled={alreadyExist}
                     placeholder="City"
                     value={inputContentAct}
                     onChange={(value) => inputChange(id, 'inputAction', value)}
@@ -302,6 +307,7 @@ function RectangleDashboard({
                                 className="button-menu"
                                 size="lg"
                                 ref={buttonRef}
+                                disabled={alreadyExist}
                             >
                                 {action}
                                 <IconChevronDown size={16} />
@@ -359,6 +365,7 @@ function RectangleDashboard({
                                 className="button-menu"
                                 size="lg"
                                 ref={buttonRef}
+                                disabled={alreadyExist}
                             >
                                 {reaction}
                                 <IconChevronDown size={16} />
@@ -406,20 +413,21 @@ function RectangleDashboard({
                     <img src={logo_cross} width={35} height={35} alt="cross" />
                 </button>
             </div>
-
-            <Button
-                className="button-correct"
-                onClick={() =>
-                    applyAcRea(
-                        action,
-                        reaction,
-                        inputContentAct,
-                        inputContentReact
-                    )
-                }
-            >
-                Apply
-            </Button>
+            {!alreadyExist && (
+                <Button
+                    className="button-correct"
+                    onClick={() =>
+                        applyAcRea(
+                            action,
+                            reaction,
+                            inputContentAct,
+                            inputContentReact
+                        )
+                    }
+                >
+                    Apply
+                </Button>
+            )}
         </>
     );
 }
