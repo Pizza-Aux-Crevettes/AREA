@@ -103,13 +103,10 @@ export class DashboardPage implements OnInit {
                     this.addNewArea();
                 }
             });
-          this.tokenService.getAdaptabilityUser(userToken).subscribe((adaptabilityResponse) => {
-            console.log('Adaptability Response:', adaptabilityResponse);
-            
-            if (adaptabilityResponse.length > 0) {
-                this.isDislexicFontEnabled = adaptabilityResponse[0].adaptabilityText;
-            }
-        });
+          this.utilsService.fetchAdaptability(userToken);
+          this.utilsService.isDislexicFont$.subscribe((fontState) => {
+            this.isDislexicFontEnabled = fontState;
+          });
         this.checkConnection();
     }
 
@@ -252,4 +249,4 @@ export class DashboardPage implements OnInit {
         });
       }
     }
-  }
+  } 

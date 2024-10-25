@@ -37,7 +37,6 @@ module.exports = (app: Express) => {
         let decoded : any;
         res.setHeader('Content-Type', 'application/json');
         const userInfo = req.body;
-        console.log(userInfo);
         if (!userInfo.token) {
             res.status(401).json();
             return;
@@ -52,7 +51,7 @@ module.exports = (app: Express) => {
             if (!result) {
                 res.status(400).json({ msg: 'invalid email' });
             }
-            res.status(200).json({ msg: 'the adadptibily is set' });
+            res.status(200).json({ msg: 'the adadptibily is set'});
         }
     });
 

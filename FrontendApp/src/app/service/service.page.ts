@@ -10,6 +10,7 @@ import { IonSelect } from '@ionic/angular';
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
+
 export class ServicePage implements OnInit {
   isDislexicFontEnabled?: boolean;
   serviceList: string[] = [
@@ -51,6 +52,10 @@ export class ServicePage implements OnInit {
         let email = '';
         let token = '';
 
+        this.utilsService.fetchAdaptability(userToken);
+        this.utilsService.isDislexicFont$.subscribe((fontState) => {
+          this.isDislexicFontEnabled = fontState;
+        });
         for (let i = 0; i < this.serviceList.length; i++) {
             if (params.get(this.serviceList[i]) && userToken !== null) {
                 this.tokenService
@@ -64,14 +69,6 @@ export class ServicePage implements OnInit {
                             .subscribe((response) => {
                                 this.clearUrl();
                             });
-                            this.tokenService.getAdaptabilityUser(userToken).subscribe((adaptabilityResponse) => {
-                                console.log('Adaptability Response:', adaptabilityResponse);
-                                
-                                if (adaptabilityResponse.length > 0) {
-                                    this.isDislexicFontEnabled = adaptabilityResponse[0].adaptabilityText;
-                                }
-                            });
-                            
                         const discord_token = this.localStorage.getItem('discord_token');
                         if (discord_token !== null) {
                             this.utilsService.getDiscordMe(discord_token).subscribe((response) => {

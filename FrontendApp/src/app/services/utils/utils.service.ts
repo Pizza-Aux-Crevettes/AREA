@@ -82,7 +82,22 @@ export class UtilsService {
         }
     }
 
+    fetchAdaptability(userToken: string | null) {
+      this.tokenService.getAdaptabilityUser(userToken).subscribe(
+        (response) => {
+          const adaptability = response[0]?.adaptabilityText;
+          this.isDislexicFontSubject.next(adaptability);
+        },
+        (error) => {
+          console.error('Error fetching adaptability:', error);
+        }
+      );
+    }
+
   toggleDislexicFont(userToken: string | null, componentInstance: any) {
+    const currentFontState = this.isDislexicFontSubject.value;
+    const newFontState = !currentFontState;
+    this.isDislexicFontSubject.next(newFontState);
     this.tokenService.setAdaptabilityUser(userToken).subscribe(
       (response) => {
         console.log('Updated adaptability response:', response);
