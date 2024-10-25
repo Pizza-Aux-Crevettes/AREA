@@ -199,19 +199,8 @@ export class DashboardPage implements OnInit {
         local: true,
       };
       this.areas.push(newArea);
-
-    addNewArea(): void {
-        const newArea: Area = {
-            id: this.areas.length,
-            action: '',
-            reaction: '',
-            inputAction: '',
-            inputReaction: '',
-            userEmail: '',
-            local: true,
-        };
-        this.areas.push(newArea);
     }
+
     clearUrl() {
       const url = window.location.href.split('?')[0];
       window.history.replaceState({}, document.title, url);
@@ -286,3 +275,4 @@ export class DashboardPage implements OnInit {
         }
     }
 }
+
