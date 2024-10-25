@@ -31,6 +31,36 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('./assets/fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('./assets/fonts/OpenDyslexic-Regular.woff') format('woff'),
+         url('./assets/fonts/OpenDyslexic-Regular.otf') format('opentype'),
+         url('./assets/fonts/OpenDyslexic-Regular.eot');
+    font-weight: normal;
+    font-style: normal;
+}
+  
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('./assets/fonts/OpenDyslexic-Bold.woff2') format('woff2'),
+        url('./assets/fonts/OpenDyslexic-Bold.woff') format('woff'),
+        url('./assets/fonts/OpenDyslexic-Bold.otf') format('opentype'),
+        url('./assets/fonts/OpenDyslexic-Bold.eot');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('./assets/fonts/OpenDyslexic-Italic.woff2') format('woff2'),
+        url('./assets/fonts/OpenDyslexic-Italic.woff') format('woff'),
+        url('./assets/fonts/OpenDyslexic-Italic.otf') format('opentype'),
+        url('./assets/fonts/OpenDyslexic-Italic.eot');
+    font-weight: normal;
+    font-style: italic;
+}
+
 ion-content {
     --background: #b5ceff
 }

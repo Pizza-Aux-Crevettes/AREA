@@ -129,4 +129,22 @@ export class TokenService {
             });
         }
     }
+    getAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        });
+
+        return this.http.get<any>(`${this.API_URL}/api/getAdaptabilityUser`, { headers });
+    }
+
+    setAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        });
+        const body = {token:token};
+        
+        return this.http.post<any>(`${this.API_URL}/api/setAdaptabilityUser`, body, { headers });
+    }
 }
