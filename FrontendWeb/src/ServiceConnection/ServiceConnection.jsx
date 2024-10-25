@@ -5,6 +5,7 @@ import logo_discord from '../assets/discord.png';
 import logo_twitch from '../assets/twitch.png';
 import logo_spotify from '../assets/spotify.png';
 import logo_google from '../assets/google.png';
+import logo_github from '../assets/github.png';
 import './ServiceConnection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -73,16 +74,19 @@ function Service() {
     const [googleText, setGoogleText] = useState('');
     const [twitchText, setTwitchText] = useState('');
     const [discordText, setDiscordText] = useState('');
+    const [githubText, setGithubText] = useState('');
 
     const [spotifyStatus, setSpotifyStatus] = useState('');
     const [googleStatus, setGoogleStatus] = useState('');
     const [twitchStatus, setTwitchStatus] = useState('');
     const [discordStatus, setDiscordStatus] = useState('');
+    const [githubStatus, setGithubStatus] = useState('');
 
     const [spotifyConnect, setSpotifyConnect] = useState(false);
     const [googleConnect, setGoogleConnect] = useState(false);
     const [twitchConnect, setTwitchConnect] = useState(false);
     const [discordConnect, setDiscordConnect] = useState(false);
+    const [githubConnect, setGithubConnect] = useState(false);
     useEffect(() => {
         if (Cookies.get('token') === null) {
             navigate('/');
@@ -96,14 +100,17 @@ function Service() {
             'twitch_token',
             'google_token',
             'discord_token',
+            'github_token',
             'discord_refresh',
             'spotify_refresh',
             'google_refresh',
             'twitch_refresh',
+            'github_refresh'
         ];
 
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
+            console.log(serviceList[i], token);
             if (token) {
                 Cookies.set(serviceList[i], token);
                 if (Cookies.get(serviceList[i])) {
@@ -169,6 +176,16 @@ function Service() {
             setDiscordText('Connect to Discord');
             setDiscordStatus('#33478f');
             setDiscordConnect(false);
+        }
+
+        if (Cookies.get('github_token')) {
+            setGithubText('disconnection of Github');
+            setGithubStatus('#3AB700');
+            setGithubConnect(true);
+        } else {
+            setGithubText('Connect to Github');
+            setGithubStatus('#33478f');
+            setGithubConnect(false);
         }
     }, [navigate, location]);
 
@@ -333,6 +350,16 @@ function Service() {
                                     handleClick('google', googleConnect)
                                 }
                                 color_status={googleStatus}
+                            />
+                        </div>
+                        <div className="column-container">
+                            <RectangleService
+                                text={githubText}
+                                logo={logo_github}
+                                Click={() =>
+                                    handleClick('github', githubConnect)
+                                }
+                                color_status={githubStatus}
                             />
                         </div>
                         <div className="column-container">
