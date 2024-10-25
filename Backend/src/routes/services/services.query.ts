@@ -23,6 +23,7 @@ export async function updateService(
     token: string,
     service: string
 ): Promise<any> {
+    console.log(token);
     const { data, error } = await supabase
         .from('Service')
         .update([

@@ -35,6 +35,7 @@ require('./API/Spotify')(app);
 require('./API/google/Google')(app);
 require('./API/Twitch/Twitch')(app);
 require('./API/discord/Discord')(app);
+require('./API/github/Github')(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
 
