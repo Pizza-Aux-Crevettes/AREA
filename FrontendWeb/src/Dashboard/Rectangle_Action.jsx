@@ -18,7 +18,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${Cookies.get('token')}`,
+            Authorization: `Bearer ${Cookies.get('token')}`,
         },
         body: JSON.stringify({
             token: Cookies.get('token'),
@@ -30,6 +30,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
     })
         .then((response) => {
             console.log(response);
+            window.location.reload();
         })
         .catch((error) => {
             console.error(error);
@@ -44,6 +45,7 @@ function RectangleDashboard({
     inputChange,
     inputContentAct,
     inputContentReact,
+    alreadyExist,
 }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [action, setAction] = useState(contentAct);
@@ -58,6 +60,11 @@ function RectangleDashboard({
             label: 'When my discord username changes',
             connected: false,
         },
+        {
+            action: 'DiscordGuilds',
+            label: 'When my number of discord guilds change',
+            connected: false,
+        },
     ]);
 
     const [menuItemsReaction, setMenuItemsReaction] = useState([
@@ -65,7 +72,11 @@ function RectangleDashboard({
         { reaction: 'sendEmail', label: 'Send an email', connected: false },
         { reaction: 'MP', label: 'Send a mp', connected: false },
         { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
-        { reaction: 'Event', label: 'Create a Event on Google Calendar', connected: false },
+        {
+            reaction: 'Event',
+            label: 'Create a Event on Google Calendar',
+            connected: false,
+        },
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -96,6 +107,11 @@ function RectangleDashboard({
                 }
                 break;
             case 'DiscordUsername':
+                if (!Cookies.get('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordGuilds':
                 if (!Cookies.get('discord_token')) {
                     return false;
                 }
@@ -149,20 +165,26 @@ function RectangleDashboard({
         }
         let text = '';
         switch (service) {
-            case 'Email':
-                text = 'Please log in to google';
-                break;
             case 'DiscordUsername':
+                text = 'Please log in to discord';
+                break;
+            case 'DiscordGuilds':
                 text = 'Please log in to discord';
                 break;
             case 'Spotify':
                 text = 'Please log in to spotify';
                 break;
             case 'sendEmail':
-                text = 'Please log in to Google';
+                text = 'Please log in to google';
+                break;
+            case 'Event':
+                text = 'Please log in to google';
+                break;
+            case 'Email':
+                text = 'Please log in to google';
                 break;
             case 'Clip':
-                text = 'Please log in to Twitch';
+                text = 'Please log in to twitch';
                 break;
         }
         setHoverText(text);
@@ -176,6 +198,7 @@ function RectangleDashboard({
         return (
             <>
                 <TextInput
+                    disabled={alreadyExist}
                     radius="md"
                     size="lg"
                     placeholder="Enter your input"
@@ -203,6 +226,7 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    disabled={alreadyExist}
                     size="lg"
                     radius="md"
                     placeholder="City"
@@ -234,6 +258,7 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    disabled={alreadyExist}
                     placeholder="City"
                     value={inputContentAct}
                     onChange={(value) => inputChange(id, 'inputAction', value)}
@@ -282,6 +307,7 @@ function RectangleDashboard({
                                 className="button-menu"
                                 size="lg"
                                 ref={buttonRef}
+                                disabled={alreadyExist}
                             >
                                 {action}
                                 <IconChevronDown size={16} />
@@ -327,7 +353,9 @@ function RectangleDashboard({
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
 
-                    {reaction === 'MP' || reaction === 'Clip' || reaction === 'Event'
+                    {reaction === 'MP' ||
+                    reaction === 'Clip' ||
+                    reaction === 'Event'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -337,6 +365,7 @@ function RectangleDashboard({
                                 className="button-menu"
                                 size="lg"
                                 ref={buttonRef}
+                                disabled={alreadyExist}
                             >
                                 {reaction}
                                 <IconChevronDown size={16} />
@@ -377,7 +406,6 @@ function RectangleDashboard({
                                     )}
                                 </Fragment>
                             ))}
-
                         </Menu.Dropdown>
                     </Menu>
                 </div>
@@ -385,20 +413,21 @@ function RectangleDashboard({
                     <img src={logo_cross} width={35} height={35} alt="cross" />
                 </button>
             </div>
-
-            <Button
-                className="button-correct"
-                onClick={() =>
-                    applyAcRea(
-                        action,
-                        reaction,
-                        inputContentAct,
-                        inputContentReact
-                    )
-                }
-            >
-                Apply
-            </Button>
+            {!alreadyExist && (
+                <Button
+                    className="button-correct"
+                    onClick={() =>
+                        applyAcRea(
+                            action,
+                            reaction,
+                            inputContentAct,
+                            inputContentReact
+                        )
+                    }
+                >
+                    Apply
+                </Button>
+            )}
         </>
     );
 }

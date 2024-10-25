@@ -75,7 +75,7 @@ export class ServicePage implements OnInit {
                                 const token = this.localStorage.getItem('token');
                                 if (token !== null) {
                                     console.log(response.userData.username);
-                                    this.utilsService.setUsernameDiscordInDB(token, response.userData.username).subscribe((response) => {window.location.reload()})
+                                    this.utilsService.setUsernameDiscordInDB(token, response.userData.username, response.guildCount).subscribe((response) => {window.location.reload()})
                                 }
                             })
 
