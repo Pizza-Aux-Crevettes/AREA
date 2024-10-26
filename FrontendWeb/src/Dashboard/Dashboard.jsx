@@ -25,6 +25,7 @@ function Dashboard() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token,
@@ -44,7 +45,14 @@ function Dashboard() {
     const addNewArea = () => {
         const maxId =
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
-        const newArea = { id: maxId + 1, action: "Select action", reaction: "Select reaction", inputAction: '', inputReaction: '' };
+        const newArea = {
+            id: maxId + 1,
+            action: 'Select action',
+            reaction: 'Select reaction',
+            inputAction: '',
+            inputReaction: '',
+        };
+        setAreas([...areas, newArea]);
         setAreas([...areas, newArea]);
     };
 
@@ -62,6 +70,7 @@ function Dashboard() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token: Cookies.get('token'),
@@ -82,25 +91,50 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
-        {/* <div className="dashboard" style={{fontFamily: adaptability ? 'OpenDyslexic, Arial, sans-serif' : 'Arial, sans-serif'}}> */}
             <div className="all-container">
                 <Title title="Dashboard" />
                 <div className="container">
                     <div className="back-rectangle">
                         <div className="column-container">
-                            {areas.map((area) => (
-                                <div key={area.id} className="row_container">
-                                    <RectangleDashboard
-                                        id={area.id}
-                                        onRemove={removeArea}
-                                        contentAct={area.action}
-                                        contentReact={area.reaction}
-                                        inputChange={inputChange}
-                                        inputContentAct={area.inputAction}
-                                        inputContentReact={area.inputReaction}
-                                    />
-                                </div>
-                            ))}
+                            {areas.map((area) =>
+                                area.action === 'Select action' ? (
+                                    <div
+                                        key={area.id}
+                                        className="row_container"
+                                    >
+                                        <RectangleDashboard
+                                            id={area.id}
+                                            onRemove={removeArea}
+                                            contentAct={area.action}
+                                            contentReact={area.reaction}
+                                            inputChange={inputChange}
+                                            inputContentAct={area.inputAction}
+                                            inputContentReact={
+                                                area.inputReaction
+                                            }
+                                            alreadyExist={false}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        key={area.id}
+                                        className="row_container"
+                                    >
+                                        <RectangleDashboard
+                                            id={area.id}
+                                            onRemove={removeArea}
+                                            contentAct={area.action}
+                                            contentReact={area.reaction}
+                                            inputChange={inputChange}
+                                            inputContentAct={area.inputAction}
+                                            inputContentReact={
+                                                area.inputReaction
+                                            }
+                                            alreadyExist={true}
+                                        />
+                                    </div>
+                                )
+                            )}
                             <AddRectangle addNewArea={addNewArea} />
                         </div>
                     </div>

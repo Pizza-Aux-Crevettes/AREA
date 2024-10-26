@@ -28,8 +28,8 @@ export async function sendMail(email: string, token: string, emailDest: string):
     return result;
 }
 
-export async function createCalEvent(token: string, email: string) {
-    const result = await insertCalEvent(token, email);
+export async function createCalEvent(token: string, email: string, title: string) {
+    const result = await insertCalEvent(token, email, title);
     if (result === null) {
         console.error('Error when set event');
         await refreshGmailToken(email);

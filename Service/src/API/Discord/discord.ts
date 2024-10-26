@@ -5,7 +5,10 @@ import {
     updateDiscordToken,
     updateUserName,
     getUserName,
-    getService
+    discordUserMe,
+    getActualNbGuilds,
+    getNbGuilds,
+    updateDBGuilds,
 } from './discord.query';
 import axios from 'axios';
 import qs from 'qs';
@@ -47,6 +50,104 @@ export async function discordSendMP(
     }
 }
 
+export async function updateUsername(
+    email: string,
+    newUsername: string
+): Promise<any> {
+    try {
+        const result = await updateUserName(newUsername, email);
+        if (!result) {
+            console.error('Error when send discord mp');
+            return;
+        }
+        return result;
+    } catch (e) {
+        console.error('Error sending discord mp', e);
+        await refreshTokenOfDiscord('email');
+        return false;
+    }
+}
+
+export async function getUsername(email: string): Promise<any> {
+    try {
+        const result = await getUserName(email);
+        if (result === null) {
+            console.error('Error when send discord mp');
+            return;
+        }
+        return result;
+    } catch (e) {
+        console.error('Error sending discord mp', e);
+        await refreshTokenOfDiscord('email');
+        return false;
+    }
+}
+
+export async function ifChangeUsername(
+    token: string,
+    email: string
+): Promise<boolean> {
+    const result = await discordUserMe(token);
+    console.log(result);
+    const newUsername = result.global_name;
+    const username = await getUsername(email);
+    if (username[0].username !== newUsername) {
+        console.log('username = ', username[0].username);
+        console.log('newUsername = ', newUsername);
+        await updateUsername(email, newUsername);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export async function updateNbGuilds(
+    email: string,
+    newNbGuilds: number
+): Promise<any> {
+    try {
+        const result = await updateDBGuilds(email, newNbGuilds);
+        if (!result) {
+            console.error('Error when update nb of Guilds');
+            return;
+        }
+        return result;
+    } catch (e) {
+        console.error('Error updating nb of Guilds', e);
+        await refreshTokenOfDiscord('email');
+        return false;
+    }
+}
+
+export async function getGuilds(email: string): Promise<any> {
+    try {
+        const result = await getNbGuilds(email);
+        if (result === null) {
+            console.error('Error when get nb of Guilds');
+            return;
+        }
+        return result;
+    } catch (e) {
+        console.error('Error getting nb of Guilds', e);
+        await refreshTokenOfDiscord('email');
+        return false;
+    }
+}
+
+export async function ifNumberOfGuildsChange(token: string, email: string) {
+    const result = await getActualNbGuilds(token);
+    const nbGuilds = await getGuilds(email);
+
+    if (nbGuilds[0].nbGuilds !== result.length) {
+        console.log('nbGuilds = ', nbGuilds[0].nbGuilds);
+        console.log('newNbGuilds = ', result.length);
+        await updateNbGuilds(email, result.length);
+        return true;
+    }
+    console.log('false');
+    return false;
+}
+
 export async function refreshTokenOfDiscord(email: string) {
     const refresh_token: string = await getRefreshDiscordToken(email);
     const qs = require('qs');
@@ -86,82 +187,4 @@ export async function refreshTokenOfDiscord(email: string) {
     } catch (error) {
         console.error('Error refreshing access token:', error);
     }
-}
-
-export async function updateUsername(
-    email: string,
-    newUsername: string
-): Promise<any> {
-    try {
-        const result = await updateUserName(newUsername, email);
-        if (!result) {
-            console.error('Error when send discord mp');
-            return;
-        }
-        return result;
-    } catch (e) {
-        console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
-        return false;
-    }
-}
-
-export async function getUsername(email: string): Promise<any> {
-    try {
-        const result = await getUserName(email);
-        if (result === null) {
-            console.error('Error when send discord mp');
-            return;
-        }
-        return result;
-    } catch (e) {
-        console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
-        return false;
-    }
-}
-
-export async function ifChangeUsername(
-    email: string
-): Promise<boolean> {
-    const result = await discordUserMe(email);
-    const newUsername = result.global_name;
-    const username = await getUsername(email);
-    if (username[0].username !== newUsername) {
-        console.log("username = ",username[0].username);
-        console.log("newUsername = ",newUsername);
-        const result = await updateUsername(email, newUsername);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-export async function discordUserMe (email:string) {
-    const result = await getTokensServices(email);
-    if (result !== null) {
-        try {
-            const response = await axios.get(
-                'https://discord.com/api/users/@me',
-                {
-                    headers: {
-                        Authorization: `Bearer ${result[0].discord_token}`,
-                    },
-                }
-            );
-
-            return response.data;
-
-        } catch (error) {
-            console.error(
-                "Erreur lors de la récupération des infos de l'utilisateur:",
-                error
-            );
-        }
-    }
-}
-
-export async function getTokensServices (email:string) {
-    const result = await getService(email);
-    return result;
 }

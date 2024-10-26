@@ -14,6 +14,7 @@ export class TokenService {
     getServicesTokens(email: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
 
         try {
@@ -72,6 +73,7 @@ export class TokenService {
     ): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
 
         try {
@@ -102,6 +104,7 @@ export class TokenService {
     revokeToken(service: string, token: string): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
         });
         console.log('route =', `${this.API_URL}/${service}/revoke`);
         try {
@@ -125,5 +128,23 @@ export class TokenService {
                 data: {},
             });
         }
+    }
+    getAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        });
+
+        return this.http.get<any>(`${this.API_URL}/api/getAdaptabilityUser`, { headers });
+    }
+
+    setAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        });
+        const body = {token:token};
+        
+        return this.http.post<any>(`${this.API_URL}/api/setAdaptabilityUser`, body, { headers });
     }
 }

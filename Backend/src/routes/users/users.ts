@@ -1,9 +1,10 @@
 import { Express, Request, Response } from 'express';
 import { setAdaptability, getAdaptability } from './user.query';
+import { auth } from '../../middleware/auth';
 const jwt = require('jsonwebtoken');
 
 module.exports = (app: Express) => {
-    app.get('/api/user/me', async (req: Request, res: Response) => {
+    app.get('/api/user/me', auth, async (req: Request, res: Response) => {
         /*
         #swagger.responses[200] = {
             content: {
@@ -32,7 +33,7 @@ module.exports = (app: Express) => {
         }
     });
 
-    app.post('/api/setAdaptabilityUser', async (req: Request, res: Response) => {
+    app.post('/api/setAdaptabilityUser', auth, async (req: Request, res: Response) => {
         let decoded : any;
         res.setHeader('Content-Type', 'application/json');
         const userInfo = req.body;
@@ -50,11 +51,11 @@ module.exports = (app: Express) => {
             if (!result) {
                 res.status(400).json({ msg: 'invalid email' });
             }
-            res.status(200).json({ msg: 'the adadptibily is set' });
+            res.status(200).json({ msg: 'the adadptibily is set'});
         }
     });
 
-    app.get('/api/getAdaptabilityUser', async (req: Request, res: Response) => {
+    app.get('/api/getAdaptabilityUser', auth, async (req: Request, res: Response) => {
         let decoded : any;
         res.setHeader('Content-Type', 'application/json');
         const userInfo = req.header('Authorization');

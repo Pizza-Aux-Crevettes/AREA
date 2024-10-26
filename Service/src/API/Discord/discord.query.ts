@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import supabase from '../../config/db';
 import e from 'express';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -87,16 +88,78 @@ export async function getUserName(email: string): Promise<any> {
     }
 }
 
-export async function getService(user_email: string): Promise<any> {
-    const { data: user_info, error } = await supabase
-        .from('Service')
-        .select('*')
-        .eq('user_email', user_email);
-    if (error) {
-        return null;
+export async function discordUserMe(token: string) {
+    if (token !== null) {
+        try {
+            const response = await axios.get(
+                'https://discord.com/api/users/@me',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error('Error when get user informations', error);
+        }
     }
-    if (user_info.length === 0) {
-        return null;
+}
+
+export async function getNbGuilds(email: string): Promise<any> {
+    try {
+        const { data } = await supabase
+            .from('DiscordUserDatas')
+            .select('nbGuilds')
+            .eq('email', email)
+            .select();
+        return data;
+    } catch (error) {
+        console.error('get user guilds', e);
+        return false;
     }
-    return user_info;
+}
+
+export async function updateDBGuilds(email: string, nb: number): Promise<any> {
+    try {
+        const { error } = await supabase
+            .from('DiscordUserDatas')
+            .update({
+                nbGuilds: nb,
+            })
+            .eq('email', email)
+            .select();
+        return !error;
+    } catch (error) {
+        console.error(
+            'Error when update the actual number of discord guilds ',
+            e
+        );
+        return false;
+    }
+}
+
+export async function getActualNbGuilds(token: string) {
+    if (token !== null) {
+        try {
+            const response = await axios.get(
+                'https://discord.com/api/users/@me/guilds',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error(
+                'Error when get the actual number of discord guilds ',
+                error
+            );
+        }
+    } else {
+        console.error('Token is null or undefined');
+    }
 }

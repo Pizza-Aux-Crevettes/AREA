@@ -1,28 +1,32 @@
-<ion-content>
+<ion-content [ngClass]="{'dislexic-font': isDislexicFontEnabled}">
   <div class="Service-div">
     <div class="Service-title-bar">
       <div>
-        <img
-            src="assets/menu.png"
-            style="
-                width: 24px;
-                height: 24px;
-                margin-top: 100%;
-            "
-            (click)="moveToDashboard()"
-        />
+        <ion-list>
+          <ion-icon name="menu"
+            style="color: black;"
+            class="menu-button"
+            (click)="openMenu(menu1)">
+          </ion-icon>
+          <ion-select #menu1 interface="action-sheet" (ionChange)="onSelectNavigate($event)" style="display: none;">
+            <ion-select-option value="Dashboard">Dashboard</ion-select-option>
+            <ion-select-option value="Service">Service Connection</ion-select-option>
+          </ion-select>
+        </ion-list>
       </div>
-      <ion-text><h1>Service</h1> </ion-text>
+      <ion-text class="title"><h1>Service</h1> </ion-text>
       <div>
-        <img
-            src="assets/exit.png"
-            style="
-                width: 24px;
-                height: 24px;
-                margin-top: 100%;
-            "
-            (click)="deleteCookies()"
-        />
+        <ion-list>
+          <ion-icon
+            name="settings-outline"
+            (click)="openMenu(menu2)"
+            class="menu-button">
+          </ion-icon>
+          <ion-select #menu2 interface="action-sheet" (ionChange)="onSelectParam($event)" style="display: none;">
+            <ion-select-option value="Log out">Log out</ion-select-option>
+            <ion-select-option value="Dislexic font">Dislexic font</ion-select-option>
+          </ion-select>
+        </ion-list>
       </div>
     </div>
     <div class="flex-rectangle">

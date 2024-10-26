@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { TokenService } from 'src/app/services/token/token.service';
-import { SpotifyService } from 'src/app/services/spotify/spotify.service';
-import { WeatherService } from 'src/app/services/weather/weather.service';
-import { GmailService } from 'src/app/services/gmail/gmail.service';
 import { AreaService } from 'src/app/services/area/area.service';
-import { of, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
-import { Router } from '@angular/router';
-
+import { IonSelect } from '@ionic/angular';
+import { UtilsService } from 'src/app/services/utils/utils.service';
+import { TokenService } from '../services/token/token.service';
 interface Area {
     id: number;
     action: string;
@@ -25,7 +20,11 @@ interface Area {
     providers: [AreaService],
 })
 export class DashboardPage implements OnInit {
+    isDislexicFontEnabled?: boolean;
+    hoverText: string = '';
+
     areas: Area[] = [];
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -64,13 +63,45 @@ export class DashboardPage implements OnInit {
         { name: 'Christchurch' },
     ];
 
+    menuItemsAction = [
+        { action: 'Weather', label: 'When it rains', connected: false },
+        { action: 'Email', label: 'When I receive an email', connected: false },
+        { action: 'Alerts', label: 'When it is alerts', connected: false },
+        {
+            action: 'DiscordUsername',
+            label: 'When my discord username changes',
+            connected: false,
+        },
+        {
+            action: 'DiscordGuilds',
+            label: 'When my number of discord guilds change',
+            connected: false,
+        },
+    ];
+
+    menuItemsReaction = [
+        { reaction: 'Spotify', label: 'Sad music is played', connected: false },
+        { reaction: 'sendEmail', label: 'Send an email', connected: false },
+        { reaction: 'MP', label: 'Send a mp', connected: false },
+        { reaction: 'Clip', label: 'Create a twitch clip', connected: false },
+        {
+            reaction: 'Event',
+            label: 'Create a Event on Google Calendar',
+            connected: false,
+        },
+        { reaction: 'Issue', label: 'Create an issue github', connected: false },
+    ];
+
     constructor(
         private localStorage: LocalStorageService,
-        private router: Router,
-        private areaService: AreaService
+        private areaService: AreaService,
+        private utilsService: UtilsService,
+        private tokenService: TokenService
     ) {}
 
     ngOnInit() {
+        let userToken = this.localStorage.getItem('token');
+
         this.areaService
             .getArea(`${this.localStorage.getItem('token')}`)
             .subscribe((res) => {
@@ -81,20 +112,81 @@ export class DashboardPage implements OnInit {
                     this.addNewArea();
                 }
             });
+        this.utilsService.fetchAdaptability(userToken);
+        this.utilsService.isDislexicFont$.subscribe((fontState) => {
+            this.isDislexicFontEnabled = fontState;
+        });
+        this.checkConnection();
     }
 
-    deleteCookies() {
-        this.localStorage.removeItem('token');
-        for (let i = 0; i < this.serviceList.length; i++) {
-            if (this.localStorage.getItem(this.serviceList[i])) {
-                this.localStorage.removeItem(this.serviceList[i]);
-            }
+    isAreaDisabled(area: Area): boolean {
+        return area.inputAction !== '';
+    }
+
+    checkServicesConnexion(area: string): boolean {
+        switch (area) {
+            case 'Email':
+                if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordUsername':
+                if (!this.localStorage.getItem('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'DiscordGuilds':
+                if (!this.localStorage.getItem('discord_token')) {
+                    return false;
+                }
+                break;
+            case 'Spotify':
+                if (!this.localStorage.getItem('spotify_token')) {
+                    return false;
+                }
+                break;
+            case 'sendEmail':
+                if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'Clip':
+                if (!this.localStorage.getItem('twitch_token')) {
+                    return false;
+                }
+                break;
+            case 'Event':
+                if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            default:
+                return true;
         }
-        this.router.navigate(['/']);
+        return true;
     }
+    checkConnection() {
+        for (let i = 0; i < this.menuItemsAction.length; i++) {
+            this.menuItemsAction[i].connected = this.checkServicesConnexion(
+                this.menuItemsAction[i].action
+            );
+        }
+        for (let i = 0; i < this.menuItemsReaction.length; i++) {
+            this.menuItemsReaction[i].connected = this.checkServicesConnexion(
+                this.menuItemsReaction[i].reaction
+            );
+        }
 
-    moveToService() {
-        this.router.navigate(['/service']);
+        const token = this.localStorage.getItem('token');
+        if (token) {
+            this.areaService.getArea(token).subscribe((res) => {
+                this.areas = res;
+                if (this.areas.length === 0) {
+                    this.addNewArea();
+                    this.addNewArea();
+                }
+            });
+        }
     }
 
     addNewArea(): void {
@@ -108,7 +200,32 @@ export class DashboardPage implements OnInit {
             local: true,
         };
         this.areas.push(newArea);
-        console.log(this.areas);
+    }
+
+    clearUrl() {
+        const url = window.location.href.split('?')[0];
+        window.history.replaceState({}, document.title, url);
+    }
+
+    toggleDislexicFont() {
+        const userToken = this.localStorage.getItem('token');
+        this.utilsService.toggleDislexicFont(userToken, this);
+    }
+
+    deleteCookies() {
+        this.utilsService.deleteCookies(this.serviceList);
+    }
+
+    openMenu(menu: IonSelect) {
+        this.utilsService.openMenu(menu);
+    }
+
+    onSelectNavigate(event: any) {
+        this.utilsService.onSelectNavigate(event, this);
+    }
+
+    onSelectParam(event: any) {
+        this.utilsService.onSelectParam(event, this);
     }
 
     onSelectAction(event: any, area: Area) {
@@ -124,39 +241,36 @@ export class DashboardPage implements OnInit {
     }
 
     DelArea(id: number) {
-        let token = this.localStorage.getItem('token');
-        if (token === null) {
-            return;
+        const token = this.localStorage.getItem('token');
+        if (!token) return;
+
+        const area = this.areas.find((area) => area.id === id);
+        if (area) {
+            const body = {
+                action: area.action,
+                reaction: area.reaction,
+                inputAction: area.inputAction,
+                inputReaction: area.inputReaction,
+            };
+            this.areaService.delArea(token, body).subscribe(() => {
+                this.areas = this.areas.filter((area) => area.id !== id);
+            });
         }
-        let body: any;
-        for (const area of this.areas) {
-            if (area.id === id) {
-                body = {
-                    action: area.action,
-                    reaction: area.reaction,
-                    inputAction: area.inputAction,
-                    inputReaction: area.inputReaction,
-                };
-            }
-        }
-        if (body.action) {
-            this.areaService.delArea(token, body).subscribe((_) => {});
-        }
-        this.areas = this.areas.filter((area) => area.id !== id);
     }
 
     ApplyArea(
         action: string,
         reaction: string,
-        inputAction: string | undefined,
-        inputReaction: string | undefined
+        inputAction?: string,
+        inputReaction?: string
     ) {
-        let token = this.localStorage.getItem('token');
-        if (token !== null) {
+        const token = this.localStorage.getItem('token');
+        if (token) {
             this.areaService
                 .setArea(token, action, reaction, inputAction, inputReaction)
                 .subscribe((response) => {
                     console.log(response);
+                    window.location.reload();
                 });
         }
     }

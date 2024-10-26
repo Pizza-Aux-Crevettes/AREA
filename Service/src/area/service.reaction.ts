@@ -13,7 +13,6 @@ export async function setReaction(
     const token = await getTokens(email);
     switch (reaction) {
         case 'Spotify':
-            console.log(token[0].spotify_token)
             result = await playSong(email, token[0].spotify_token);
             break;
         case 'sendEmail':
@@ -26,7 +25,9 @@ export async function setReaction(
             result = await createClipTwitch(inputReaction, token[0].twitch_token);
             break;
         case 'Event':
-            result = await createCalEvent(token[0].google_token, email);
+            result = await createCalEvent(token[0].google_token, email, inputReaction);
+        case 'MP':
+            result = await discordSendMP(inputReaction, "__(°)< Pouet");
             break;
         default:
             break;

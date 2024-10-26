@@ -13,6 +13,14 @@
     flex-direction: row;
     padding: 2%;
     justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    color: black;
+    margin-bottom: 15px;
+    display: flex;
+    align-self: center;
 }
 
 .flex-rectangle {
@@ -92,6 +100,7 @@
 
 .apply-button {
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .add-button {
@@ -104,3 +113,28 @@
 .close-button {
     height: 5%;
 }
+
+.popUp {
+    background-color: #e90808 !important;
+    position: absolute;
+    left: 42%;
+    top: 70px;
+    border: 1px solid black;
+    width: 30vh;
+    height: 5vh;
+}
+
+.menu-button {
+    width: 35px;
+    height: 35px;
+    color: black;
+}
+
+.Dashboard-title-bar ion-list {
+    background-color: transparent;
+}
+
+.dislexic-font {
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+  }
+  
