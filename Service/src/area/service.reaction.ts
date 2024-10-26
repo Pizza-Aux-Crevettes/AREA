@@ -3,7 +3,7 @@ import { sendMail, createCalEvent } from '../API/gmail/Gmail';
 import { playSong } from '../API/spotify/spotify';
 import { discordSendMP } from '../API/Discord/discord';
 import { createClipTwitch } from '../API/twitch/twitch';
-import { issueGithub } from '../API/Github/github';
+import { branchGithub, issueGithub } from '../API/Github/github';
 
 export async function setReaction(
     reaction: string,
@@ -29,6 +29,9 @@ export async function setReaction(
             break;
         case 'Issue':
             result = await issueGithub(token[0].github_token, inputReaction);
+            break;
+        case 'Branch':
+            result = await branchGithub(token[0].github_token, inputReaction);
             break;
         default:
             break;
