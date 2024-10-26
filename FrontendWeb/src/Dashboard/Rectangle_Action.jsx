@@ -193,7 +193,7 @@ function RectangleDashboard({
                 text = 'Please log in to twitch';
                 break;
             case 'Issue':
-                text = 'Please log in to twitch';
+                text = 'Please log in to github';
                 break;
         }
         setHoverText(text);
