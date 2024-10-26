@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
-import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
-import {UtilsService} from 'src/app/services/utils/utils.service'
+import { UtilsService } from 'src/app/services/utils/utils.service';
 import { IonSelect } from '@ionic/angular';
 @Component({
     selector: 'app-service',
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
-
 export class ServicePage implements OnInit {
-  isDislexicFontEnabled?: boolean;
-  serviceList: string[] = [
+    isDislexicFontEnabled?: boolean;
+    serviceList: string[] = [
         'spotify_token',
         'twitch_token',
         'google_token',
@@ -42,7 +40,7 @@ export class ServicePage implements OnInit {
     constructor(
         private localStorage: LocalStorageService,
         private tokenService: TokenService,
-        private utilsService: UtilsService,
+        private utilsService: UtilsService
     ) {}
 
     ngOnInit() {
@@ -54,7 +52,7 @@ export class ServicePage implements OnInit {
 
         this.utilsService.fetchAdaptability(userToken);
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
-          this.isDislexicFontEnabled = fontState;
+            this.isDislexicFontEnabled = fontState;
         });
         for (let i = 0; i < this.serviceList.length; i++) {
             if (params.get(this.serviceList[i]) && userToken !== null) {
@@ -69,16 +67,27 @@ export class ServicePage implements OnInit {
                             .subscribe((response) => {
                                 this.clearUrl();
                             });
-                        const discord_token = this.localStorage.getItem('discord_token');
+                        const discord_token =
+                            this.localStorage.getItem('discord_token');
                         if (discord_token !== null) {
-                            this.utilsService.getDiscordMe(discord_token).subscribe((response) => {
-                                const token = this.localStorage.getItem('token');
-                                if (token !== null) {
-                                    console.log(response.userData.username);
-                                    this.utilsService.setUsernameDiscordInDB(token, response.userData.username, response.guildCount).subscribe((response) => {window.location.reload()})
-                                }
-                            })
-
+                            this.utilsService
+                                .getDiscordMe(discord_token)
+                                .subscribe((response) => {
+                                    const token =
+                                        this.localStorage.getItem('token');
+                                    if (token !== null) {
+                                        console.log(response.userData.username);
+                                        this.utilsService
+                                            .setUsernameDiscordInDB(
+                                                token,
+                                                response.userData.username,
+                                                response.guildCount
+                                            )
+                                            .subscribe((response) => {
+                                                window.location.reload();
+                                            });
+                                    }
+                                });
                         }
                     });
             }
@@ -99,11 +108,11 @@ export class ServicePage implements OnInit {
             this.localStorage.getItem('twitch_token') &&
             this.localStorage.getItem('twitch_token') !== 'null'
         ) {
-            this.twitch_text = 'disconnection of Twitch';
+            this.twitch_text = 'disconnection of twitch';
             this.twitch_status = '#3AB700';
             this.twitch_connect = true;
         } else {
-            this.twitch_text = 'Connect to Twitch';
+            this.twitch_text = 'Connect to twitch';
             this.twitch_status = '8cb3ff';
             this.twitch_connect = false;
         }

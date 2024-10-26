@@ -30,7 +30,7 @@ export default function createTestServer() {
     require('../routes/login/login')(app);
     require('../routes/register/register')(app);
 
-    require('../API/Spotify')(app);
+    require('../API/spotify/Spotify')(app);
     require('../API/google/Google')(app);
     return app;
 }
