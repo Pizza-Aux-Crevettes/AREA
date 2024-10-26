@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AreaService } from 'src/app/services/area/area.service';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { Router } from '@angular/router';
 import { IonSelect } from '@ionic/angular';
-
+import {UtilsService} from 'src/app/services/utils/utils.service'
+import { TokenService } from '../services/token/token.service';
 interface Area {
     id: number;
     action: string;
@@ -20,8 +21,8 @@ interface Area {
     providers: [AreaService],
 })
 export class DashboardPage implements OnInit {
-    hoverText: string = '';
-    @ViewChild('menu', { static: false }) menu!: IonSelect;
+  isDislexicFontEnabled?: boolean;
+  hoverText: string = '';
 
     areas: Area[] = [];
 
@@ -91,12 +92,15 @@ export class DashboardPage implements OnInit {
     ];
 
     constructor(
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private areaService: AreaService
+      private localStorage: LocalStorageService,
+      private areaService: AreaService,
+      private utilsService: UtilsService,
+      private tokenService: TokenService
     ) {}
 
     ngOnInit() {
+        let userToken = this.localStorage.getItem('token');
+
         this.areaService
             .getArea(`${this.localStorage.getItem('token')}`)
             .subscribe((res) => {
@@ -107,6 +111,10 @@ export class DashboardPage implements OnInit {
                     this.addNewArea();
                 }
             });
+          this.utilsService.fetchAdaptability(userToken);
+          this.utilsService.isDislexicFont$.subscribe((fontState) => {
+            this.isDislexicFontEnabled = fontState;
+          });
         this.checkConnection();
     }
 
@@ -180,32 +188,45 @@ export class DashboardPage implements OnInit {
         }
     }
 
-    deleteCookies() {
-        this.localStorage.removeItem('token');
-        this.serviceList.forEach((service) => {
-            if (this.localStorage.getItem(service)) {
-                this.localStorage.removeItem(service);
-            }
-        });
-        this.router.navigate(['/']);
-    }
-
-    moveToPage(navigate: string) {
-        this.router.navigate([navigate]);
-    }
-
     addNewArea(): void {
-        const newArea: Area = {
-            id: this.areas.length,
-            action: '',
-            reaction: '',
-            inputAction: '',
-            inputReaction: '',
-            userEmail: '',
-            local: true,
-        };
-        this.areas.push(newArea);
+      const newArea: Area = {
+        id: this.areas.length,
+        action: '',
+        reaction: '',
+        inputAction: '',
+        inputReaction: '',
+        userEmail: '',
+        local: true,
+      };
+      this.areas.push(newArea);
     }
+
+    clearUrl() {
+      const url = window.location.href.split('?')[0];
+      window.history.replaceState({}, document.title, url);
+  }
+
+    toggleDislexicFont() {
+        const userToken = this.localStorage.getItem('token');
+        this.utilsService.toggleDislexicFont(userToken, this);
+    }
+
+    deleteCookies() {
+        this.utilsService.deleteCookies(this.serviceList);
+    }
+
+    openMenu(menu: IonSelect) {
+        this.utilsService.openMenu(menu);
+    }
+
+    onSelectNavigate(event: any) {
+        this.utilsService.onSelectNavigate(event, this);
+    }
+
+    onSelectParam(event: any) {
+        this.utilsService.onSelectParam(event, this);
+    }
+
 
     onSelectAction(event: any, area: Area) {
         area.action = event.detail.value;
@@ -217,32 +238,6 @@ export class DashboardPage implements OnInit {
 
     onSelectCity(event: any, area: Area) {
         area.inputAction = event.detail.value;
-    }
-
-    openMenu(menu: IonSelect) {
-        if (menu) {
-            menu.open();
-        } else {
-            console.log('Menu not found');
-        }
-    }
-
-    onSelectNavigate(event: any) {
-        const selectedValue = event.detail.value;
-        if (selectedValue === 'Dashboard') {
-            this.moveToPage('/dashboard');
-        } else if (selectedValue === 'Service') {
-            this.moveToPage('/service');
-        }
-    }
-
-    onSelectParam(event: any) {
-        const selectedValue = event.detail.value;
-        if (selectedValue === 'Log out') {
-            this.deleteCookies();
-        } else if (selectedValue === 'Dislexic font') {
-            this.moveToPage('/service');
-        }
     }
 
     DelArea(id: number) {
@@ -280,3 +275,4 @@ export class DashboardPage implements OnInit {
         }
     }
 }
+

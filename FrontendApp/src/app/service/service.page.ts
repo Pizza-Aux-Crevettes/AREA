@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -10,9 +10,10 @@ import { IonSelect } from '@ionic/angular';
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
+
 export class ServicePage implements OnInit {
-    @ViewChild('menu', { static: false }) menu!: IonSelect;
-    serviceList: string[] = [
+  isDislexicFontEnabled?: boolean;
+  serviceList: string[] = [
         'spotify_token',
         'twitch_token',
         'google_token',
@@ -40,18 +41,21 @@ export class ServicePage implements OnInit {
 
     constructor(
         private localStorage: LocalStorageService,
-        private router: Router,
         private tokenService: TokenService,
         private utilsService: UtilsService,
     ) {}
 
     ngOnInit() {
+        let userToken = this.localStorage.getItem('token');
         const search = window.location.search;
         const params = new URLSearchParams(search);
         let email = '';
         let token = '';
 
-        let userToken = this.localStorage.getItem('token');
+        this.utilsService.fetchAdaptability(userToken);
+        this.utilsService.isDislexicFont$.subscribe((fontState) => {
+          this.isDislexicFontEnabled = fontState;
+        });
         for (let i = 0; i < this.serviceList.length; i++) {
             if (params.get(this.serviceList[i]) && userToken !== null) {
                 this.tokenService
@@ -134,50 +138,26 @@ export class ServicePage implements OnInit {
         window.history.replaceState({}, document.title, url);
     }
 
-    deleteCookies() {
-        this.localStorage.removeItem('token');
-        for (let i = 0; i < this.serviceList.length; i++) {
-            if (this.localStorage.getItem(this.serviceList[i])) {
-                this.localStorage.removeItem(this.serviceList[i]);
-            }
-        }
-        this.router.navigate(['/']);
+    toggleDislexicFont() {
+        const userToken = this.localStorage.getItem('token');
+        this.utilsService.toggleDislexicFont(userToken, this);
     }
 
-    moveToDashboard() {
-        this.router.navigate(['/dashboard']);
+    deleteCookies() {
+        this.utilsService.deleteCookies(this.serviceList);
     }
 
     openMenu(menu: IonSelect) {
-        if (menu) {
-          menu.open();
-        } else {
-          console.log("Menu not found");
-        }
+        this.utilsService.openMenu(menu);
     }
-    
-      moveToPage(navigate: string) {
-        this.router.navigate([navigate]);
-      }
 
     onSelectNavigate(event: any) {
-        const selectedValue = event.detail.value;
-        if (selectedValue === 'Dashboard') {
-          this.moveToPage('/dashboard');
-        } else if (selectedValue === 'Service') {
-          this.moveToPage('/service');
-        }
-      }
+        this.utilsService.onSelectNavigate(event, this);
+    }
 
-      onSelectParam(event: any) {
-        const selectedValue = event.detail.value;
-        if (selectedValue === 'Log out') {
-          this.deleteCookies();
-        } else if (selectedValue === 'Dislexic font') {
-          this.moveToPage('/dashboard');
-        }
-      }
-
+    onSelectParam(event: any) {
+        this.utilsService.onSelectParam(event, this);
+    }
 
     ManageService(service: string, status: boolean) {
         if (!status) {

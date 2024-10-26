@@ -51,7 +51,7 @@ module.exports = (app: Express) => {
             if (!result) {
                 res.status(400).json({ msg: 'invalid email' });
             }
-            res.status(200).json({ msg: 'the adadptibily is set' });
+            res.status(200).json({ msg: 'the adadptibily is set'});
         }
     });
 
