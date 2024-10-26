@@ -70,7 +70,8 @@
               value="{{area.inputAction}}" [disabled]="!area.local"></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || area.reaction === 'Event'" class="input-div">
+          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
+          area.reaction === 'Event' || area.reaction === 'Branch'" class="input-div">
             <ion-input
               class="input-balise"
               size="small"

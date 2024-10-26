@@ -94,6 +94,7 @@ function RectangleDashboard({
             label: 'Create an issue on github',
             connected: false,
         },
+        { reaction: 'Branch', label: 'Create a Branch on github', connected: false }
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -158,6 +159,12 @@ function RectangleDashboard({
                     return false;
                 }
                 break;
+
+            case 'Branch':
+                if (!Cookies.get('github_token')) {
+                    return false;
+                }
+                break;
             default:
                 return true;
         }
@@ -209,6 +216,10 @@ function RectangleDashboard({
                 text = 'Please log in to twitch';
                 break;
             case 'Issue':
+                text = 'Please log in to github';
+                break;
+
+            case 'Branch':
                 text = 'Please log in to github';
                 break;
         }
@@ -380,9 +391,11 @@ function RectangleDashboard({
                     {action === 'News' ? handleInput(inputContentAct, 'inputAction') : null}
 
                     {reaction === 'MP' ||
-                    reaction === 'Clip' ||
-                    reaction === 'Event' ||
-                    reaction === 'Issue'
+
+                        reaction === 'Clip' ||
+                        reaction === 'Event' ||
+                        reaction === 'Issue' ||
+                        reaction === 'Branch'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 

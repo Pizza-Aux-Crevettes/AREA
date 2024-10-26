@@ -95,6 +95,7 @@ export class DashboardPage implements OnInit {
             label: 'Create an issue github',
             connected: false,
         },
+        { reaction: 'Branch', label: 'Create a branch github', connected: false }
     ];
 
     emptyField: string = '';
@@ -104,7 +105,7 @@ export class DashboardPage implements OnInit {
         private areaService: AreaService,
         private utilsService: UtilsService,
         private tokenService: TokenService
-    ) {}
+    ) { }
 
     ngOnInit() {
         let userToken = this.localStorage.getItem('token');
@@ -159,6 +160,16 @@ export class DashboardPage implements OnInit {
                 break;
             case 'Event':
                 if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'Issue':
+                if (!this.localStorage.getItem('github_token')) {
+                    return false;
+                }
+                break;
+            case 'Branch':
+                if (!this.localStorage.getItem('github_token')) {
                     return false;
                 }
                 break;
