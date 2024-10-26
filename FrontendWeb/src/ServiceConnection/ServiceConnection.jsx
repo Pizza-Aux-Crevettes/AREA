@@ -46,6 +46,7 @@ const registerService = async (service) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('token')}`,
                 },
                 body: JSON.stringify({
                     userEmail: userEmail,
