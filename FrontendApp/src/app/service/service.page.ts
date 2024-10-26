@@ -16,26 +16,31 @@ export class ServicePage implements OnInit {
         'twitch_token',
         'google_token',
         'discord_token',
+        'github_token',
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
         'discord_refresh',
+        'github_refresh'
     ];
 
     public spotify_text: string = '';
     public google_text: string = '';
     public twitch_text: string = '';
     public discord_text: string = '';
+    public github_text: string = '';
 
     public spotify_status: string = '';
     public google_status: string = '';
     public twitch_status: string = '';
     public discord_status: string = '';
+    public github_status: string = '';
 
     public spotify_connect: boolean = false;
     public google_connect: boolean = false;
     public twitch_connect: boolean = false;
     public discord_connect: boolean = false;
+    public github_connect: boolean = false;
 
     constructor(
         private localStorage: LocalStorageService,
@@ -115,6 +120,18 @@ export class ServicePage implements OnInit {
             this.twitch_text = 'Connect to twitch';
             this.twitch_status = '8cb3ff';
             this.twitch_connect = false;
+        }
+        if (
+            this.localStorage.getItem('github_token') &&
+            this.localStorage.getItem('github_token') !== 'null'
+        ) {
+            this.github_text = 'disconnection of Github';
+            this.github_status = '#3AB700';
+            this.github_connect = true;
+        } else {
+            this.github_text = 'Connect to Github';
+            this.github_status = '8cb3ff';
+            this.github_connect = false;
         }
         if (
             this.localStorage.getItem('google_token') &&

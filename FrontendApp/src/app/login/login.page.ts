@@ -20,6 +20,7 @@ export class LoginPage implements OnInit {
         'google_token',
         'twitch_token',
         'discord_token',
+        'github_token',
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
