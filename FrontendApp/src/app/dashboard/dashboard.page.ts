@@ -31,6 +31,7 @@ export class DashboardPage implements OnInit {
         'twitch_token',
         'google_token',
         'discord_token',
+        'github_token',
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
