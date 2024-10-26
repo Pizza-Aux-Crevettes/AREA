@@ -110,7 +110,6 @@ function Service() {
 
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
-            console.log(serviceList[i], token);
             if (token) {
                 Cookies.set(serviceList[i], token);
                 if (Cookies.get(serviceList[i])) {
@@ -128,7 +127,6 @@ function Service() {
                                 return response.json();
                             })
                             .then((json) => {
-                                console.log('json: ', json);
                                 setUsernameDiscordInDB(
                                     json.userData.username,
                                     json.guildCount
@@ -192,7 +190,6 @@ function Service() {
     }, [navigate, location]);
 
     const setUsernameDiscordInDB = (userName, nbGuilds) => {
-        console.log(nbGuilds, userName);
         fetch('http://localhost:8080/discord/setUsername', {
             method: 'POST',
             headers: {
