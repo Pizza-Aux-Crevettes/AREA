@@ -14,6 +14,7 @@ function Parameters() {
         Cookies.set('google_token', '', { expires: -1 });
         Cookies.set('discord_token', '', { expires: -1 });
         Cookies.set('twitch_token', '', { expires: -1 });
+        Cookies.set('github_token', '', { expires: -1 });
         Cookies.set('twitch_refresh', '', { expires: -1 });
         Cookies.set('spotify_refresh', '', { expires: -1 });
         Cookies.set('google_refresh', '', { expires: -1 });

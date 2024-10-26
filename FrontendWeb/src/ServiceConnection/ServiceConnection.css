@@ -27,8 +27,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 18vh;
-  gap: 16vh;
+  margin: 6vh;
+  gap: 14vh;
 }
 
 .service .rectangle {
