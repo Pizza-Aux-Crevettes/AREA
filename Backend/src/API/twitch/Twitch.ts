@@ -33,10 +33,7 @@ module.exports = (app: Express) => {
         });
 
         try {
-            const response = await axios.post(
-                tokenUrl,
-                bodyParams,
-            );
+            const response = await axios.post(tokenUrl, bodyParams);
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
 
@@ -68,42 +65,51 @@ module.exports = (app: Express) => {
                 expires_in: response.data.expires_in,
             });
         } catch (error) {
-            console.error('Error refreshing Twitch token:', error);
+            console.error('Error refreshing twitch token:', error);
             res.status(500).send('Error during token refresh');
         }
     });
 
     app.post('/twitch/revoke', async (req, res) => {
         const token = req.body.token;
-    
+
         if (!token) {
             return res
                 .status(400)
                 .send('Le token est requis pour la révocation.');
         }
-    
+
         const revokeUrl = 'https://id.twitch.tv/oauth2/revoke';
-    
+
         const bodyParams = new URLSearchParams({
             client_id: client_id,
             token: token,
         });
-    
+
         try {
             const response = await axios.post(revokeUrl, bodyParams);
-    
+
             if (response.status === 200) {
-                console.log('Token révoqué avec succès pour Twitch.');
+                console.log('Token révoqué avec succès pour twitch.');
                 return res.json({
-                    message: 'Token révoqué avec succès pour Twitch.',
+                    message: 'Token révoqué avec succès pour twitch.',
                 });
             } else {
-                console.error('Erreur lors de la révocation du token pour Twitch.');
-                return res.status(500).send('Erreur lors de la révocation du token pour Twitch.');
+                console.error(
+                    'Erreur lors de la révocation du token pour twitch.'
+                );
+                return res
+                    .status(500)
+                    .send('Erreur lors de la révocation du token pour twitch.');
             }
         } catch (error) {
-            console.error('Erreur lors de la révocation du token pour Twitch :', error);
-            return res.status(500).send('Erreur lors de la révocation du token pour Twitch.');
+            console.error(
+                'Erreur lors de la révocation du token pour twitch :',
+                error
+            );
+            return res
+                .status(500)
+                .send('Erreur lors de la révocation du token pour twitch.');
         }
-    });    
+    });
 };

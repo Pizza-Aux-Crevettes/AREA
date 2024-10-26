@@ -71,7 +71,7 @@ function RectangleDashboard({
         { reaction: 'Spotify', label: 'Sad music is played', connected: false },
         { reaction: 'sendEmail', label: 'Send an email', connected: false },
         { reaction: 'MP', label: 'Send a mp', connected: false },
-        { reaction: 'Clip', label: 'Create a Twitch clip', connected: false },
+        { reaction: 'Clip', label: 'Create a twitch clip', connected: false },
         {
             reaction: 'Event',
             label: 'Create a Event on Google Calendar',

@@ -47,6 +47,7 @@ const registerService = async (service) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('token')}`,
                 },
                 body: JSON.stringify({
                     userEmail: userEmail,
@@ -65,7 +66,6 @@ const registerService = async (service) => {
         console.error('An error occured', error);
     }
 };
-
 
 function Service() {
     const navigate = useNavigate();
@@ -119,7 +119,8 @@ function Service() {
                         fetch('http://localhost:8080/discord/me', {
                             method: 'GET',
                             headers: {
-                                Authorization: 'Bearer ' + Cookies.get('discord_token'),
+                                Authorization:
+                                    'Bearer ' + Cookies.get('discord_token'),
                                 'Content-Type': 'application/json',
                             },
                         })
@@ -127,11 +128,12 @@ function Service() {
                                 return response.json();
                             })
                             .then((json) => {
-                                console.log("json: ", json);
-                                setUsernameDiscordInDB(json.userData.username, json.guildCount);
+                                console.log('json: ', json);
+                                setUsernameDiscordInDB(
+                                    json.userData.username,
+                                    json.guildCount
+                                );
                             });
-
-
                     }
                 }
             }
@@ -149,11 +151,11 @@ function Service() {
         }
 
         if (Cookies.get('twitch_token')) {
-            setTwitchText('disconnection of Twitch');
+            setTwitchText('disconnection of twitch');
             setTwitchStatus('#3AB700');
             setTwitchConnect(true);
         } else {
-            setTwitchText('Connect to Twitch');
+            setTwitchText('Connect to twitch');
             setTwitchStatus('#33478f');
             setTwitchConnect(false);
         }
@@ -189,9 +191,8 @@ function Service() {
         }
     }, [navigate, location]);
 
-
     const setUsernameDiscordInDB = (userName, nbGuilds) => {
-        console.log(nbGuilds, userName)
+        console.log(nbGuilds, userName);
         fetch('http://localhost:8080/discord/setUsername', {
             method: 'POST',
             headers: {
@@ -251,7 +252,7 @@ function Service() {
                                             headers: {
                                                 'Content-Type':
                                                     'application/json',
-                                                'Authorization': `Bearer ${Cookies.get('token')}`,
+                                                Authorization: `Bearer ${Cookies.get('token')}`,
                                             },
                                             body: JSON.stringify({
                                                 userEmail: email,
@@ -268,7 +269,7 @@ function Service() {
                                                     headers: {
                                                         'Content-Type':
                                                             'application/json',
-                                                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                                                        Authorization: `Bearer ${Cookies.get('token')}`,
                                                     },
                                                     body: JSON.stringify({
                                                         userEmail: email,
@@ -296,7 +297,7 @@ function Service() {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                                    Authorization: `Bearer ${Cookies.get('token')}`,
                                 },
                                 body: JSON.stringify({
                                     userEmail: email,
@@ -308,7 +309,7 @@ function Service() {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
-                                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                                        Authorization: `Bearer ${Cookies.get('token')}`,
                                     },
                                     body: JSON.stringify({
                                         userEmail: email,
