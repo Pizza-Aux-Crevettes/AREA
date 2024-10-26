@@ -77,6 +77,8 @@ function RectangleDashboard({
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
+        { reaction: 'Issue', label: 'Create an issue on github', connected: false },
+        { reaction: 'Branch', label: 'Create a Branch on github', connected: false }
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -136,6 +138,16 @@ function RectangleDashboard({
                     return false;
                 }
                 break;
+            case 'Issue':
+                if (!Cookies.get('github_token')) {
+                    return false;
+                }
+                break;
+            case 'Branch':
+                if (!Cookies.get('github_token')) {
+                    return false;
+                }
+                break;
             default:
                 return true;
         }
@@ -185,6 +197,12 @@ function RectangleDashboard({
                 break;
             case 'Clip':
                 text = 'Please log in to twitch';
+                break;
+            case 'Issue':
+                text = 'Please log in to github';
+                break;
+            case 'Branch':
+                text = 'Please log in to github';
                 break;
         }
         setHoverText(text);
@@ -354,8 +372,10 @@ function RectangleDashboard({
                     {action === 'Alerts' ? handleAlerts() : null}
 
                     {reaction === 'MP' ||
-                    reaction === 'Clip' ||
-                    reaction === 'Event'
+                        reaction === 'Clip' ||
+                        reaction === 'Event' ||
+                        reaction === 'Issue' ||
+                        reaction === 'Branch'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
