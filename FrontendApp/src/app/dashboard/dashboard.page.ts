@@ -89,6 +89,7 @@ export class DashboardPage implements OnInit {
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
+        { reaction: 'Issue', label: 'Create an issue github', connected: false },
     ];
 
     constructor(

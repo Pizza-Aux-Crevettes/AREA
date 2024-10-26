@@ -73,10 +73,14 @@
               value="{{area.inputAction}}" [disabled]="!area.local"></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Event'"
-            class="input-div">
-            <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
-              value="{{area.inputReaction}}" [disabled]="!area.local"></ion-input>
+          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || area.reaction === 'Event'" class="input-div">
+            <ion-input
+              class="input-balise"
+              size="small"
+              [(ngModel)]="area.inputReaction"
+              placeholder="Enter a text"
+              value="{{area.inputReaction}}"
+            ></ion-input>
           </div>
 
           <ion-list class="reaction-list">
