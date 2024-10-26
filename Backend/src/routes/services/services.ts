@@ -6,7 +6,6 @@ module.exports = (app: Express) => {
     app.post('/api/setNewToken', auth, async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const service_infos = req.body;
-        console.log("setnewtoken: ", req.body)
         if (service_infos.token === '') {
             service_infos.token = null;
         }
@@ -15,7 +14,6 @@ module.exports = (app: Express) => {
             service_infos.token,
             service_infos.service
         );
-        console.log("setnewtoken result: ", result)
         if (result === null) {
             res.status(400).json({
                 msg: 'Error when setting new token, the email does not exit',
