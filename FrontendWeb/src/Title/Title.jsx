@@ -6,6 +6,8 @@ import Cookies from 'cookies-js';
 import { browser } from 'globals';
 
 function Parameters() {
+    const navigate = useNavigate();
+    const location = useLocation();
     function deleteCookies() {
         Cookies.set('token', '', { expires: -1 });
         Cookies.set('spotify_token', '', { expires: -1 });
@@ -17,9 +19,10 @@ function Parameters() {
         Cookies.set('google_refresh', '', { expires: -1 });
         Cookies.set('discord_refresh', '', { expires: -1 });
 
+        navigate('/');
         setTimeout(() => {
             window.location.reload();
-        }, 1000);
+        }, 50);
     }
 
     const toggleFont = () => {
