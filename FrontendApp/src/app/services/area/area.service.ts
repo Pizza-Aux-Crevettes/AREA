@@ -19,7 +19,7 @@ export class AreaService {
     ): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(
@@ -41,7 +41,7 @@ export class AreaService {
     delArea(token: string, body: any) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(
@@ -71,11 +71,33 @@ export class AreaService {
     getArea(token: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
         try {
             return this.http.post<any>(
                 `${this.API_URL}/api/getArea`,
+                { token },
+                { headers }
+            );
+        } catch (error) {
+            console.error('Error:', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
+
+    DelEmailUser(token: string) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        });
+        try {
+            return this.http.post<any>(
+                `${this.API_URL}/api/DelEmailUser`,
                 { token },
                 { headers }
             );

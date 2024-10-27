@@ -88,12 +88,9 @@ export async function ifChangeUsername(
     email: string
 ): Promise<boolean> {
     const result = await discordUserMe(token);
-    console.log(result);
     const newUsername = result.global_name;
     const username = await getUsername(email);
     if (username[0].username !== newUsername) {
-        console.log('username = ', username[0].username);
-        console.log('newUsername = ', newUsername);
         await updateUsername(email, newUsername);
         return true;
     } else {
@@ -139,12 +136,9 @@ export async function ifNumberOfGuildsChange(token: string, email: string) {
     const nbGuilds = await getGuilds(email);
 
     if (nbGuilds[0].nbGuilds !== result.length) {
-        console.log('nbGuilds = ', nbGuilds[0].nbGuilds);
-        console.log('newNbGuilds = ', result.length);
         await updateNbGuilds(email, result.length);
         return true;
     }
-    console.log('false');
     return false;
 }
 

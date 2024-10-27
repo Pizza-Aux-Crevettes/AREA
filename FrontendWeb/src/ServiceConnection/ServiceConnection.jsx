@@ -105,7 +105,7 @@ function Service() {
             'spotify_refresh',
             'google_refresh',
             'twitch_refresh',
-            'github_refresh'
+            'github_refresh',
         ];
 
         for (let i = 0; i < serviceList.length; i++) {
@@ -225,7 +225,10 @@ function Service() {
                     .then((json) => {
                         const email = json.email;
                         const tokenService = Cookies.get(service + '_token');
-                        if (tokenService && service !== 'spotify') {
+                        if (
+                            tokenService &&
+                            (service !== 'spotify' || service !== 'google')
+                        ) {
                             fetch(`http://localhost:8080/${service}/revoke`, {
                                 method: 'POST',
                                 headers: {
@@ -283,7 +286,10 @@ function Service() {
                                     });
                                 }
                             });
-                        } else if (tokenService && service === 'spotify') {
+                        } else if (
+                            tokenService &&
+                            (service === 'spotify' || service === 'google')
+                        ) {
                             Cookies.set(service + '_token', '', {
                                 expires: -1,
                             });

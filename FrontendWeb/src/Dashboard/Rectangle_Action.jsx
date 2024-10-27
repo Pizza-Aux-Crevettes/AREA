@@ -77,7 +77,11 @@ function RectangleDashboard({
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
-        { reaction: 'Issue', label: 'Create an issue on github', connected: false }
+        {
+            reaction: 'Issue',
+            label: 'Create an issue on github',
+            connected: false,
+        },
     ]);
 
     const [hoverText, setHoverText] = useState('');
@@ -363,9 +367,9 @@ function RectangleDashboard({
                     {action === 'Alerts' ? handleAlerts() : null}
 
                     {reaction === 'MP' ||
-                        reaction === 'Clip' ||
-                        reaction === 'Event' ||
-                        reaction === 'Issue'
+                    reaction === 'Clip' ||
+                    reaction === 'Event' ||
+                    reaction === 'Issue'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -411,7 +415,7 @@ function RectangleDashboard({
                                             {item.label}
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsAction.length - 1 && (
+                                    {index !== menuItemsReaction.length - 1 && (
                                         <MenuDivider />
                                     )}
                                 </Fragment>
