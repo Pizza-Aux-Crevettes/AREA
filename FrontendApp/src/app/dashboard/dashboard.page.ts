@@ -89,7 +89,11 @@ export class DashboardPage implements OnInit {
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
-        { reaction: 'Issue', label: 'Create an issue github', connected: false },
+        {
+            reaction: 'Issue',
+            label: 'Create an issue github',
+            connected: false,
+        },
     ];
 
     constructor(
@@ -117,10 +121,6 @@ export class DashboardPage implements OnInit {
             this.isDislexicFontEnabled = fontState;
         });
         this.checkConnection();
-    }
-
-    isAreaDisabled(area: Area): boolean {
-        return area.inputAction !== '';
     }
 
     checkServicesConnexion(area: string): boolean {
@@ -255,6 +255,7 @@ export class DashboardPage implements OnInit {
             this.areaService.delArea(token, body).subscribe(() => {
                 this.areas = this.areas.filter((area) => area.id !== id);
             });
+            this.areaService.DelEmailUser(token).subscribe(() => {});
         }
     }
 

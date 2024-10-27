@@ -1,9 +1,10 @@
 import supabase from '../../config/db';
 
-export async function setUserName(email: string, userName: string, nbGuilds: number) {
-    console.log(email);
-    console.log(userName);
-    console.log(nbGuilds)
+export async function setUserName(
+    email: string,
+    userName: string,
+    nbGuilds: number
+) {
     try {
         const { error } = await supabase
             .from('DiscordUserDatas')
