@@ -196,7 +196,7 @@ export class ServicePage implements OnInit, AfterViewInit {
                         const token = this.localStorage.getItem(
                             service + '_token'
                         );
-                        if (token && (service != 'spotify' && service !== 'google' && service !== 'github')) {
+                        if (token && service != 'spotify' && service != 'google') {
                             this.tokenService
                                 .revokeToken(service, token)
                                 .subscribe(() => {
@@ -224,7 +224,7 @@ export class ServicePage implements OnInit, AfterViewInit {
                                                 });
                                         });
                                 });
-                        } else if (token && (service === 'spotify' || service === 'google' || service === 'github')) {
+                        } else {
                             this.localStorage.removeItem(service + '_token');
                             this.localStorage.removeItem(service + '_refresh');
                             this.tokenService
