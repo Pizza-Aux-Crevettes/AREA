@@ -115,12 +115,16 @@
 }
 
 .popUp {
+    display:flex;
     background-color: #e90808 !important;
-    position: absolute;
     left: 42%;
     top: 70px;
     border: 1px solid black;
-    width: 30vh;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+    width: 25vh;
     height: 5vh;
 }
 

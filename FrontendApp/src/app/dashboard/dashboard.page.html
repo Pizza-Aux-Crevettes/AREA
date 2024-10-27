@@ -28,12 +28,10 @@
 
 
     <div class="flex-rectangle" *ngFor="let area of areas">
-      <div *ngIf="hoverText" class="popUp">
-        {{ hoverText }}
-      </div>
       <div class="main-rectangle">
         <div class="actionReaction-rect">
-          <ion-list class="action-list">
+            <div *ngIf="emptyField !== ''" class="popUp">{{ emptyField }}</div>
+            <ion-list class="action-list">
             <ion-item>
               <ion-select aria-label="Action" interface="popover" placeholder="Action"
                 (ionChange)="onSelectAction($event, area)" [(ngModel)]="area.action" [disabled]="!area.local">

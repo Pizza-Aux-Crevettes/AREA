@@ -96,6 +96,8 @@ export class DashboardPage implements OnInit {
         },
     ];
 
+    emptyField: string = '';
+
     constructor(
         private localStorage: LocalStorageService,
         private areaService: AreaService,
@@ -264,13 +266,29 @@ export class DashboardPage implements OnInit {
         inputAction?: string,
         inputReaction?: string
     ) {
-        const token = this.localStorage.getItem('token');
-        if (token) {
-            this.areaService
-                .setArea(token, action, reaction, inputAction, inputReaction)
-                .subscribe((response) => {
-                    window.location.reload();
-                });
+        if (
+            action === '' ||
+            reaction === '' ||
+            inputAction === '' ||
+            inputReaction == ''
+        ) {
+            this.emptyField = 'Please complete all fields';
+        } else {
+            this.emptyField = '';
+            const token = this.localStorage.getItem('token');
+            if (token) {
+                this.areaService
+                    .setArea(
+                        token,
+                        action,
+                        reaction,
+                        inputAction,
+                        inputReaction
+                    )
+                    .subscribe((response) => {
+                        window.location.reload();
+                    });
+            }
         }
     }
 }
