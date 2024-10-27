@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
@@ -9,7 +9,7 @@ import { IonSelect } from '@ionic/angular';
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
-export class ServicePage implements OnInit {
+export class ServicePage implements OnInit, AfterViewInit {
     isDislexicFontEnabled?: boolean;
     serviceList: string[] = [
         'spotify_token',
@@ -71,6 +71,7 @@ export class ServicePage implements OnInit {
                             .setTokenInDb(token, email, this.serviceList[i])
                             .subscribe((response) => {
                                 this.clearUrl();
+                                this.ngAfterViewInit();
                             });
                         const discord_token =
                             this.localStorage.getItem('discord_token');
@@ -97,11 +98,14 @@ export class ServicePage implements OnInit {
                     });
             }
         }
+    }
+
+    ngAfterViewInit() {
         if (
             this.localStorage.getItem('spotify_token') &&
             this.localStorage.getItem('spotify_token') !== 'null'
         ) {
-            this.spotify_text = 'disconnection of Spotify';
+            this.spotify_text = 'Disconnection of Spotify';
             this.spotify_status = '#3AB700';
             this.spotify_connect = true;
         } else {
@@ -113,7 +117,7 @@ export class ServicePage implements OnInit {
             this.localStorage.getItem('twitch_token') &&
             this.localStorage.getItem('twitch_token') !== 'null'
         ) {
-            this.twitch_text = 'disconnection of twitch';
+            this.twitch_text = 'Disconnection of twitch';
             this.twitch_status = '#3AB700';
             this.twitch_connect = true;
         } else {
@@ -125,7 +129,7 @@ export class ServicePage implements OnInit {
             this.localStorage.getItem('github_token') &&
             this.localStorage.getItem('github_token') !== 'null'
         ) {
-            this.github_text = 'disconnection of Github';
+            this.github_text = 'Disconnection of Github';
             this.github_status = '#3AB700';
             this.github_connect = true;
         } else {
@@ -137,7 +141,7 @@ export class ServicePage implements OnInit {
             this.localStorage.getItem('google_token') &&
             this.localStorage.getItem('google_token') !== 'null'
         ) {
-            this.google_text = 'disconnection of Google';
+            this.google_text = 'Disconnection of Google';
             this.google_status = '#3AB700';
             this.google_connect = true;
         } else {
@@ -149,7 +153,7 @@ export class ServicePage implements OnInit {
             this.localStorage.getItem('discord_token') &&
             this.localStorage.getItem('discord_token') !== 'null'
         ) {
-            this.discord_text = 'disconnection of Discord';
+            this.discord_text = 'Disconnection of Discord';
             this.discord_status = '#3AB700';
             this.discord_connect = true;
         } else {
