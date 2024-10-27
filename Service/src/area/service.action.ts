@@ -14,7 +14,8 @@ import { IsActive } from '../manageFS/manageFile';
 export async function setActions(
     action: string,
     inputAction: string,
-    email: string
+    email: string,
+    id: string
 ): Promise<any> {
     let result;
     const token = await getTokens(email);
@@ -24,7 +25,8 @@ export async function setActions(
                 './WeatherFile.json',
                 inputAction,
                 getWeatherDatas,
-                email
+                email,
+                id
             );
             break;
         case 'Alert':
@@ -32,7 +34,8 @@ export async function setActions(
                 './AlertFile.json',
                 inputAction,
                 getAlertsDatas,
-                email
+                email,
+                id
             );
             break;
         case 'News':
