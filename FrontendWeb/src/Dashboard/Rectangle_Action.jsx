@@ -14,27 +14,32 @@ import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
-    fetch('http://localhost:8080/api/setArea', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-        body: JSON.stringify({
-            token: Cookies.get('token'),
-            action: action,
-            reaction: reaction,
-            inputAct: inputAction,
-            inputReact: inputReaction,
-        }),
-    })
-        .then((response) => {
-            console.log(response);
-            window.location.reload();
+    if (action && reaction && inputReaction && inputAction) {
+        fetch('http://localhost:8080/api/setArea', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+                action: action,
+                reaction: reaction,
+                inputAct: inputAction,
+                inputReact: inputReaction,
+            }),
         })
-        .catch((error) => {
-            console.error(error);
-        });
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    } else {
+        alert("Please complete all fields");
+    }
 };
 
 function RectangleDashboard({

@@ -272,7 +272,7 @@ export class DashboardPage implements OnInit {
             inputAction === '' ||
             inputReaction == ''
         ) {
-            this.emptyField = 'Please complete all fields';
+            alert("Please complete all fields");
         } else {
             this.emptyField = '';
             const token = this.localStorage.getItem('token');
