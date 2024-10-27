@@ -109,7 +109,6 @@ export class DashboardPage implements OnInit {
         this.areaService
             .getArea(`${this.localStorage.getItem('token')}`)
             .subscribe((res) => {
-                console.log(res);
                 this.areas = res;
                 if (this.areas.length == 0) {
                     this.addNewArea();
@@ -270,7 +269,6 @@ export class DashboardPage implements OnInit {
             this.areaService
                 .setArea(token, action, reaction, inputAction, inputReaction)
                 .subscribe((response) => {
-                    console.log(response);
                     window.location.reload();
                 });
         }
