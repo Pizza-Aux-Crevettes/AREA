@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import axios from 'axios';
+import { updateService } from '../../routes/services/services.query';
 
 const client_id = process.env.GITHUB_CLIENT_ID!;
 const client_secret = process.env.GITHUB_CLIENT_SECRET!;
@@ -14,6 +15,20 @@ module.exports = (app: Express) => {
             origin = '';
         }
         const scope = 'repo user admin:org write:issue';
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
+        res.redirect(authUrl);
+    })
+
+    app.get("/github/login/:email", (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
+        if (req.params.email)
+            origin += `_${req.params.email}`;
+        const scope = 'repo user write:issue';
         const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
         res.redirect(authUrl);
     })
@@ -43,11 +58,23 @@ module.exports = (app: Express) => {
             console.log(response.data)
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
+            let state: any = req.query.state;
+            state = state.split('_');
+            const origin = state[0];
+            if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
+                const email = state[1];
+                await updateService(
+                    email,
+                    access_token,
+                    "github_token"
+                );
+                res.send('You can close this page you are login !');
+            } else {
 
-            const origin = req.query.state;
-            res.redirect(
-                `${origin}service?github_token=${access_token}&github_refresh=${refresh_token}`
-            );
+                res.redirect(
+                    `${origin}service?github_token=${access_token}&github_refresh=${refresh_token}`
+                );
+            }
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');

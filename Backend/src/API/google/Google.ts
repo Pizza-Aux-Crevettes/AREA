@@ -2,6 +2,7 @@ import { Express, Request, Response } from 'express';
 import axios from 'axios';
 import { delMailUser } from './Google.query';
 import { auth } from '../../middleware/auth';
+import { updateService } from '../../routes/services/services.query';
 
 const jwt = require('jsonwebtoken');
 
@@ -17,6 +18,21 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
+        const scope =
+            'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar';
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
+        res.redirect(authUrl);
+    });
+
+    app.get('/google/login/:email', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
+        if (req.params.email)
+            origin += `_${req.params.email}`;
         const scope =
             'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar';
         const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
@@ -50,10 +66,27 @@ module.exports = (app: Express) => {
 
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
-            const origin = req.query.state;
-            res.redirect(
-                `${origin}service?google_token=${access_token}&google_refresh=${refresh_token}`
-            );
+            let state: any = req.query.state;
+            state = state.split('_');
+            const origin = state[0];
+            if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
+                const email = state[1];
+                await updateService(
+                    email,
+                    access_token,
+                    "google_token"
+                );
+                await updateService(
+                    email,
+                    access_token,
+                    "google_refresh"
+                );
+                res.send('You can close this page you are login !');
+            } else {
+                res.redirect(
+                    `${origin}service?google_token=${access_token}&google_refresh=${refresh_token}`
+                );
+            }
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');

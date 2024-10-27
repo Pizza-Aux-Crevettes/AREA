@@ -81,6 +81,7 @@ export class LoginPage implements OnInit {
                         })
                     )
                     .subscribe((res) => {
+                        this.localStorage.setItem('email', res.email);
                         this.tokenService
                             .getServicesTokens(res.email)
                             .pipe(

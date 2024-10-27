@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { IonSelect } from '@ionic/angular';
+import { catchError, of } from 'rxjs';
+import { Browser } from '@capacitor/browser';
 @Component({
     selector: 'app-service',
     templateUrl: './service.page.html',
@@ -42,6 +44,18 @@ export class ServicePage implements OnInit, AfterViewInit {
     public discord_connect: boolean = false;
     public github_connect: boolean = false;
 
+    services: string[] = [
+        'spotify_token',
+        'google_token',
+        'twitch_token',
+        'discord_token',
+        'github_token',
+        'spotify_refresh',
+        'google_refresh',
+        'twitch_refresh',
+        'discord_refresh',
+    ];
+
     constructor(
         private localStorage: LocalStorageService,
         private tokenService: TokenService,
@@ -59,48 +73,24 @@ export class ServicePage implements OnInit, AfterViewInit {
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
             this.isDislexicFontEnabled = fontState;
         });
-        for (let i = 0; i < this.serviceList.length; i++) {
-            if (params.get(this.serviceList[i]) && userToken !== null) {
-                this.tokenService
-                    .getUserData(userToken)
-                    .subscribe((response) => {
-                        email = response.email;
-                        token = `${params.get(this.serviceList[i])}`;
-                        this.localStorage.setItem(this.serviceList[i], token);
-                        this.tokenService
-                            .setTokenInDb(token, email, this.serviceList[i])
-                            .subscribe((response) => {
-                                this.clearUrl();
-                                this.ngAfterViewInit();
-                            });
-                        const discord_token =
-                            this.localStorage.getItem('discord_token');
-                        if (discord_token !== null) {
-                            this.utilsService
-                                .getDiscordMe(discord_token)
-                                .subscribe((response) => {
-                                    const token =
-                                        this.localStorage.getItem('token');
-                                    if (token !== null) {
-                                        console.log(response.userData.username);
-                                        this.utilsService
-                                            .setUsernameDiscordInDB(
-                                                token,
-                                                response.userData.username,
-                                                response.guildCount
-                                            )
-                                            .subscribe((response) => {
-                                                window.location.reload();
-                                            });
-                                    }
-                                });
-                        }
-                    });
-            }
-        }
-    }
-
-    ngAfterViewInit() {
+        this.tokenService
+            .getServicesTokens(this.localStorage.getItem('email'))
+            .pipe(
+                catchError((error) => {
+                    console.error(error);
+                    return of(null);
+                })
+            )
+            .subscribe((res) => {
+                for (let i = 0; i < this.services.length; i++) {
+                    if (res[0][this.services[i]] !== null) {
+                        this.localStorage.setItem(
+                            this.services[i],
+                            res[0][this.services[i]]
+                        );
+                    }
+                }
+            });
         if (
             this.localStorage.getItem('spotify_token') &&
             this.localStorage.getItem('spotify_token') !== 'null'
@@ -189,9 +179,13 @@ export class ServicePage implements OnInit, AfterViewInit {
         this.utilsService.onSelectParam(event, this);
     }
 
-    ManageService(service: string, status: boolean) {
+    async ManageService(service: string, status: boolean) {
         if (!status) {
-            window.location.href = `${environment.api}/${service}/login`;
+            await Browser.open({url: `${environment.api}/${service}/login/${this.localStorage.getItem('email')}`});
+
+            await Browser.addListener('browserFinished', () => {
+                window.location.reload();
+            });
         } else {
             let userToken = this.localStorage.getItem('token');
             if (userToken) {
