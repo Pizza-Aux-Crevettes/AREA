@@ -7,6 +7,7 @@ import {
     Modal,
     MenuDivider,
     Select,
+    getBreakpointValue,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
@@ -83,6 +84,13 @@ function RectangleDashboard({
 
     const [hoverText, setHoverText] = useState('');
 
+    const [githubOrgs, setGithubOrgs] = useState([])
+    const [orgChosen, setOrgChosen] = useState('')
+    const [orgfinal, setOrgfinal] = useState('')
+    const [githubRep, setGithubRep] = useState([]);
+    const [repChosen, setRepChosen] = useState('')
+    const [repfinal, setRepfinal] = useState('')
+
     useEffect(() => {
         const checkConnection = async () => {
             for (let i = 0; i < menuItemsAction.length; i++) {
@@ -100,6 +108,132 @@ function RectangleDashboard({
         };
         checkConnection();
     }, [action, reaction]);
+
+    async function settupReaction(reaction) {
+        setReaction(reaction);
+        if (reaction === 'Branch' || reaction === 'Issue') {
+            try {
+                const response = await fetch('https://api.github.com/user/orgs', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const orgsUser = await response.json();
+
+                const personnal = await fetch('https://api.github.com/user', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                    },
+                });
+                if (!personnal.ok) {
+                    throw new Error(`HTTP error! status: ${personnal.status}`);
+                }
+                const personnalUser = await personnal.json();
+                setGithubOrgs([...orgsUser, personnalUser]);
+                await getRep(orgsUser, personnalUser);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    const getRep = async (orgsUser, personnalUser) => {
+        try {
+            const orgFetchPromises = orgsUser.map(org =>
+                fetch(`https://api.github.com/orgs/${org.login}/repos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+            );
+            const orgRepos = await Promise.all(orgFetchPromises);
+            const flatOrgRepos = orgRepos.flat();
+            setGithubRep(prevRepos => [...prevRepos, ...flatOrgRepos]);
+            const userResponse = await fetch(`https://api.github.com/users/${personnalUser.login}/repos`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                },
+            });
+            if (!userResponse.ok) {
+                throw new Error(`Error fetching repos for user ${personnalUser.login}: ${userResponse.status}`);
+            }
+            const userRepos = await userResponse.json();
+            setGithubRep(prevRepos => [...prevRepos, ...userRepos]);
+        } catch (error) {
+            console.error('Failed to fetch repositories:', error);
+            return null;
+        }
+    }
+
+    const orgsVal = (value) => {
+        setOrgChosen(value)
+        setOrgfinal(value + ' ');
+    }
+
+    const repsVal = (value) => {
+        setRepChosen(value)
+        setRepfinal(value + ' ');
+    }
+
+    const handleOrgs = () => {
+        return (
+            <>
+                <Select
+                    disabled={alreadyExist}
+                    size="lg"
+                    radius="md"
+                    placeholder="Organisations github"
+                    value={orgChosen}
+                    onChange={(value) => orgsVal(value)}
+                    data={githubOrgs.map((userOrg) => ({
+                        value: userOrg.login,
+                        label: userOrg.login,
+                    }))}
+                />
+            </>
+        )
+    }
+
+    const handleRep = () => {
+        const filterRep = githubRep.filter(userRep => userRep.owner.login === orgChosen);
+        return (
+            <>
+                <Select
+                    disabled={alreadyExist}
+                    size="lg"
+                    radius="md"
+                    placeholder="Repos github"
+                    value={repChosen}
+                    onChange={(value) => repsVal(value)}
+                    data={filterRep.map((userRep) => ({
+                        value: userRep.name,
+                        label: userRep.name,
+                    }))}
+                />
+            </>
+        )
+    }
 
     const checkServicesConnexion = async (area) => {
         switch (area) {
@@ -371,6 +505,8 @@ function RectangleDashboard({
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
 
+                    {reaction === 'Branch' || reaction == 'Issue' ? handleOrgs() : null}
+                    {reaction === 'Branch' || reaction == 'Issue' ? handleRep() : null}
                     {reaction === 'MP' ||
                         reaction === 'Clip' ||
                         reaction === 'Event' ||
@@ -411,7 +547,7 @@ function RectangleDashboard({
                                     >
                                         <Menu.Item
                                             onClick={() =>
-                                                setReaction(item.reaction)
+                                                settupReaction(item.reaction)
                                             }
                                             disabled={
                                                 action === item.reaction ||
@@ -441,7 +577,7 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            inputContentReact
+                            orgfinal + repfinal + inputContentReact
                         )
                     }
                 >
