@@ -297,7 +297,6 @@ function RectangleDashboard({
                     return false;
                 }
                 break;
-
             case 'Branch':
                 if (!Cookies.get('github_token')) {
                     return false;
@@ -356,7 +355,6 @@ function RectangleDashboard({
             case 'Issue':
                 text = 'Please log in to github';
                 break;
-
             case 'Branch':
                 text = 'Please log in to github';
                 break;
@@ -531,7 +529,6 @@ function RectangleDashboard({
                     {reaction === 'Branch' || reaction == 'Issue' ? handleOrgs() : null}
                     {reaction === 'Branch' || reaction == 'Issue' ? handleRep() : null}
                     {reaction === 'MP' ||
-
                         reaction === 'Clip' ||
                         reaction === 'Event' ||
                         reaction === 'Issue' ||
