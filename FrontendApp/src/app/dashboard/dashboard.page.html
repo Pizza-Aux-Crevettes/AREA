@@ -97,8 +97,13 @@
             </ion-list>
           </div>
 
+          <div *ngIf="area.reaction === 'sendEmail'" class="input-div">
+            <ion-input class="input-balise" size="small" [(ngModel)]="emailInput" placeholder="Email"
+            (ionInput)="emailInputChange($event)" [disabled]="!area.local"></ion-input>
+          </div>
+
           <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
-          area.reaction === 'Event' || area.reaction === 'Branch'" class="input-div">
+          area.reaction === 'Event' || area.reaction === 'Branch' || area.reaction === 'sendEmail'" class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
               value="{{area.inputReaction}}"></ion-input>
           </div>
