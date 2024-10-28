@@ -35,7 +35,7 @@ async function registerUserNews(email: string, news_author: string, news_title: 
         .select()
 
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return true;
@@ -57,7 +57,7 @@ async function updateUserNews(email: string, user_data: any, news_author: string
             .eq("Email", email)
             .select()
         if (error) {
-            console.log(error);
+            console.error(error);
             return null;
         } else {
             return true;
@@ -72,7 +72,7 @@ async function getDataUser(email: string): Promise<any> {
         .eq("Email", email);
 
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return user_data;
@@ -83,7 +83,6 @@ export async function getArticle(email: string, title: string): Promise<any> {
     const newsKey: string = process.env.NEWSAPI_API_KEY as string;
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
-    console.log(formattedDate);
     const urlTranslate =
         `https://newsapi.org/v2/everything?pageSize=1&qInTitle="${title}"&sortBy=publishedAt&apiKey=${newsKey}`;
 
@@ -92,13 +91,8 @@ export async function getArticle(email: string, title: string): Promise<any> {
 
         const jsonData = await result.text();
         const article = parseArticle(jsonData);
-        console.log("email:", email);
-        console.log("article Author:", article.author);
-        console.log("article Title:", article.title);
         if (article.author !== undefined && article.title !== undefined) {
             const user_data = await getDataUser(email);
-            console.log("DB Author:", user_data[0].Author);
-            console.log("DB Title:", user_data[0].Title, "End news\n");
             if (user_data.length === 0) {
                 const register = await registerUserNews(email, article.author, article.title);
                 return register;
@@ -107,7 +101,6 @@ export async function getArticle(email: string, title: string): Promise<any> {
                 return update;
             }
         } else {
-            console.log("End news\n");
             return false;
         }
     } catch (error) {
