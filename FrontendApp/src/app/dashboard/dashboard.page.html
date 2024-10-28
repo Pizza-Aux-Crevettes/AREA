@@ -30,7 +30,7 @@
     <div class="flex-rectangle" *ngFor="let area of areas">
       <div class="main-rectangle">
         <div class="actionReaction-rect">
-            <ion-list class="action-list">
+          <ion-list class="action-list">
             <ion-item>
               <ion-select aria-label="Action" interface="popover" placeholder="Action"
                 (ionChange)="onSelectAction($event, area)" [(ngModel)]="area.action" [disabled]="!area.local">
@@ -70,21 +70,44 @@
               value="{{area.inputAction}}" [disabled]="!area.local"></ion-input>
           </div>
 
+          <div *ngIf="area.reaction === 'Issue' || area.reaction === 'Branch'" class="city-div">
+            <ion-list class="city-list">
+              <ion-item>
+                <ion-select [disabled]="!area.local" interface="popover" placeholder="Organisations GitHub"
+                  [(ngModel)]="orgChosen" (ionChange)="orgsVal($event)">
+                  <ion-select-option *ngFor="let org of githubOrgs" [value]="org.login">
+                    {{ org.login }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <div *ngIf="area.reaction === 'Issue' || area.reaction === 'Branch'" class="city-div">
+            <ion-list class="city-list">
+              <ion-item>
+                <ion-select [disabled]="!area.local" interface="popover" placeholder="Repos GitHub"
+                  [(ngModel)]="repChosen" (ionChange)="repsVal($event)">
+                  <ion-select-option *ngFor="let rep of filterRep" [value]="rep.name">
+                    {{ rep.name }}
+                  </ion-select-option>
+                </ion-select>
+
+              </ion-item>
+            </ion-list>
+          </div>
+
           <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
           area.reaction === 'Event' || area.reaction === 'Branch'" class="input-div">
-            <ion-input
-              class="input-balise"
-              size="small"
-              [(ngModel)]="area.inputReaction"
-              placeholder="Enter a text"
-              value="{{area.inputReaction}}"
-            ></ion-input>
+            <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
+              value="{{area.inputReaction}}"></ion-input>
           </div>
 
           <ion-list class="reaction-list">
             <ion-item>
               <ion-select aria-label="Reaction" interface="popover" placeholder="Reaction"
-                (ionChange)="onSelectReaction($event, area)" [(ngModel)]="area.reaction" value="{{area.reaction}}" [disabled]="!area.local">
+                (ionChange)="onSelectReaction($event, area)" [(ngModel)]="area.reaction" value="{{area.reaction}}"
+                [disabled]="!area.local">
                 <ion-select-option *ngFor="let item of menuItemsReaction" [value]="item.reaction"
                   [disabled]="area.reaction === item.reaction || !item.connected">
                   {{ item.label }}
