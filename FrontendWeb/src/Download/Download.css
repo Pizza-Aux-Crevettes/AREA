@@ -1,0 +1,50 @@
+.download .all-container {
+    background-color: #B5CEFF;
+    display: grid;
+    grid-template-rows: 0px 100vh;
+    grid-gap: 4%;
+    overflow: hidden;
+}
+
+.download .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.download .back-rectangle {
+    background-color: #8CB3FF;
+    width: 80%;
+    height: 80%;
+    border-radius: 8px;
+    display: flex;
+    position: relative;
+    padding: 5%;
+}
+
+.download .back-rectangle .text-content {
+    align-self: flex-start;
+    justify-self: flex-start;
+}
+
+.download .back-rectangle .icon {
+    position: absolute;
+    left: 55%;
+}
+
+.download .text-download {
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+}
+
+.download .back-rectangle .button-content {
+    align-self: flex-start;
+    justify-self: flex-start;
+    background-color:#7289da;
+    color: rgb(36, 36, 36);
+}
+
+.download .back-rectangle .button-content:hover {
+    background-color:#6378c0;
+}
