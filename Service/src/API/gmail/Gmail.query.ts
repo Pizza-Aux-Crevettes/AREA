@@ -163,6 +163,7 @@ export async function getRefreshGoogleToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
+        console.log("coucou")
         return data[0].google_refresh;
     } catch (e) {
         console.error('getRefreshGoogleToken', e);
