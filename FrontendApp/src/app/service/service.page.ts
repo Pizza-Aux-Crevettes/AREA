@@ -26,18 +26,6 @@ export class ServicePage implements OnInit, AfterViewInit {
         'github_refresh'
     ];
 
-    public spotify_text: string = '';
-    public google_text: string = '';
-    public twitch_text: string = '';
-    public discord_text: string = '';
-    public github_text: string = '';
-
-    public spotify_status: string = '';
-    public google_status: string = '';
-    public twitch_status: string = '';
-    public discord_status: string = '';
-    public github_status: string = '';
-
     public spotify_connect: boolean = false;
     public google_connect: boolean = false;
     public twitch_connect: boolean = false;
@@ -57,7 +45,7 @@ export class ServicePage implements OnInit, AfterViewInit {
     ];
 
     constructor(
-        private localStorage: LocalStorageService,
+        protected localStorage: LocalStorageService,
         private tokenService: TokenService,
         private utilsService: UtilsService
     ) {}
@@ -73,6 +61,10 @@ export class ServicePage implements OnInit, AfterViewInit {
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
             this.isDislexicFontEnabled = fontState;
         });
+        this.loadServices();
+    }
+
+    loadServices() {
         this.tokenService
             .getServicesTokens(this.localStorage.getItem('email'))
             .pipe(
@@ -90,67 +82,19 @@ export class ServicePage implements OnInit, AfterViewInit {
                         );
                     }
                 }
+                this.spotify_connect = !!(this.localStorage.getItem('spotify_token') &&
+                    this.localStorage.getItem('spotify_token') !== 'null');
+                this.twitch_connect = !!(this.localStorage.getItem('twitch_token') &&
+                    this.localStorage.getItem('twitch_token') !== 'null');
+                this.github_connect = !!(this.localStorage.getItem('github_token') &&
+                    this.localStorage.getItem('github_token') !== 'null');
+                this.google_connect = !!(this.localStorage.getItem('google_token') &&
+                    this.localStorage.getItem('google_token') !== 'null');
+                this.discord_connect = !!(this.localStorage.getItem('discord_token') &&
+                    this.localStorage.getItem('discord_token') !== 'null');
             });
-        if (
-            this.localStorage.getItem('spotify_token') &&
-            this.localStorage.getItem('spotify_token') !== 'null'
-        ) {
-            this.spotify_text = 'Disconnection of Spotify';
-            this.spotify_status = '#3AB700';
-            this.spotify_connect = true;
-        } else {
-            this.spotify_text = 'Connect to Spotify';
-            this.spotify_status = '8cb3ff';
-            this.spotify_connect = false;
-        }
-        if (
-            this.localStorage.getItem('twitch_token') &&
-            this.localStorage.getItem('twitch_token') !== 'null'
-        ) {
-            this.twitch_text = 'Disconnection of twitch';
-            this.twitch_status = '#3AB700';
-            this.twitch_connect = true;
-        } else {
-            this.twitch_text = 'Connect to twitch';
-            this.twitch_status = '8cb3ff';
-            this.twitch_connect = false;
-        }
-        if (
-            this.localStorage.getItem('github_token') &&
-            this.localStorage.getItem('github_token') !== 'null'
-        ) {
-            this.github_text = 'Disconnection of Github';
-            this.github_status = '#3AB700';
-            this.github_connect = true;
-        } else {
-            this.github_text = 'Connect to Github';
-            this.github_status = '8cb3ff';
-            this.github_connect = false;
-        }
-        if (
-            this.localStorage.getItem('google_token') &&
-            this.localStorage.getItem('google_token') !== 'null'
-        ) {
-            this.google_text = 'Disconnection of Google';
-            this.google_status = '#3AB700';
-            this.google_connect = true;
-        } else {
-            this.google_text = 'Connect to Google';
-            this.google_status = '8cb3ff';
-            this.google_connect = false;
-        }
-        if (
-            this.localStorage.getItem('discord_token') &&
-            this.localStorage.getItem('discord_token') !== 'null'
-        ) {
-            this.discord_text = 'Disconnection of Discord';
-            this.discord_status = '#3AB700';
-            this.discord_connect = true;
-        } else {
-            this.discord_text = 'Connect to Discord';
-            this.discord_status = '8cb3ff';
-            this.discord_connect = false;
-        }
+
+
     }
 
     clearUrl() {

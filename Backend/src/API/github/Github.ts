@@ -29,7 +29,7 @@ module.exports = (app: Express) => {
         if (req.params.email)
             origin += `_${req.params.email}`;
         const scope = 'repo user write:issue';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("http://10.0.2.2:8080/github/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
         res.redirect(authUrl);
     })
 
@@ -42,7 +42,7 @@ module.exports = (app: Express) => {
             code: code as string,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/github/callback" : redirect_uri,
         });
 
         const headers = {
@@ -68,7 +68,7 @@ module.exports = (app: Express) => {
                     access_token,
                     "github_token"
                 );
-                res.send('You can close this page you are login !');
+                res.send("<script>window.close();</script > ");
             } else {
 
                 res.redirect(

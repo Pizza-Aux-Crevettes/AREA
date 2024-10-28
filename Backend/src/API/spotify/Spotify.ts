@@ -29,7 +29,7 @@ module.exports = (app: Express) => {
             'user-read-private user-read-email user-modify-playback-state';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
             scope
-        )}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}`;
+        )}&redirect_uri=${encodeURIComponent('http://10.0.2.2:8080/spotify/callback')}&state=${encodeURIComponent(origin)}`;
         res.redirect(authUrl);
     });
 
@@ -47,7 +47,7 @@ module.exports = (app: Express) => {
             },
             form: {
                 code: code,
-                redirect_uri: redirect_uri,
+                redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/spotify/callback" : redirect_uri,
                 grant_type: 'authorization_code',
             },
             json: true,
@@ -76,7 +76,7 @@ module.exports = (app: Express) => {
                     refresh_token,
                     "spotify_refresh"
                 );
-                res.send('You can close this page you are login !');
+                res.send("<script>window.close();</script > ");
             } else {
                 res.redirect(
                     `${origin}service?spotify_token=${access_token}&spotify_refresh=${refresh_token}`

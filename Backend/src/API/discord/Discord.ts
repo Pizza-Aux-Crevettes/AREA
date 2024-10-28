@@ -33,7 +33,7 @@ module.exports = (app: Express) => {
             origin += `_${req.params.email}`;
         console.log(origin);
         const scope = 'identify email guilds guilds.members.read bot';
-        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("http://10.0.2.2/discord/callback")}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
     });
 
@@ -52,7 +52,7 @@ module.exports = (app: Express) => {
             client_secret: client_secret,
             grant_type: 'authorization_code',
             code: code as string,
-            redirect_uri: redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/discord/callback" : redirect_uri,
         });
 
         try {
@@ -78,7 +78,7 @@ module.exports = (app: Express) => {
                     refresh_token,
                     "discord_refresh"
                 );
-                res.send('You can close this page you are login !');
+                res.send("<script>window.close();</script > ");
             } else {
                 res.redirect(
                     `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
