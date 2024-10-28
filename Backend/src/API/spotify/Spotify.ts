@@ -7,9 +7,15 @@ const redirect_uri = 'http://localhost:8080/spotify/callback';
 
 module.exports = (app: Express) => {
     app.get('/spotify/login', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
         const scope =
             'user-read-private user-read-email user-modify-playback-state';
-        const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
+        const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(
             scope
         )}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
         res.redirect(authUrl);
@@ -44,7 +50,7 @@ module.exports = (app: Express) => {
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
 
-            const origin = req.headers.referer;
+            const origin = req.query.state;
 
             console.log(origin);
             res.redirect(
