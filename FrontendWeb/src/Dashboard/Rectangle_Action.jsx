@@ -127,6 +127,10 @@ function RectangleDashboard({
 
     async function settupReaction(reaction) {
         setReaction(reaction);
+        setOrgChosen('');
+        setOrgfinal('');
+        setRepChosen('');
+        setRepfinal('');
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
                 const response = await fetch('https://api.github.com/user/orgs', {
