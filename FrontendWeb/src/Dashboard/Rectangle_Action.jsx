@@ -114,6 +114,9 @@ function RectangleDashboard({
     const [repChosen, setRepChosen] = useState('');
     const [repfinal, setRepfinal] = useState('');
 
+    const [emailInput, setEmailInput] = useState('');
+    const [emailInputFinal, setEmailInputFinal] = useState('');
+
     useEffect(() => {
         const checkConnection = async () => {
             for (let i = 0; i < menuItemsAction.length; i++) {
@@ -138,6 +141,8 @@ function RectangleDashboard({
         setOrgfinal('');
         setRepChosen('');
         setRepfinal('');
+        setEmailInput('');
+        setEmailInputFinal('');
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
                 const response = await fetch(
@@ -399,6 +404,26 @@ function RectangleDashboard({
         );
     };
 
+    const emailInputChange = (value) => {
+        setEmailInput(value);
+        setEmailInputFinal(value + ' ');
+    }
+
+    const handleInputEmail = () => {
+        return (
+            <>
+                <TextInput
+                    disabled={alreadyExist}
+                    radius="md"
+                    size="lg"
+                    placeholder="Enter an email"
+                    value={emailInput}
+                    onChange={(e) => emailInputChange(e.target.value)}
+                />
+            </>
+        );
+    }
+
     const handleWeather = () => {
         const cities = [
             { name: 'Paris' },
@@ -549,14 +574,16 @@ function RectangleDashboard({
                     {reaction === 'Branch' || reaction == 'Issue'
                         ? handleOrgs()
                         : null}
+                    {reaction === 'sendEmail' ? handleInputEmail() : null}
                     {reaction === 'Branch' || reaction == 'Issue'
                         ? handleRep()
                         : null}
                     {reaction === 'MP' ||
-                    reaction === 'Clip' ||
-                    reaction === 'Event' ||
-                    reaction === 'Issue' ||
-                    reaction === 'Branch'
+                        reaction === 'Clip' ||
+                        reaction === 'Event' ||
+                        reaction === 'Issue' ||
+                        reaction === 'Branch' ||
+                        reaction === 'sendEmail'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
@@ -622,7 +649,7 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            orgfinal + repfinal + inputContentReact
+                            emailInputFinal + orgfinal + repfinal + inputContentReact
                         )
                     }
                 >

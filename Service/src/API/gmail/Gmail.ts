@@ -30,9 +30,12 @@ export async function haveMail(email: string, token: string): Promise<any> {
 export async function sendMail(
     email: string,
     token: string,
-    emailDest: string
+    infoMail: string
 ): Promise<any> {
-    const result = await sendGmail(token, emailDest);
+    const firstSpaceIndex = infoMail.indexOf(' ');
+    const emailDest = infoMail.substring(0, firstSpaceIndex);
+    const emailMess = infoMail.substring(firstSpaceIndex + 1);
+    const result = await sendGmail(token, emailDest, emailMess);
     if (result === null) {
         console.error('Error when send email');
         await refreshGmailToken(email);

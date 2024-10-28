@@ -60,12 +60,12 @@ export async function getGmailMsg(token: string, email: string) {
     }
 }
 
-export async function sendGmail(token: string, dest: string) {
+export async function sendGmail(token: string, dest: string, mess: string) {
     const email = [
         `To: ${dest}`,
         'Subject: AREA: reaction',
         '',
-        'Tu as un ou des mails pas ouverts °<3°',
+        mess,
     ].join('\n');
     const encodedMessage = base64.encode(email);
 
@@ -163,6 +163,7 @@ export async function getRefreshGoogleToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
+        console.log("coucou")
         return data[0].google_refresh;
     } catch (e) {
         console.error('getRefreshGoogleToken', e);

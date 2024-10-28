@@ -33,6 +33,9 @@ export class DashboardPage implements OnInit {
     repfinal: string = '';
     filterRep: any[] = [];
 
+    emailInput: string = '';
+    emailInputFinal: string = '';
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -262,6 +265,8 @@ export class DashboardPage implements OnInit {
         this.orgfinal = '';
         this.repChosen = '';
         this.repfinal = '';
+        this.emailInput = '';
+        this.emailInputFinal = '';
         
         if (area.reaction === 'Branch' || area.reaction === 'Issue') {
             try {
@@ -346,6 +351,11 @@ export class DashboardPage implements OnInit {
         area.inputAction = event.detail.value;
     }
 
+    emailInputChange (value: any){
+        this.emailInput = value.detail.value;
+        this.emailInputFinal = value.detail.value + ' ';
+    }
+
     DelArea(id: number) {
         const token = this.localStorage.getItem('token');
         if (!token) return;
@@ -394,7 +404,7 @@ export class DashboardPage implements OnInit {
                         action,
                         reaction,
                         inputAction,
-                        this.orgfinal + this.repfinal + inputReaction
+                        this.emailInputFinal + this.orgfinal + this.repfinal + inputReaction
                     )
                     .subscribe((response) => {
                         window.location.reload();
