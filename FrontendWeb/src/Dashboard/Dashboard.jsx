@@ -81,7 +81,16 @@ function Dashboard() {
             }),
         })
             .then((response) => {
-                console.log(response);
+                fetch('http://localhost:8080/api/DelEmailUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('token')}`,
+                    },
+                    body: JSON.stringify({
+                        token: Cookies.get('token'),
+                    }),
+                });
             })
             .catch((error) => {
                 console.error(error);

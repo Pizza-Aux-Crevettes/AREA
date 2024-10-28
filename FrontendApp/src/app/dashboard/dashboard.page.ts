@@ -67,6 +67,7 @@ export class DashboardPage implements OnInit {
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
         { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
             label: 'When my discord username changes',
@@ -89,9 +90,15 @@ export class DashboardPage implements OnInit {
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
-        { reaction: 'Issue', label: 'Create an issue github', connected: false },
+        {
+            reaction: 'Issue',
+            label: 'Create an issue github',
+            connected: false,
+        },
         { reaction: 'Branch', label: 'Create a branch github', connected: false }
     ];
+
+    emptyField: string = '';
 
     constructor(
         private localStorage: LocalStorageService,
@@ -106,7 +113,6 @@ export class DashboardPage implements OnInit {
         this.areaService
             .getArea(`${this.localStorage.getItem('token')}`)
             .subscribe((res) => {
-                console.log(res);
                 this.areas = res;
                 if (this.areas.length == 0) {
                     this.addNewArea();
@@ -118,10 +124,6 @@ export class DashboardPage implements OnInit {
             this.isDislexicFontEnabled = fontState;
         });
         this.checkConnection();
-    }
-
-    isAreaDisabled(area: Area): boolean {
-        return area.inputAction !== '';
     }
 
     checkServicesConnexion(area: string): boolean {
@@ -266,6 +268,7 @@ export class DashboardPage implements OnInit {
             this.areaService.delArea(token, body).subscribe(() => {
                 this.areas = this.areas.filter((area) => area.id !== id);
             });
+            this.areaService.DelEmailUser(token).subscribe(() => {});
         }
     }
 
@@ -275,14 +278,35 @@ export class DashboardPage implements OnInit {
         inputAction?: string,
         inputReaction?: string
     ) {
-        const token = this.localStorage.getItem('token');
-        if (token) {
-            this.areaService
-                .setArea(token, action, reaction, inputAction, inputReaction)
-                .subscribe((response) => {
-                    console.log(response);
-                    window.location.reload();
-                });
+        if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+          inputAction = 'Nothing';
+        }
+        if (reaction === 'Spotify') {
+          inputReaction = 'Nothing';
+        }
+        if (
+            action === '' ||
+            reaction === '' ||
+            inputAction === '' ||
+            inputReaction == ''
+        ) {
+            alert("Please complete all fields");
+        } else {
+            this.emptyField = '';
+            const token = this.localStorage.getItem('token');
+            if (token) {
+                this.areaService
+                    .setArea(
+                        token,
+                        action,
+                        reaction,
+                        inputAction,
+                        inputReaction
+                    )
+                    .subscribe((response) => {
+                        window.location.reload();
+                    });
+            }
         }
     }
 }

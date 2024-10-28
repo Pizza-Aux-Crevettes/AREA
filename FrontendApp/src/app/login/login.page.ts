@@ -72,10 +72,12 @@ export class LoginPage implements OnInit {
                             )
                             .subscribe((res) => {
                                 for (let i = 0; i < this.services.length; i++) {
-                                    this.localStorage.setItem(
-                                        this.services[i],
-                                        res[0][this.services[i]]
-                                    );
+                                    if (res[0][this.services[i]] !== null) {
+                                        this.localStorage.setItem(
+                                            this.services[i],
+                                            res[0][this.services[i]]
+                                        );
+                                    }
                                 }
                                 this.router.navigate(['/dashboard']);
                             });

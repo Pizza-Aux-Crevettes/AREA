@@ -27,7 +27,7 @@ async function getLastMsg(msg_id: string, token: string) {
     return data;
 }
 
-export async function getGmailMsg(token: string) {
+export async function getGmailMsg(token: string, email: string) {
     let data;
     let res;
     try {
@@ -43,8 +43,17 @@ export async function getGmailMsg(token: string) {
         );
 
         data = await result.json();
-        res = await getLastMsg(data.messages[0].threadId, token);
-        return res;
+        const isAlreadyCheck = await alreadyCheck(
+            data.messages[0].threadId,
+            email
+        );
+        if (!isAlreadyCheck) {
+            await setMailInDB(data.messages[0].threadId, email);
+            res = await getLastMsg(data.messages[0].threadId, token);
+            return res;
+        } else {
+            return '';
+        }
     } catch (error) {
         console.error('error', error);
         return null;
@@ -56,7 +65,7 @@ export async function sendGmail(token: string, dest: string) {
         `To: ${dest}`,
         'Subject: AREA: reaction',
         '',
-        'Tu as un ou des mails pas ouverts °<3°'
+        'Tu as un ou des mails pas ouverts °<3°',
     ].join('\n');
     const encodedMessage = base64.encode(email);
 
@@ -66,7 +75,7 @@ export async function sendGmail(token: string, dest: string) {
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ raw: encodedMessage }),
@@ -86,7 +95,11 @@ export async function sendGmail(token: string, dest: string) {
     }
 }
 
-export async function insertCalEvent(token: string, idCalendar: string, title: string) {
+export async function insertCalEvent(
+    token: string,
+    idCalendar: string,
+    title: string
+) {
     const start = new Date();
     start.setDate(start.getDate() + 1);
     const end = new Date(start);
@@ -121,7 +134,7 @@ export async function insertCalEvent(token: string, idCalendar: string, title: s
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(content),
@@ -148,24 +161,93 @@ export async function getRefreshGoogleToken(email: string): Promise<any> {
             .select('google_refresh')
             .eq('user_email', email);
         if (error) {
-            return "";
+            return '';
         }
         return data[0].google_refresh;
     } catch (e) {
         console.error('getRefreshGoogleToken', e);
-        return "";
+        return '';
     }
 }
 
-export async function updateGoogleToken(email: string, access_token: string): Promise<boolean> {
+export async function updateGoogleToken(
+    email: string,
+    access_token: string
+): Promise<boolean> {
     try {
-        const { data, error } = await supabase.from('Service').update({
-            google_token: access_token
-        }).eq('user_email', email).select();
+        const { data, error } = await supabase
+            .from('Service')
+            .update({
+                google_token: access_token,
+            })
+            .eq('user_email', email)
+            .select();
         return !error;
-
     } catch (error) {
         console.error('updateGoogleToken', e);
         return false;
+    }
+}
+
+async function alreadyCheck(IdEmail: string, email: string) {
+    const lastId: any = await getLastId(email);
+    if (lastId !== null && lastId.length > 0) {
+        return lastId[0].lastIdEmail === IdEmail;
+    }
+    return false;
+}
+
+async function getLastId(email: string) {
+    try {
+        const { data } = await supabase
+            .from('LastUserEmail')
+            .select('lastIdEmail')
+            .eq('userEmail', email);
+        return data;
+    } catch (error) {
+        console.error('updateGoogleToken', error);
+        return '';
+    }
+}
+
+async function setMailInDB(IdEmail: string, email: string) {
+    const alreadyExist = await UserAlreadyExist(email);
+    if (alreadyExist) {
+        updateEmailId(IdEmail, email);
+    } else {
+        setEmailId(IdEmail, email);
+    }
+}
+
+async function UserAlreadyExist(email: string): Promise<boolean> {
+    const { data } = await supabase
+        .from('LastUserEmail')
+        .select('userEmail')
+        .eq('userEmail', email);
+    if (data === null || data.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+async function updateEmailId(IdEmail: string, email: string) {
+    try {
+        await supabase
+            .from('LastUserEmail')
+            .update([{ lastIdEmail: IdEmail }])
+            .eq('userEmail', email)
+            .select();
+    } catch (error) {
+        console.error('updateEmailId', e);
+    }
+}
+async function setEmailId(IdEmail: string, email: string) {
+    try {
+        await supabase
+            .from('LastUserEmail')
+            .insert([{ userEmail: email, lastIdEmail: IdEmail }])
+            .select();
+    } catch (error) {
+        console.error('updateEmailId', e);
     }
 }

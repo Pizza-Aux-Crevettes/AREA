@@ -77,6 +77,12 @@ function NavigateMenu() {
         location.pathname === '/service';
     }
 
+    function goToDownload() {
+        navigate('/download');
+        location.pathname === '/download';
+    }
+
+
     return (
         <div>
             <Menu width={200} shadow="md">
@@ -86,10 +92,16 @@ function NavigateMenu() {
                     </Menu.Target>
                 </Tooltip>
                 <Menu.Dropdown>
-                    <Menu.Item onClick={goToDashboard}>Dashboard</Menu.Item>
+                    <Menu.Item onClick={goToDashboard}>
+                        Dashboard
+                    </Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={goToService}>
                         Service Connection
+                    </Menu.Item>
+                    <MenuDivider />
+                    <Menu.Item onClick={goToDownload}>
+                        Download apk
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>

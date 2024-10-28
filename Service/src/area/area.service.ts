@@ -9,7 +9,8 @@ export async function manageArea(): Promise<void> {
             const result = await setActions(
                 config.action,
                 config.inputAction,
-                config.userEmail
+                config.userEmail,
+                config.id
             );
             if (result && result !== '') {
                 await setReaction(

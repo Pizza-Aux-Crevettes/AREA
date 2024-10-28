@@ -15,27 +15,38 @@ import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
-    fetch('http://localhost:8080/api/setArea', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-        body: JSON.stringify({
-            token: Cookies.get('token'),
-            action: action,
-            reaction: reaction,
-            inputAct: inputAction,
-            inputReact: inputReaction,
-        }),
-    })
-        .then((response) => {
-            console.log(response);
-            window.location.reload();
+    if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+        inputAction = 'Nothing';
+    }
+    if (reaction === 'Spotify') {
+        inputReaction = 'Nothing';
+    }
+    if (action && reaction && inputReaction && inputAction) {
+        fetch('http://localhost:8080/api/setArea', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+                action: action,
+                reaction: reaction,
+                inputAct: inputAction,
+                inputReact: inputReaction,
+            }),
         })
-        .catch((error) => {
-            console.error(error);
-        });
+            .then((response) => {
+                console.log(response);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    } else {
+        alert("Please complete all fields");
+    }
 };
 
 function RectangleDashboard({
@@ -56,6 +67,7 @@ function RectangleDashboard({
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
         { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
             label: 'When my discord username changes',
@@ -78,7 +90,11 @@ function RectangleDashboard({
             label: 'Create a Event on Google Calendar',
             connected: false,
         },
-        { reaction: 'Issue', label: 'Create an issue on github', connected: false },
+        {
+            reaction: 'Issue',
+            label: 'Create an issue on github',
+            connected: false,
+        },
         { reaction: 'Branch', label: 'Create a Branch on github', connected: false }
     ]);
 
@@ -508,6 +524,7 @@ function RectangleDashboard({
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
+                    {action === 'News' ? handleInput(inputContentAct, 'inputAction') : null}
 
                     {reaction === 'Branch' || reaction == 'Issue' ? handleOrgs() : null}
                     {reaction === 'Branch' || reaction == 'Issue' ? handleRep() : null}
@@ -561,7 +578,7 @@ function RectangleDashboard({
                                             {item.label}
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsAction.length - 1 && (
+                                    {index !== menuItemsReaction.length - 1 && (
                                         <MenuDivider />
                                     )}
                                 </Fragment>

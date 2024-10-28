@@ -1,5 +1,9 @@
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
 import axios from 'axios';
+import { delMailUser } from './Google.query';
+import { auth } from '../../middleware/auth';
+
+const jwt = require('jsonwebtoken');
 
 const client_id = process.env.GOOGLE_CLIENT_ID!;
 const client_secret = process.env.GOOGLE_CLIENT_SECRET!;
@@ -56,48 +60,17 @@ module.exports = (app: Express) => {
         }
     });
 
-    app.post('/google/revoke', async (req, res) => {
-        const token = req.body.token;
-        if (!token) {
-            return res
-                .status(400)
-                .send('Le token est requis pour la révocation.');
+    app.post('/api/DelEmailUser', auth, async (req: Request, res: Response) => {
+        res.setHeader('Content-Type', 'application/json');
+        const user_infos = req.body;
+        let decoded = jwt.verify(user_infos.token, process.env.SECRET);
+        const result = await delMailUser(decoded.email);
+
+        if (result === null) {
+            res.status(400).json({ msg: 'Cannot delete the Email' });
         }
-
-        const revokeUrl = 'https://oauth2.googleapis.com/revoke';
-
-        try {
-            const response = await axios.post(revokeUrl, null, {
-                params: {
-                    token: token,
-                },
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    Authorization: `Bearer ${token}`, // Authentification via Bearer Token
-                },
-            });
-
-            if (response.status === 200) {
-                console.log('Token révoqué avec succès pour Google.');
-                return res.json({
-                    message: 'Token révoqué avec succès pour Google.',
-                });
-            } else {
-                console.error(
-                    'Erreur lors de la révocation du token pour Google.'
-                );
-                return res
-                    .status(500)
-                    .send('Erreur lors de la révocation du token pour Google.');
-            }
-        } catch (error) {
-            console.error(
-                'Erreur lors de la révocation du token pour Google :',
-                error
-            );
-            return res
-                .status(500)
-                .send('Erreur lors de la révocation du token pour Google.');
-        }
+        res.status(200).json({
+            msg: 'Email deleted successfully.',
+        });
     });
 };
