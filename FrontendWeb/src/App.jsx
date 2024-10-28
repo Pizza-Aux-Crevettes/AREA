@@ -4,6 +4,7 @@ import "./App.css";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Dashboard from "./Dashboard/Dashboard";
+import Download from "./Download/Download";
 import Service from "./ServiceConnection/ServiceConnection";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import "@mantine/core/styles.css";
@@ -45,6 +46,7 @@ const App = () => {
                             <>
                                 <Route path="/" element={<Dashboard />} />
                                 <Route path="/service" element={<Service />} />
+                                <Route path="/download" element={<Download />} />
                             </>
                         ) : (
                             <>
