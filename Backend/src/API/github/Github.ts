@@ -13,7 +13,7 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        const scope = 'repo user write:issue';
+        const scope = 'repo user admin:org write:issue';
         const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
         res.redirect(authUrl);
     })
@@ -31,7 +31,7 @@ module.exports = (app: Express) => {
         });
 
         const headers = {
-            Accept: 'application/json',  // C'est une bonne pratique d'ajouter ce header
+            Accept: 'application/json',
         };
 
         try {

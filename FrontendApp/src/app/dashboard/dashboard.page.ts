@@ -25,6 +25,14 @@ export class DashboardPage implements OnInit {
 
     areas: Area[] = [];
 
+    githubOrgs: any[] = [];
+    orgChosen: string = '';
+    orgfinal: string = '';
+    githubRep: any[] = [];
+    repChosen: string = '';
+    repfinal: string = '';
+    filterRep: any[] = [];
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -95,6 +103,7 @@ export class DashboardPage implements OnInit {
             label: 'Create an issue github',
             connected: false,
         },
+        { reaction: 'Branch', label: 'Create a branch github', connected: false }
     ];
 
     emptyField: string = '';
@@ -104,7 +113,7 @@ export class DashboardPage implements OnInit {
         private areaService: AreaService,
         private utilsService: UtilsService,
         private tokenService: TokenService
-    ) {}
+    ) { }
 
     ngOnInit() {
         let userToken = this.localStorage.getItem('token');
@@ -123,6 +132,9 @@ export class DashboardPage implements OnInit {
             this.isDislexicFontEnabled = fontState;
         });
         this.checkConnection();
+    }
+    isAreaDisabled(area: Area): boolean {
+        return area.inputAction !== '';
     }
 
     checkServicesConnexion(area: string): boolean {
@@ -159,6 +171,16 @@ export class DashboardPage implements OnInit {
                 break;
             case 'Event':
                 if (!this.localStorage.getItem('google_token')) {
+                    return false;
+                }
+                break;
+            case 'Issue':
+                if (!this.localStorage.getItem('github_token')) {
+                    return false;
+                }
+                break;
+            case 'Branch':
+                if (!this.localStorage.getItem('github_token')) {
                     return false;
                 }
                 break;
@@ -234,8 +256,90 @@ export class DashboardPage implements OnInit {
         area.action = event.detail.value;
     }
 
-    onSelectReaction(event: any, area: Area) {
+    async onSelectReaction(event: any, area: Area) {
         area.reaction = event.detail.value;
+        this.orgChosen = '';
+        this.orgfinal = '';
+        this.repChosen = '';
+        this.repfinal = '';
+        
+        if (area.reaction === 'Branch' || area.reaction === 'Issue') {
+            try {
+                const orgsUser = await this.fetchGitHubData('https://api.github.com/user/orgs');
+                const personnalUser = await this.fetchGitHubData('https://api.github.com/user');
+                
+                if (orgsUser && personnalUser) {
+                    this.githubOrgs = [...orgsUser, personnalUser];
+                }
+                const allRep = await this.getRep(this.githubOrgs);
+                if (allRep) {
+                    this.githubRep = allRep;
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données GitHub :", error);
+            }
+        }
+    }
+
+    private async fetchGitHubData(url: string): Promise<any> {
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+            }
+    
+            return await response.json();
+        } catch (error) {
+            console.error("Erreur lors de l'appel de l'API GitHub :", error);
+            throw error;
+        }
+    }
+
+    private async getRep(githubOrgs: any[]) {
+        try {
+            const orgFetchPromises = githubOrgs.map(org =>
+                fetch(`https://api.github.com/users/${org.login}/repos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+            );
+            const orgRepos = await Promise.all(orgFetchPromises);
+            const flatOrgRepos = orgRepos.reduce((acc, val) => acc.concat(val), []);
+            return flatOrgRepos;
+        } catch (error) {
+            console.error('Failed to fetch repositories:', error);
+            return null;
+        }
+    }
+
+    orgsVal (value: any) {
+        console.log(this.githubRep)
+        this.orgChosen = value.detail.value;
+        this.orgfinal = value.detail.value + ' ';
+        this.filterRep = this.githubRep.filter(userRep => userRep.owner.login === this.orgChosen);
+    }
+
+    repsVal (value: any) {
+        this.repChosen= value.detail.value;
+        this.repfinal= value.detail.value + ' ';
     }
 
     onSelectCity(event: any, area: Area) {
@@ -290,7 +394,7 @@ export class DashboardPage implements OnInit {
                         action,
                         reaction,
                         inputAction,
-                        inputReaction
+                        this.orgfinal + this.repfinal + inputReaction
                     )
                     .subscribe((response) => {
                         window.location.reload();
