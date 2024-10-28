@@ -15,7 +15,11 @@ import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
-    if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+    if (
+        action === 'DiscordUsername' ||
+        action === 'DiscordGuilds' ||
+        action === 'Email'
+    ) {
         inputAction = 'Nothing';
     }
     if (reaction === 'Spotify') {
@@ -43,9 +47,8 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
             .catch((error) => {
                 console.error(error);
             });
-
     } else {
-        alert("Please complete all fields");
+        alert('Please complete all fields');
     }
 };
 
@@ -95,17 +98,21 @@ function RectangleDashboard({
             label: 'Create an issue on github',
             connected: false,
         },
-        { reaction: 'Branch', label: 'Create a Branch on github', connected: false }
+        {
+            reaction: 'Branch',
+            label: 'Create a Branch on github',
+            connected: false,
+        },
     ]);
 
     const [hoverText, setHoverText] = useState('');
 
-    const [githubOrgs, setGithubOrgs] = useState([])
-    const [orgChosen, setOrgChosen] = useState('')
-    const [orgfinal, setOrgfinal] = useState('')
+    const [githubOrgs, setGithubOrgs] = useState([]);
+    const [orgChosen, setOrgChosen] = useState('');
+    const [orgfinal, setOrgfinal] = useState('');
     const [githubRep, setGithubRep] = useState([]);
-    const [repChosen, setRepChosen] = useState('')
-    const [repfinal, setRepfinal] = useState('')
+    const [repChosen, setRepChosen] = useState('');
+    const [repfinal, setRepfinal] = useState('');
 
     useEffect(() => {
         const checkConnection = async () => {
@@ -133,14 +140,17 @@ function RectangleDashboard({
         setRepfinal('');
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
-                const response = await fetch('https://api.github.com/user/orgs', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
-                    },
-                });
+                const response = await fetch(
+                    'https://api.github.com/user/orgs',
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/vnd.github.v3+json',
+                            Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        },
+                    }
+                );
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -150,8 +160,8 @@ function RectangleDashboard({
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                        Accept: 'application/vnd.github.v3+json',
+                        Authorization: `Bearer ${Cookies.get('github_token')}`,
                     },
                 });
                 if (!personnal.ok) {
@@ -168,53 +178,59 @@ function RectangleDashboard({
 
     const getRep = async (orgsUser, personnalUser) => {
         try {
-            const orgFetchPromises = orgsUser.map(org =>
+            const orgFetchPromises = orgsUser.map((org) =>
                 fetch(`https://api.github.com/orgs/${org.login}/repos`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${Cookies.get('github_token')}`,
+                        Accept: 'application/vnd.github.v3+json',
+                        Authorization: `Bearer ${Cookies.get('github_token')}`,
                     },
+                }).then((response) => {
+                    if (!response.ok) {
+                        throw new Error(
+                            `Error fetching repos for org ${org.login}: ${response.status}`
+                        );
+                    }
+                    return response.json();
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
-                        }
-                        return response.json();
-                    })
             );
             const orgRepos = await Promise.all(orgFetchPromises);
             const flatOrgRepos = orgRepos.flat();
-            setGithubRep(prevRepos => [...prevRepos, ...flatOrgRepos]);
-            const userResponse = await fetch(`https://api.github.com/users/${personnalUser.login}/repos`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `Bearer ${Cookies.get('github_token')}`,
-                },
-            });
+            setGithubRep((prevRepos) => [...prevRepos, ...flatOrgRepos]);
+            const userResponse = await fetch(
+                `https://api.github.com/users/${personnalUser.login}/repos`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/vnd.github.v3+json',
+                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                    },
+                }
+            );
             if (!userResponse.ok) {
-                throw new Error(`Error fetching repos for user ${personnalUser.login}: ${userResponse.status}`);
+                throw new Error(
+                    `Error fetching repos for user ${personnalUser.login}: ${userResponse.status}`
+                );
             }
             const userRepos = await userResponse.json();
-            setGithubRep(prevRepos => [...prevRepos, ...userRepos]);
+            setGithubRep((prevRepos) => [...prevRepos, ...userRepos]);
         } catch (error) {
             console.error('Failed to fetch repositories:', error);
             return null;
         }
-    }
+    };
 
     const orgsVal = (value) => {
-        setOrgChosen(value)
+        setOrgChosen(value);
         setOrgfinal(value + ' ');
-    }
+    };
 
     const repsVal = (value) => {
-        setRepChosen(value)
+        setRepChosen(value);
         setRepfinal(value + ' ');
-    }
+    };
 
     const handleOrgs = () => {
         return (
@@ -232,11 +248,13 @@ function RectangleDashboard({
                     }))}
                 />
             </>
-        )
-    }
+        );
+    };
 
     const handleRep = () => {
-        const filterRep = githubRep.filter(userRep => userRep.owner.login === orgChosen);
+        const filterRep = githubRep.filter(
+            (userRep) => userRep.owner.login === orgChosen
+        );
         return (
             <>
                 <Select
@@ -252,8 +270,8 @@ function RectangleDashboard({
                     }))}
                 />
             </>
-        )
-    }
+        );
+    };
 
     const checkServicesConnexion = async (area) => {
         switch (area) {
@@ -524,15 +542,21 @@ function RectangleDashboard({
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
-                    {action === 'News' ? handleInput(inputContentAct, 'inputAction') : null}
+                    {action === 'News'
+                        ? handleInput(inputContentAct, 'inputAction')
+                        : null}
 
-                    {reaction === 'Branch' || reaction == 'Issue' ? handleOrgs() : null}
-                    {reaction === 'Branch' || reaction == 'Issue' ? handleRep() : null}
+                    {reaction === 'Branch' || reaction == 'Issue'
+                        ? handleOrgs()
+                        : null}
+                    {reaction === 'Branch' || reaction == 'Issue'
+                        ? handleRep()
+                        : null}
                     {reaction === 'MP' ||
-                        reaction === 'Clip' ||
-                        reaction === 'Event' ||
-                        reaction === 'Issue' ||
-                        reaction === 'Branch'
+                    reaction === 'Clip' ||
+                    reaction === 'Event' ||
+                    reaction === 'Issue' ||
+                    reaction === 'Branch'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
