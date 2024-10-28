@@ -60,6 +60,7 @@ function RectangleDashboard({
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
         { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
             label: 'When my discord username changes',
@@ -370,6 +371,7 @@ function RectangleDashboard({
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
+                    {action === 'News' ? handleInput(inputContentAct, 'inputAction') : null}
 
                     {reaction === 'MP' ||
                     reaction === 'Clip' ||
