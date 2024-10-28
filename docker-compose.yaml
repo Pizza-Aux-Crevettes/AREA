@@ -20,3 +20,8 @@ services:
         build: FrontendApp
         volumes:
             - area_volume:/output
+
+    service:
+        build: Service
+        volumes:
+            - area_volume:/output
