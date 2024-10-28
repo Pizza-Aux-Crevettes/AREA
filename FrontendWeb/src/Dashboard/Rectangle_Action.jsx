@@ -14,6 +14,12 @@ import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
+    if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+        inputAction = 'Nothing';
+    }
+    if (reaction === 'Spotify') {
+        inputReaction = 'Nothing';
+    }
     if (action && reaction && inputReaction && inputAction) {
         fetch('http://localhost:8080/api/setArea', {
             method: 'POST',

@@ -67,6 +67,7 @@ export class DashboardPage implements OnInit {
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
         { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
             label: 'When my discord username changes',
@@ -266,6 +267,12 @@ export class DashboardPage implements OnInit {
         inputAction?: string,
         inputReaction?: string
     ) {
+        if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+          inputAction = 'Nothing';
+        }
+        if (reaction === 'Spotify') {
+          inputReaction = 'Nothing';
+        }
         if (
             action === '' ||
             reaction === '' ||
