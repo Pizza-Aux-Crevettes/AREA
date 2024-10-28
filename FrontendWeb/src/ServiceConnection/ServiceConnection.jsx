@@ -225,9 +225,10 @@ function Service() {
                     .then((json) => {
                         const email = json.email;
                         const tokenService = Cookies.get(service + '_token');
+                        console.log(service);
                         if (
                             tokenService &&
-                            (service !== 'spotify' || service !== 'google')
+                            (service !== 'spotify' && service !== 'google' && service !== 'github')
                         ) {
                             fetch(`http://localhost:8080/${service}/revoke`, {
                                 method: 'POST',
@@ -288,7 +289,7 @@ function Service() {
                             });
                         } else if (
                             tokenService &&
-                            (service === 'spotify' || service === 'google')
+                            (service === 'spotify' || service === 'google' || service === 'github')
                         ) {
                             Cookies.set(service + '_token', '', {
                                 expires: -1,
