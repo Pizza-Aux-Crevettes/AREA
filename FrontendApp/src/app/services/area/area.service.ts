@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 export class AreaService {
-    private API_URL = environment.api;
+    API_URL = localStorage.getItem('userInputIP');
     constructor(private http: HttpClient) {}
 
     setArea(

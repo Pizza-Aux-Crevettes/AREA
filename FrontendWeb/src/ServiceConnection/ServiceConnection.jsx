@@ -27,8 +27,10 @@ function RectangleService({ text, logo, Click, color_status }) {
 }
 
 const registerService = async (service) => {
+    const apiUrl = localStorage.getItem('userInputIP');
+
     try {
-        const response = await fetch('http://localhost:8080/api/user/me', {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
             method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + Cookies.get('token'),
@@ -87,6 +89,8 @@ function Service() {
     const [twitchConnect, setTwitchConnect] = useState(false);
     const [discordConnect, setDiscordConnect] = useState(false);
     const [githubConnect, setGithubConnect] = useState(false);
+
+    const apiUrl = localStorage.getItem('userInputIP');
     useEffect(() => {
         if (Cookies.get('token') === null) {
             navigate('/');
@@ -115,7 +119,7 @@ function Service() {
                 if (Cookies.get(serviceList[i])) {
                     registerService(serviceList[i]);
                     if (serviceList[i] === 'discord_token') {
-                        fetch('http://localhost:8080/discord/me', {
+                        fetch(`${apiUrl}/discord/me`, {
                             method: 'GET',
                             headers: {
                                 Authorization:
@@ -190,7 +194,7 @@ function Service() {
     }, [navigate, location]);
 
     const setUsernameDiscordInDB = (userName, nbGuilds) => {
-        fetch('http://localhost:8080/discord/setUsername', {
+        fetch(`${apiUrl}/discord/setUsername`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -212,7 +216,7 @@ function Service() {
         if (isConnected) {
             let userToken = Cookies.get('token');
             if (userToken) {
-                fetch('http://localhost:8080/api/user/me', {
+                fetch(`${apiUrl}/api/user/me`, {
                     method: 'GET',
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('token'),
@@ -228,9 +232,11 @@ function Service() {
                         console.log(service);
                         if (
                             tokenService &&
-                            (service !== 'spotify' && service !== 'google' && service !== 'github')
+                            service !== 'spotify' &&
+                            service !== 'google' &&
+                            service !== 'github'
                         ) {
-                            fetch(`http://localhost:8080/${service}/revoke`, {
+                            fetch(`${apiUrl}/${service}/revoke`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -246,41 +252,33 @@ function Service() {
                                     Cookies.set(service + '_refresh', '', {
                                         expires: -1,
                                     });
-                                    fetch(
-                                        'http://localhost:8080/api/setNewToken',
-                                        {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type':
-                                                    'application/json',
-                                                Authorization: `Bearer ${Cookies.get('token')}`,
-                                            },
-                                            body: JSON.stringify({
-                                                userEmail: email,
-                                                token: '',
-                                                service: service + '_token',
-                                            }),
-                                        }
-                                    ).then((response) => {
+                                    fetch(`${apiUrl}/api/setNewToken`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Authorization: `Bearer ${Cookies.get('token')}`,
+                                        },
+                                        body: JSON.stringify({
+                                            userEmail: email,
+                                            token: '',
+                                            service: service + '_token',
+                                        }),
+                                    }).then((response) => {
                                         if (response.ok) {
-                                            fetch(
-                                                'http://localhost:8080/api/setNewToken',
-                                                {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Content-Type':
-                                                            'application/json',
-                                                        Authorization: `Bearer ${Cookies.get('token')}`,
-                                                    },
-                                                    body: JSON.stringify({
-                                                        userEmail: email,
-                                                        token: '',
-                                                        service:
-                                                            service +
-                                                            '_refresh',
-                                                    }),
-                                                }
-                                            ).then(() => {
+                                            fetch(`${apiUrl}/api/setNewToken`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type':
+                                                        'application/json',
+                                                    Authorization: `Bearer ${Cookies.get('token')}`,
+                                                },
+                                                body: JSON.stringify({
+                                                    userEmail: email,
+                                                    token: '',
+                                                    service:
+                                                        service + '_refresh',
+                                                }),
+                                            }).then(() => {
                                                 window.location.reload();
                                             });
                                         }
@@ -289,7 +287,9 @@ function Service() {
                             });
                         } else if (
                             tokenService &&
-                            (service === 'spotify' || service === 'google' || service === 'github')
+                            (service === 'spotify' ||
+                                service === 'google' ||
+                                service === 'github')
                         ) {
                             Cookies.set(service + '_token', '', {
                                 expires: -1,
@@ -297,7 +297,7 @@ function Service() {
                             Cookies.set(service + '_refresh', '', {
                                 expires: -1,
                             });
-                            fetch('http://localhost:8080/api/setNewToken', {
+                            fetch(`${apiUrl}/api/setNewToken`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -309,7 +309,7 @@ function Service() {
                                     service: service + '_token',
                                 }),
                             }).then(() => {
-                                fetch('http://localhost:8080/api/setNewToken', {
+                                fetch(`${apiUrl}/api/setNewToken`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -328,8 +328,7 @@ function Service() {
                     });
             }
         } else {
-            window.location.href =
-                'http://localhost:8080/' + service + '/login/';
+            window.location.href = `${apiUrl}/` + service + '/login/';
         }
     };
 
