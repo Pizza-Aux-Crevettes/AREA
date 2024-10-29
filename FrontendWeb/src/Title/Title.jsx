@@ -86,7 +86,7 @@ function NavigateMenu() {
     function ChangeIpAdress() {
         const userInput = window.prompt(
             'Please enter an IP address :',
-            'http://localhost:8080'
+            `${localStorage.getItem('userInputIP')}`
         );
         if (userInput !== null) {
             localStorage.setItem('userInputIP', userInput);

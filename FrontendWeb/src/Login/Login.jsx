@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './Login.css';
 import Cookies from 'cookies-js';
 import { Button, LoadingOverlay } from '@mantine/core';
-import { resolvePath, useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
