@@ -102,6 +102,11 @@
             (ionInput)="emailInputChange($event)" [disabled]="!area.local"></ion-input>
           </div>
 
+          <div *ngIf="area.reaction === 'MP'" class="input-div">
+            <ion-input class="input-balise" size="small" [(ngModel)]="idDiscordInput" placeholder="id Discord"
+            (ionInput)="idDiscordInputChange($event)" [disabled]="!area.local"></ion-input>
+          </div>
+
           <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
           area.reaction === 'Event' || area.reaction === 'Branch' || area.reaction === 'sendEmail'" class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"

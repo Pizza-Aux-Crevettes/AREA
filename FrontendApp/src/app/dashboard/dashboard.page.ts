@@ -36,6 +36,9 @@ export class DashboardPage implements OnInit {
     emailInput: string = '';
     emailInputFinal: string = '';
 
+    idDiscordInput: string = '';
+    idDiscordInputFinal: string = '';
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -267,7 +270,9 @@ export class DashboardPage implements OnInit {
         this.repfinal = '';
         this.emailInput = '';
         this.emailInputFinal = '';
-        
+        this.idDiscordInput = '';
+        this.idDiscordInputFinal = '';
+
         if (area.reaction === 'Branch' || area.reaction === 'Issue') {
             try {
                 const orgsUser = await this.fetchGitHubData('https://api.github.com/user/orgs');
@@ -296,7 +301,7 @@ export class DashboardPage implements OnInit {
                     'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
                 },
             });
-    
+
             if (!response.ok) {
                 throw new Error(`Erreur HTTP! Statut: ${response.status}`);
             }
@@ -356,6 +361,11 @@ export class DashboardPage implements OnInit {
         this.emailInputFinal = value.detail.value + ' ';
     }
 
+    idDiscordInputChange (value: any){
+        this.idDiscordInput = value.detail.value;
+        this.idDiscordInputFinal = value.detail.value + ' ';
+    }
+
     DelArea(id: number) {
         const token = this.localStorage.getItem('token');
         if (!token) return;
@@ -404,7 +414,7 @@ export class DashboardPage implements OnInit {
                         action,
                         reaction,
                         inputAction,
-                        this.emailInputFinal + this.orgfinal + this.repfinal + inputReaction
+                        this.idDiscordInputFinal + this.emailInputFinal + this.orgfinal + this.repfinal + inputReaction
                     )
                     .subscribe((response) => {
                         window.location.reload();
