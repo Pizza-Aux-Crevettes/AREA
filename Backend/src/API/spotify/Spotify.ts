@@ -29,7 +29,7 @@ module.exports = (app: Express) => {
             'user-read-private user-read-email user-modify-playback-state';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
             scope
-        )}&redirect_uri=${encodeURIComponent('http://10.0.2.2:8080/spotify/callback')}&state=${encodeURIComponent(origin)}`;
+        )}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/spotify/callback')}&state=${encodeURIComponent(origin)}`;
         res.redirect(authUrl);
     });
 

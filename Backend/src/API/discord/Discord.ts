@@ -52,7 +52,7 @@ module.exports = (app: Express) => {
             client_secret: client_secret,
             grant_type: 'authorization_code',
             code: code as string,
-            redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/discord/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/discord/callback" : redirect_uri,
         });
 
         try {

@@ -53,7 +53,7 @@ module.exports = (app: Express) => {
             code: code as string,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/google/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/google/callback" : redirect_uri,
             grant_type: 'authorization_code',
         });
 
