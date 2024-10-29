@@ -47,7 +47,7 @@ module.exports = (app: Express) => {
             },
             form: {
                 code: code,
-                redirect_uri: `${req.query.state}`.includes('@') ? "http://10.0.2.2:8080/spotify/callback" : redirect_uri,
+                redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/spotify/callback" : redirect_uri,
                 grant_type: 'authorization_code',
             },
             json: true,

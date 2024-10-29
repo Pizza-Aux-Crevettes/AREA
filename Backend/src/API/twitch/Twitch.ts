@@ -29,7 +29,7 @@ module.exports = (app: Express) => {
         if (req.params.email)
             origin += `_${req.params.email}`;
         const scope = 'clips:edit user:read:email';
-        const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent("http://10.0.2.2:8080/twitch/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
+        const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/twitch/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
         res.redirect(authUrl);
     });
 

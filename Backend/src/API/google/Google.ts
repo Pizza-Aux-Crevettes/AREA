@@ -35,7 +35,7 @@ module.exports = (app: Express) => {
             origin += `_${req.params.email}`;
         const scope =
             'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent("http://10.0.2.2:8080/google/callback")}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/google/callback")}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
         res.redirect(authUrl);
     });
 

@@ -29,7 +29,7 @@ module.exports = (app: Express) => {
         if (req.params.email)
             origin += `_${req.params.email}`;
         const scope = 'repo user write:issue';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("http://10.0.2.2:8080/github/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/github/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
         res.redirect(authUrl);
     })
 
