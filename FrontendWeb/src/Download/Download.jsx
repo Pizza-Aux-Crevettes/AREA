@@ -1,6 +1,6 @@
 import Title from '../Title/Title';
 import { IconArrowBarToDown } from '@tabler/icons-react';
-import { Button, Tooltip } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import mobile_icon from '../assets/mobile.png';
 

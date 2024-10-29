@@ -473,6 +473,8 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    radius="md"
+                    size="lg"
                     disabled={alreadyExist}
                     placeholder="City"
                     value={inputContentAct}
@@ -518,52 +520,32 @@ function RectangleDashboard({
                 <div className="cont-rect">
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Button
-                                className="button-menu"
-                                size="lg"
-                                ref={buttonRef}
-                                disabled={alreadyExist}
-                            >
+                            <Button className="button-menu" size="lg" disabled={alreadyExist} ref={buttonRef}>
                                 {action}
                                 <IconChevronDown size={16} />
                             </Button>
                         </Menu.Target>
+
                         <Menu.Dropdown>
                             {menuItemsAction.map((item, index) => (
                                 <Fragment key={item.action}>
                                     <div
-                                        onMouseOver={() =>
-                                            MouseHover(
-                                                item.action,
-
-                                                item.connected
-                                            )
-                                        }
+                                        onMouseOver={() => MouseHover(item.action, item.connected)}
                                         onMouseLeave={handleMouseLeave}
-                                        style={{
-                                            display: 'inline-block',
-                                            position: 'relative',
-                                        }}
                                     >
                                         <Menu.Item
-                                            onClick={() =>
-                                                setAction(item.action)
-                                            }
-                                            disabled={
-                                                action === item.action ||
-                                                item.connected === false
-                                            }
+                                            onClick={() => setAction(item.action)}
+                                            disabled={action === item.action || !item.connected}
                                         >
                                             {item.label}
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsAction.length - 1 && (
-                                        <MenuDivider />
-                                    )}
+                                    {index !== menuItemsAction.length - 1 && <MenuDivider />}
                                 </Fragment>
                             ))}
                         </Menu.Dropdown>
                     </Menu>
+
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
@@ -589,12 +571,7 @@ function RectangleDashboard({
 
                     <Menu width={200} shadow="md">
                         <Menu.Target>
-                            <Button
-                                className="button-menu"
-                                size="lg"
-                                ref={buttonRef}
-                                disabled={alreadyExist}
-                            >
+                            <Button className="button-menu" size="lg" ref={buttonRef} disabled={alreadyExist}>
                                 {reaction}
                                 <IconChevronDown size={16} />
                             </Button>
@@ -604,34 +581,17 @@ function RectangleDashboard({
                             {menuItemsReaction.map((item, index) => (
                                 <Fragment key={item.reaction}>
                                     <div
-                                        onMouseOver={() =>
-                                            MouseHover(
-                                                item.reaction,
-
-                                                item.connected
-                                            )
-                                        }
+                                        onMouseOver={() => MouseHover(item.reaction, item.connected)}
                                         onMouseLeave={handleMouseLeave}
-                                        style={{
-                                            display: 'inline-block',
-                                            position: 'relative',
-                                        }}
                                     >
                                         <Menu.Item
-                                            onClick={() =>
-                                                settupReaction(item.reaction)
-                                            }
-                                            disabled={
-                                                action === item.reaction ||
-                                                item.connected === false
-                                            }
+                                            onClick={() => settupReaction(item.reaction)}
+                                            disabled={ action === item.reaction || item.connected === false }
                                         >
                                             {item.label}
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsReaction.length - 1 && (
-                                        <MenuDivider />
-                                    )}
+                                    {index !== menuItemsReaction.length - 1 && ( <MenuDivider /> )}
                                 </Fragment>
                             ))}
                         </Menu.Dropdown>
