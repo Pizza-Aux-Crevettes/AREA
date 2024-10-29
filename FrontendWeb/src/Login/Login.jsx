@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Login.css';
 import Cookies from 'cookies-js';
 import { Button, LoadingOverlay } from '@mantine/core';
@@ -21,6 +21,21 @@ function Login() {
         'discord_refresh',
         'github_refresh',
     ];
+    const apiUrl = localStorage.getItem('userInputIP');
+
+    useEffect(() => {
+        if (!localStorage.getItem('userInputIP')) {
+            const userInput = window.prompt(
+                'Please enter an IP address :',
+                'http://localhost:8080'
+            );
+            if (userInput) {
+                localStorage.setItem('userInputIP', userInput);
+            } else {
+                localStorage.setItem('userInputIP', 'http://localhost:8080');
+            }
+        }
+    }, []);
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -36,7 +51,7 @@ function Login() {
 
     async function LoginUser() {
         setLoading(true);
-        const resultLogin = await fetch('http://localhost:8080/api/login', {
+        const resultLogin = await fetch(`${apiUrl}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,19 +66,16 @@ function Login() {
         if (resultLogin.ok) {
             const json = await resultLogin.json();
             Cookies.set('token', json.own_token);
-            const resultToken = await fetch(
-                'http://localhost:8080/api/getToken',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${Cookies.get('token')}`,
-                    },
-                    body: JSON.stringify({
-                        user_email: email,
-                    }),
-                }
-            );
+            const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+                },
+                body: JSON.stringify({
+                    user_email: email,
+                }),
+            });
             const data = await resultToken.json();
             for (let i = 0; i < services.length; i++) {
                 if (data[0][`${services[i]}`] !== null) {

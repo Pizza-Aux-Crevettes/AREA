@@ -4,10 +4,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './Title.css';
 import Cookies from 'cookies-js';
 import { browser } from 'globals';
+import { useEffect, useState } from 'react';
 
-function Parameters() {
+function Parameters(apiUrl) {
     const navigate = useNavigate();
-    const location = useLocation();
+
     function deleteCookies() {
         Cookies.set('token', '', { expires: -1 });
         Cookies.set('spotify_token', '', { expires: -1 });
@@ -19,7 +20,7 @@ function Parameters() {
         Cookies.set('spotify_refresh', '', { expires: -1 });
         Cookies.set('google_refresh', '', { expires: -1 });
         Cookies.set('discord_refresh', '', { expires: -1 });
-
+        localStorage.removeItem('userInputIP');
         navigate('/');
         setTimeout(() => {
             window.location.reload();
@@ -27,7 +28,7 @@ function Parameters() {
     }
 
     const toggleFont = () => {
-        fetch('http://localhost:8080/api/setAdaptabilityUser', {
+        fetch(`${apiUrl}/api/setAdaptabilityUser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,6 +83,15 @@ function NavigateMenu() {
         location.pathname === '/download';
     }
 
+    function ChangeIpAdress() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            'http://localhost:8080'
+        );
+        if (userInput !== null) {
+            localStorage.setItem('userInputIP', userInput);
+        }
+    }
 
     return (
         <div>
@@ -92,16 +102,16 @@ function NavigateMenu() {
                     </Menu.Target>
                 </Tooltip>
                 <Menu.Dropdown>
-                    <Menu.Item onClick={goToDashboard}>
-                        Dashboard
-                    </Menu.Item>
+                    <Menu.Item onClick={goToDashboard}>Dashboard</Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={goToService}>
                         Service Connection
                     </Menu.Item>
                     <MenuDivider />
-                    <Menu.Item onClick={goToDownload}>
-                        Download apk
+                    <Menu.Item onClick={goToDownload}>Download apk</Menu.Item>
+                    <MenuDivider />
+                    <Menu.Item onClick={ChangeIpAdress}>
+                        Change IP adress
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -110,12 +120,15 @@ function NavigateMenu() {
 }
 
 function Title({ title }) {
+    const apiUrl = localStorage.getItem('userInputIP');
+
+    useEffect(() => {});
     return (
         <div>
             <div className="top-part">
                 <NavigateMenu />
                 <h1>{title}</h1>
-                <Parameters />
+                <Parameters apiUrl={apiUrl} />
             </div>
         </div>
     );
