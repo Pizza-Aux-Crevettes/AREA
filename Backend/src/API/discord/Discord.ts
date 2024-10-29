@@ -78,7 +78,7 @@ module.exports = (app: Express) => {
                     refresh_token,
                     "discord_refresh"
                 );
-                res.send("<script>window.close();</script > ");
+                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
                 res.redirect(
                     `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
