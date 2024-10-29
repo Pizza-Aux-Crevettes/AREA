@@ -71,4 +71,4 @@ jobs:
             username: ${{ secrets.SSH_USERNAME }}
             password: ${{ secrets.SSH_PASSWORD }}
             port: ${{ secrets.SSH_PORT }}
-            script: echo ${{ secrets.SSH_PASSWORD }} | sudo -S systemctl restart area-anastasia.service
+            script: echo ${{ secrets.SSH_PASSWORD }} | sudo -S systemctl restart api-anastasia.service

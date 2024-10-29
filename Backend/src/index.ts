@@ -2,8 +2,8 @@ require('dotenv').config();
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-const app = express();
-const port = 8080;
+const app: Express = require('express')();
+const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const doc = require('../output.json');
 const path = require('path');
@@ -39,5 +39,4 @@ require('./API/github/Github')(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
 app.use('/output', express.static('/output'));
-
-app.listen(port, '0.0.0.0', () => {});
+app.listen(port, () => {});
