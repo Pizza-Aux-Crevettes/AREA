@@ -1,9 +1,9 @@
 require('dotenv').config();
-import express from 'express';
+import express, { Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-const app = express();
-const port = 8080;
+const app: Express = require('express')();
+const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const doc = require('../output.json');
 const path = require('path');
@@ -11,7 +11,7 @@ const path = require('path');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
+app.use(function (req , res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -39,5 +39,4 @@ require('./API/github/Github')(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
 app.use('/output', express.static('/output'));
-
-app.listen(port, '0.0.0.0', () => {});
+app.listen(port, () => {});
