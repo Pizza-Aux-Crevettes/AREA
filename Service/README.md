@@ -1,8 +1,8 @@
-# Backend Project
+# Service Project
 
 ## Description
 
-This project is the Frontend part of the AREA project. It manages users, makes calls to third-party APIs such as Google, Spotify, OpenWeather, Twitch, Github and NewsAPI, and serves data to the frontend. Authentication is handled via JSON Web Tokens (JWT) and Supabase. Swagger is used for API documentation.
+This project manages users, makes calls to third-party APIs such as Google, Spotify, OpenWeather, and NewsAPI, and serves data to the frontend. Authentication is handled via JSON Web Tokens (JWT) and Supabase. Swagger is used for API documentation.
 
 ---
 
@@ -10,7 +10,7 @@ This project is the Frontend part of the AREA project. It manages users, makes c
 
 -   [Installation](#installation)
 -   [Starting the Project](#starting-the-project)
--   [Environment Variables](#environnement-variables)
+-   [Environment Variables](#environment-variables)
 -   [API Documentation](#api-documentation)
 -   [Project Structure](#project-structure)
 -   [Useful Commands](#useful-commands)
@@ -19,13 +19,13 @@ This project is the Frontend part of the AREA project. It manages users, makes c
 
 ## Installation
 
-To install and run the backend locally:
+To install and run the service locally:
 
 1. Clone the repository:
 
     ```bash
     git clone git@github.com:EpitechPromo2027/B-DEV-500-TLS-5-1-area-anastasia.bouby.git
-    cd B-DEV-500-TLS-5-1-area-anastasia.bouby/Backend
+    cd B-DEV-500-TLS-5-1-area-anastasia.bouby/Service
     ```
 
 2. Install the dependencies:
@@ -48,37 +48,37 @@ To install and run the backend locally:
 
 ## Environnement variables
 
-The project requires certain environnement variables to function correctly.
+The project requires certain environment variables to function correctly.
 
 1. Create a .env file at the root of the project with the following content:
 
     ```bash
     REACT_APP_SUPABASE_URL="https://qkqqhtvrxplbxmvikcdy.supabase.co"
     REACT_APP_SUPABASE_ANON_KEY="your-supabase-anon-key"
-    
+
     GOOGLE_API_KEY="your-google-api-key"
-    
+
     NEWSAPI_API_KEY="your-newsapi-api-key"
-    
+
     OPENWEATHER_KEY="your-openweather-api-key"
-    
+
     GOOGLE_CLIENT_ID="your-google-client-id"
     GOOGLE_CLIENT_SECRET="your-google-client-secret"
-    
+
     SPOTIFY_CLIENT_ID="your-spotify-client-id"
     SPOTIFY_CLIENT_SECRET="your-spotify-client-secret"
-    
+
     DISCORD_CLIENT_ID="your-discord-client-id"
     DISCORD_CLIENT_SECRET="your-discord-client-secret"
     DISCORD_TOKEN="your-discord-token"
     GUILD_ID="1288150792301183007"
-    
+
     TWITCH_CLIENT_ID="your-twitch-client-id"
     TWITCH_CLIENT_SECRET="your-twitch-client-secret"
-    
+
     GITHUB_CLIENT_ID="your-github-client-id"
     GITHUB_CLIENT_SECRET="your-github-client-secret"
-    
+
     SECRET=AREA
     ```
 
@@ -96,31 +96,46 @@ Here is the structure of the project:
 
     src
     ├── API
-    │   ├── News.ts
-    │   ├── Spotify.ts
-    │   ├── google
-    │   │   ├── Google.ts
-    │   │   └── googleTranslate.ts
-    │   └── openWeather
-    │       ├── openWeather.query.ts
-    │       └── openWeather.ts
+    │   ├── Discord
+    │   │   ├── discord.query.ts
+    │   │   └── discord.ts
+    │   ├── Github
+    │   │   ├── github.query.ts
+    │   │   └── github.ts
+    │   ├── gmail
+    │   │   ├── Gmail.query.ts
+    │   │   └── Gmail.ts
+    │   ├── news
+    │   │   ├── News.query.ts
+    │   │   └── News.ts
+    │   ├── openWeather
+    │   │   ├── openWeather.query.ts
+    │   │   └── openWeather.ts
+    │   ├── spotify
+    │   │   ├── spotify.query.ts
+    │   │   └── spotify.ts
+    │   └── twitch
+    │       ├── twitch.query.ts
+    │       └── twitch.ts
+    ├── area
+    │   ├── area.service.ts
+    │   ├── service.action.ts
+    │   └── service.reaction.ts
     ├── config
     │   └── db.ts
+    ├── DB
+    │   ├── area
+    │   │   ├── area.query.ts
+    │   │   └── area.ts
+    │   └── tokens
+    │       ├── token.query.ts
+    │       └── token.ts
     ├── index.ts
-    └── routes
-        ├── services
-        │   ├── services.query.ts
-        │   └── services.ts
-        └── users
-            ├── users.query.ts
-            └── users.ts
+    └── manageFS
+        └── manageFile.ts
 
 ---
 
 ## Useful Commands
 
--   Build the project: `npm run build`
--   Start the server: `npm run start`
 -   Run the project in development mode: `npm run dev`
--   Lint the code: `npm run lint`
--   Generate Swagger Documentation: Swagger documentation will be updated automatically if you follow the right format in your route comments.

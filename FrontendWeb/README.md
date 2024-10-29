@@ -11,6 +11,8 @@ This project is the Frontend part of the AREA project. It provides a user interf
 -   [Installation](#installation)
 -   [Starting the Project](#starting-the-project)
 -   [Project Structure](#project-structure)
+-   [Dependencies](#dependencies)
+-   [Useful Commands](#useful-commands)
 
 ---
 
@@ -90,7 +92,11 @@ Here is the structure of the project:
     ├── App.jsx
     ├── Dashboard
     │   ├── Dashboard.css
-    │   └── Dashboard.jsx
+    │   ├── Dashboard.jsx
+    │   └── Rectange_Action.jsx
+    ├── Download
+    │   ├── Download.css
+    │   └── Download.jsx
     ├── Login
     │   ├── Login.css
     │   └── Login.jsx
@@ -104,15 +110,34 @@ Here is the structure of the project:
     │   ├── Title.css
     │   └── Title.jsx
     ├── assets
-    │   ├── X.png
+    │   ├── fonts
+    │   │   ├── OpenDyslexic-Bold.eot
+    │   │   ├── OpenDyslexic-Bold-Italic.eot
+    │   │   ├── OpenDyslexic-Bold-Italic.otf
+    │   │   ├── OpenDyslexic-Bold-Italic.woff
+    │   │   ├── OpenDyslexic-Bold-Italic.woff2
+    │   │   ├── OpenDyslexic-Bold.otf
+    │   │   ├── OpenDyslexic-Bold.woff
+    │   │   ├── OpenDyslexic-Bold.woff2
+    │   │   ├── opendyslexic-characters.pdf
+    │   │   ├── OpenDyslexic-Italic.eot
+    │   │   ├── OpenDyslexic-Italic.otf
+    │   │   ├── OpenDyslexic-Italic.woff
+    │   │   ├── OpenDyslexic-Italic.woff2
+    │   │   ├── OpenDyslexic-Regular.eot
+    │   │   ├── OpenDyslexic-Regular.otf
+    │   │   ├── OpenDyslexic-Regular.woff
+    │   │   └── OpenDyslexic-Regular.woff2
     │   ├── cross.png
-    │   ├── discord.png
-    │   ├── exit.png
-    │   ├── google.png
-    │   ├── info.png
-    │   ├── menu.png
-    │   ├── plus.png
-    │   └── spotify.png
+    │   ├── discord.png
+    │   ├── exit.png
+    │   ├── github.png
+    │   ├── google.png
+    │   ├── menu.png
+    │   ├── mobile.png
+    │   ├── plus.png
+    │   ├── spotify.png
+    │   └── twitch.png
     ├── index.css
     └── main.jsx
 ---
@@ -134,3 +159,12 @@ The following dependencies are required for the project:
 -   eslint-plugin-react-refresh: ^0.4.9
 -   globals: ^15.9.0
 -   vite: ^4.5.5
+
+---
+
+## Useful Commands
+
+-   Build the project: `npm run build`
+-   Start the server: `npm run start`
+-   Run the project in development mode`: npm run dev`
+-   Lint the code:` npm run lint`
