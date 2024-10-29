@@ -33,9 +33,11 @@ discordClient
     });
 
 export async function discordSendMP(
-    userId: string,
-    message: string
+    infoDiscord: string
 ): Promise<any> {
+    const firstSpaceIndex = infoDiscord.indexOf(' ');
+    const userId = infoDiscord.substring(0, firstSpaceIndex);
+    const message = infoDiscord.substring(firstSpaceIndex + 1);
     try {
         const result = await sendDM(userId, message, discordClient);
         if (result === null) {

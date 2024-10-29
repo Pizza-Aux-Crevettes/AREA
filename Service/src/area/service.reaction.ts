@@ -25,7 +25,7 @@ export async function setReaction(
         case 'Event':
             result = await createCalEvent(token[0].google_token, email, inputReaction);
         case 'MP':
-            result = await discordSendMP(inputReaction, "__(°)< Pouet");
+            result = await discordSendMP(inputReaction);
             break;
         case 'Issue':
             result = await issueGithub(token[0].github_token, inputReaction);

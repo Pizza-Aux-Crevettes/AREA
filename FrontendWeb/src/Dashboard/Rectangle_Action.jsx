@@ -117,6 +117,9 @@ function RectangleDashboard({
     const [emailInput, setEmailInput] = useState('');
     const [emailInputFinal, setEmailInputFinal] = useState('');
 
+    const [idDiscordInput, setIdDiscordInput] = useState('');
+    const [idDiscordInputFinal, setIdDiscordInputFinal] = useState('');
+
     useEffect(() => {
         const checkConnection = async () => {
             for (let i = 0; i < menuItemsAction.length; i++) {
@@ -143,6 +146,8 @@ function RectangleDashboard({
         setRepfinal('');
         setEmailInput('');
         setEmailInputFinal('');
+        setIdDiscordInput('');
+        setIdDiscordInputFinal('');
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
                 const response = await fetch(
@@ -424,6 +429,26 @@ function RectangleDashboard({
         );
     }
 
+    const idDiscordInputChange = (value) => {
+        setIdDiscordInput(value);
+        setIdDiscordInputFinal(value + ' ');
+    }
+
+    const handleInputIdDiscord = () => {
+        return (
+            <>
+                <TextInput
+                    disabled={alreadyExist}
+                    radius="md"
+                    size="lg"
+                    placeholder="Enter an id Discord"
+                    value={idDiscordInput}
+                    onChange={(e) => idDiscordInputChange(e.target.value)}
+                />
+            </>
+        );
+    }
+
     const handleWeather = () => {
         const cities = [
             { name: 'Paris' },
@@ -574,6 +599,7 @@ function RectangleDashboard({
                     {reaction === 'Branch' || reaction == 'Issue'
                         ? handleOrgs()
                         : null}
+                    {reaction === 'MP' ? handleInputIdDiscord() : null}
                     {reaction === 'sendEmail' ? handleInputEmail() : null}
                     {reaction === 'Branch' || reaction == 'Issue'
                         ? handleRep()
@@ -649,7 +675,7 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            emailInputFinal + orgfinal + repfinal + inputContentReact
+                            idDiscordInputFinal + emailInputFinal + orgfinal + repfinal + inputContentReact
                         )
                     }
                 >
