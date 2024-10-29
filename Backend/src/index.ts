@@ -1,5 +1,5 @@
 require('dotenv').config();
-import express from 'express';
+import express, { Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
 const app: Express = require('express')();
@@ -11,7 +11,7 @@ const path = require('path');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
+app.use(function (req , res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');

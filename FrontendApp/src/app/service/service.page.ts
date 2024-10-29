@@ -11,7 +11,7 @@ import { Browser } from '@capacitor/browser';
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
-export class ServicePage implements OnInit, AfterViewInit {
+export class ServicePage implements OnInit {
     isDislexicFontEnabled?: boolean;
     serviceList: string[] = [
         'spotify_token',
