@@ -82,7 +82,7 @@ export class DashboardPage implements OnInit {
     menuItemsAction = [
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
-        { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'Alerts', label: 'When there are alerts', connected: false },
         { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
