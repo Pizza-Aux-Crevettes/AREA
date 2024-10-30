@@ -4,6 +4,7 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { IonSelect } from '@ionic/angular';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { TokenService } from '../services/token/token.service';
+import { ApiService } from '../services/api/api.service';
 interface Area {
     id: number;
     action: string;
@@ -32,6 +33,10 @@ export class DashboardPage implements OnInit {
     repChosen: string = '';
     repfinal: string = '';
     filterRep: any[] = [];
+
+    tokenGithub: string = '';
+    orgsUser: any;
+    personnalUser: any;
 
     emailInput: string = '';
     emailInputFinal: string = '';
@@ -109,7 +114,11 @@ export class DashboardPage implements OnInit {
             label: 'Create an issue github',
             connected: false,
         },
-        { reaction: 'Branch', label: 'Create a branch github', connected: false }
+        {
+            reaction: 'Branch',
+            label: 'Create a branch github',
+            connected: false,
+        },
     ];
 
     emptyField: string = '';
@@ -118,8 +127,9 @@ export class DashboardPage implements OnInit {
         private localStorage: LocalStorageService,
         private areaService: AreaService,
         private utilsService: UtilsService,
-        private tokenService: TokenService
-    ) { }
+        private tokenService: TokenService,
+        private apiService: ApiService
+    ) {}
 
     ngOnInit() {
         let userToken = this.localStorage.getItem('token');
@@ -146,47 +156,47 @@ export class DashboardPage implements OnInit {
     checkServicesConnexion(area: string): boolean {
         switch (area) {
             case 'Email':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordUsername':
-                if (!this.localStorage.getItem('discord_token')) {
+                if (this.localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordGuilds':
-                if (!this.localStorage.getItem('discord_token')) {
+                if (this.localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Spotify':
-                if (!this.localStorage.getItem('spotify_token')) {
+                if (this.localStorage.getItem('spotify_token') === 'false') {
                     return false;
                 }
                 break;
             case 'sendEmail':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Clip':
-                if (!this.localStorage.getItem('twitch_token')) {
+                if (this.localStorage.getItem('twitch_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Event':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Issue':
-                if (!this.localStorage.getItem('github_token')) {
+                if (this.localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Branch':
-                if (!this.localStorage.getItem('github_token')) {
+                if (this.localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
@@ -275,93 +285,110 @@ export class DashboardPage implements OnInit {
 
         if (area.reaction === 'Branch' || area.reaction === 'Issue') {
             try {
-                const orgsUser = await this.fetchGitHubData('https://api.github.com/user/orgs');
-                const personnalUser = await this.fetchGitHubData('https://api.github.com/user');
-                
-                if (orgsUser && personnalUser) {
-                    this.githubOrgs = [...orgsUser, personnalUser];
-                }
-                const allRep = await this.getRep(this.githubOrgs);
-                if (allRep) {
-                    this.githubRep = allRep;
+                const userToken = localStorage.getItem('token');
+                if (userToken) {
+                    this.tokenService
+                        .getUserData(userToken)
+                        .subscribe((res) => {
+                            this.tokenService
+                                .getServicesTokens(res.email)
+                                .subscribe((res) => {
+                                    this.tokenGithub = res[0].github_token;
+                                    if (this.tokenGithub) {
+                                        this.apiService
+                                            .fetchGitHubData(
+                                                'https://api.github.com/user/orgs',
+                                                this.tokenGithub
+                                            )
+                                            .subscribe((res) => {
+                                                this.orgsUser = res;
+
+                                                this.personnalUser =
+                                                    this.apiService
+                                                        .fetchGitHubData(
+                                                            'https://api.github.com/user',
+                                                            this.tokenGithub
+                                                        )
+                                                        .subscribe((res) => {
+                                                            this.personnalUser =
+                                                                res;
+
+                                                            if (
+                                                                this.orgsUser &&
+                                                                this
+                                                                    .personnalUser
+                                                            ) {
+                                                                this.githubOrgs =
+                                                                    [
+                                                                        ...this
+                                                                            .orgsUser,
+                                                                        this
+                                                                            .personnalUser,
+                                                                    ];
+                                                            }
+                                                            this.apiService
+                                                                .getRep(
+                                                                    this
+                                                                        .githubOrgs,
+                                                                    this
+                                                                        .tokenGithub
+                                                                )
+                                                                .subscribe(
+                                                                    (
+                                                                        allRep
+                                                                    ) => {
+                                                                        if (
+                                                                            allRep
+                                                                        ) {
+                                                                            this.githubRep =
+                                                                                allRep;
+                                                                        }
+                                                                    },
+                                                                    (error) => {
+                                                                        console.error(
+                                                                            'Error fetching repositories:',
+                                                                            error
+                                                                        );
+                                                                    }
+                                                                );
+                                                        });
+                                            });
+                                    }
+                                });
+                        });
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données GitHub :", error);
+                console.error(
+                    'Erreur lors de la récupération des données GitHub :',
+                    error
+                );
             }
         }
     }
 
-    private async fetchGitHubData(url: string): Promise<any> {
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
-            }
-    
-            return await response.json();
-        } catch (error) {
-            console.error("Erreur lors de l'appel de l'API GitHub :", error);
-            throw error;
-        }
-    }
-
-    private async getRep(githubOrgs: any[]) {
-        try {
-            const orgFetchPromises = githubOrgs.map(org =>
-                fetch(`https://api.github.com/users/${org.login}/repos`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-            );
-            const orgRepos = await Promise.all(orgFetchPromises);
-            const flatOrgRepos = orgRepos.reduce((acc, val) => acc.concat(val), []);
-            return flatOrgRepos;
-        } catch (error) {
-            console.error('Failed to fetch repositories:', error);
-            return null;
-        }
-    }
-
-    orgsVal (value: any) {
-        console.log(this.githubRep)
+    orgsVal(value: any) {
         this.orgChosen = value.detail.value;
         this.orgfinal = value.detail.value + ' ';
-        this.filterRep = this.githubRep.filter(userRep => userRep.owner.login === this.orgChosen);
+        this.filterRep = this.githubRep.filter(
+            (userRep) => userRep.owner.login === this.orgChosen
+        );
     }
 
-    repsVal (value: any) {
-        this.repChosen= value.detail.value;
-        this.repfinal= value.detail.value + ' ';
+    repsVal(value: any) {
+        this.repChosen = value.detail.value;
+        this.repfinal = value.detail.value + ' ';
     }
 
     onSelectCity(event: any, area: Area) {
         area.inputAction = event.detail.value;
     }
 
-    emailInputChange (value: any){
+    emailInputChange(value: any) {
         this.emailInput = value.detail.value;
         this.emailInputFinal = value.detail.value + ' ';
     }
 
-    idDiscordInputChange (value: any){
+    idDiscordInputChange(value: any) {
         this.idDiscordInput = value.detail.value;
         this.idDiscordInputFinal = value.detail.value + ' ';
     }
@@ -392,10 +419,10 @@ export class DashboardPage implements OnInit {
         inputReaction?: string
     ) {
         if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
-          inputAction = 'Nothing';
+            inputAction = 'Nothing';
         }
         if (reaction === 'Spotify') {
-          inputReaction = 'Nothing';
+            inputReaction = 'Nothing';
         }
         if (
             action === '' ||
@@ -403,7 +430,7 @@ export class DashboardPage implements OnInit {
             inputAction === '' ||
             inputReaction == ''
         ) {
-            alert("Please complete all fields");
+            alert('Please complete all fields');
         } else {
             this.emptyField = '';
             const token = this.localStorage.getItem('token');
@@ -414,7 +441,11 @@ export class DashboardPage implements OnInit {
                         action,
                         reaction,
                         inputAction,
-                        this.idDiscordInputFinal + this.emailInputFinal + this.orgfinal + this.repfinal + inputReaction
+                        this.idDiscordInputFinal +
+                            this.emailInputFinal +
+                            this.orgfinal +
+                            this.repfinal +
+                            inputReaction
                     )
                     .subscribe((response) => {
                         window.location.reload();

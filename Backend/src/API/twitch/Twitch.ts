@@ -69,47 +69,4 @@ module.exports = (app: Express) => {
             res.status(500).send('Error during token refresh');
         }
     });
-
-    app.post('/twitch/revoke', async (req, res) => {
-        const token = req.body.token;
-
-        if (!token) {
-            return res
-                .status(400)
-                .send('Le token est requis pour la révocation.');
-        }
-
-        const revokeUrl = 'https://id.twitch.tv/oauth2/revoke';
-
-        const bodyParams = new URLSearchParams({
-            client_id: client_id,
-            token: token,
-        });
-
-        try {
-            const response = await axios.post(revokeUrl, bodyParams);
-
-            if (response.status === 200) {
-                console.log('Token révoqué avec succès pour twitch.');
-                return res.json({
-                    message: 'Token révoqué avec succès pour twitch.',
-                });
-            } else {
-                console.error(
-                    'Erreur lors de la révocation du token pour twitch.'
-                );
-                return res
-                    .status(500)
-                    .send('Erreur lors de la révocation du token pour twitch.');
-            }
-        } catch (error) {
-            console.error(
-                'Erreur lors de la révocation du token pour twitch :',
-                error
-            );
-            return res
-                .status(500)
-                .send('Erreur lors de la révocation du token pour twitch.');
-        }
-    });
 };

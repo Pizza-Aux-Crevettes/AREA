@@ -99,48 +99,6 @@ module.exports = (app: Express) => {
         }
     });
 
-    app.post('/discord/revoke', async (req, res) => {
-        const token = req.body.token;
-
-        if (!token) {
-            return res
-                .status(400)
-                .send('Le token est requis pour la révocation.');
-        }
-
-        const authOptions = {
-            url: 'https://discord.com/api/oauth2/token/revoke',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data: `client_id=${client_id}&client_secret=${client_secret}&token=${token}`,
-        };
-
-        try {
-            const response = await axios.post(
-                authOptions.url,
-                authOptions.data,
-                {
-                    headers: authOptions.headers,
-                }
-            );
-
-            if (response.status === 200) {
-                console.log('Token révoqué avec succès.');
-                return res.json({ message: 'Token révoqué avec succès.' });
-            } else {
-                console.error('Erreur lors de la révocation du token.');
-                return res
-                    .status(500)
-                    .send('Erreur lors de la révocation du token.');
-            }
-        } catch (error) {
-            console.error('Erreur lors de la révocation du token :', error);
-            return res
-                .status(500)
-                .send('Erreur lors de la révocation du token.');
-        }
-    });
     app.get('/discord/me', async (req, res) => {
         const accessToken = req.header('Authorization');
         if (!accessToken) {
@@ -178,8 +136,9 @@ module.exports = (app: Express) => {
                 "Erreur lors de la récupération des infos de l'utilisateur:",
                 error
             );
-            res.status(500)
-                .send('Erreur lors de la récupération des informations utilisateur (discord)');
+            res.status(500).send(
+                'Erreur lors de la récupération des informations utilisateur (discord)'
+            );
         }
     });
     app.post('/discord/setUsername', async (req, res) => {
@@ -187,7 +146,11 @@ module.exports = (app: Express) => {
         const user_info = req.body;
         const decoded = jwt.verify(user_info.token, process.env.SECRET);
 
-        const result = await setUserName(decoded.email, user_info.username, user_info.nbGuilds);
+        const result = await setUserName(
+            decoded.email,
+            user_info.username,
+            user_info.nbGuilds
+        );
         if (!result) {
             res.status(400).json({
                 msg: "Erreur lors de l'insertion du nom Discord de l'utilisateur ",

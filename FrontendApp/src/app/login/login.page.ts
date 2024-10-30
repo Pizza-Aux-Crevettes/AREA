@@ -95,7 +95,12 @@ export class LoginPage implements OnInit {
                                     if (res[0][this.services[i]] !== null) {
                                         this.localStorage.setItem(
                                             this.services[i],
-                                            res[0][this.services[i]]
+                                            'true'
+                                        );
+                                    } else {
+                                        this.localStorage.setItem(
+                                            this.services[i],
+                                            'false'
                                         );
                                     }
                                 }

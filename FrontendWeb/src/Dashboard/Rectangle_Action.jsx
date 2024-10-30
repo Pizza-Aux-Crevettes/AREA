@@ -156,6 +156,29 @@ function RectangleDashboard({
         setEmailInputFinal('');
         setIdDiscordInput('');
         setIdDiscordInputFinal('');
+
+        const response = await fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + Cookies.get('token'),
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const json = await response.json();
+        const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                user_email: json.email,
+            }),
+        });
+        const data = await resultToken.json();
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
                 const response = await fetch(
@@ -165,7 +188,7 @@ function RectangleDashboard({
                         headers: {
                             'Content-Type': 'application/json',
                             Accept: 'application/vnd.github.v3+json',
-                            Authorization: `Bearer ${Cookies.get('github_token')}`,
+                            Authorization: `Bearer ${data[0]['github_token']}`,
                         },
                     }
                 );
@@ -179,7 +202,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 });
                 if (!personnal.ok) {
@@ -195,6 +218,28 @@ function RectangleDashboard({
     }
 
     const getRep = async (orgsUser, personnalUser) => {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + Cookies.get('token'),
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const json = await response.json();
+        const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                user_email: json.email,
+            }),
+        });
+        const data = await resultToken.json();
         try {
             const orgFetchPromises = orgsUser.map((org) =>
                 fetch(`https://api.github.com/orgs/${org.login}/repos`, {
@@ -202,7 +247,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 }).then((response) => {
                     if (!response.ok) {
@@ -223,7 +268,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 }
             );
@@ -294,47 +339,47 @@ function RectangleDashboard({
     const checkServicesConnexion = async (area) => {
         switch (area) {
             case 'Email':
-                if (!Cookies.get('google_token')) {
+                if (Cookies.get('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordUsername':
-                if (!Cookies.get('discord_token')) {
+                if (Cookies.get('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordGuilds':
-                if (!Cookies.get('discord_token')) {
+                if (Cookies.get('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Spotify':
-                if (!Cookies.get('spotify_token')) {
+                if (Cookies.get('spotify_token') === 'false') {
                     return false;
                 }
                 break;
             case 'sendEmail':
-                if (!Cookies.get('google_token')) {
+                if (Cookies.get('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Clip':
-                if (!Cookies.get('twitch_token')) {
+                if (Cookies.get('twitch_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Event':
-                if (!Cookies.get('google_token')) {
+                if (Cookies.get('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Issue':
-                if (!Cookies.get('github_token')) {
+                if (Cookies.get('github_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Branch':
-                if (!Cookies.get('github_token')) {
+                if (Cookies.get('github_token') === 'false') {
                     return false;
                 }
                 break;

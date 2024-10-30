@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { IonSelect } from '@ionic/angular';
+import { ApiService } from '../services/api/api.service';
 @Component({
     selector: 'app-service',
     templateUrl: './service.page.html',
@@ -21,7 +22,6 @@ export class ServicePage implements OnInit, AfterViewInit {
         'google_refresh',
         'twitch_refresh',
         'discord_refresh',
-        'github_refresh'
     ];
 
     public spotify_text: string = '';
@@ -45,7 +45,8 @@ export class ServicePage implements OnInit, AfterViewInit {
     constructor(
         private localStorage: LocalStorageService,
         private tokenService: TokenService,
-        private utilsService: UtilsService
+        private utilsService: UtilsService,
+        private apiService: ApiService
     ) {}
 
     ngOnInit() {
@@ -76,14 +77,14 @@ export class ServicePage implements OnInit, AfterViewInit {
                         const discord_token =
                             this.localStorage.getItem('discord_token');
                         if (discord_token !== null) {
-                            this.utilsService
+                            this.apiService
                                 .getDiscordMe(discord_token)
                                 .subscribe((response) => {
                                     const token =
                                         this.localStorage.getItem('token');
                                     if (token !== null) {
                                         console.log(response.userData.username);
-                                        this.utilsService
+                                        this.apiService
                                             .setUsernameDiscordInDB(
                                                 token,
                                                 response.userData.username,
@@ -101,10 +102,7 @@ export class ServicePage implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (
-            this.localStorage.getItem('spotify_token') &&
-            this.localStorage.getItem('spotify_token') !== 'null'
-        ) {
+        if (this.localStorage.getItem('spotify_token') === 'true') {
             this.spotify_text = 'Disconnection of Spotify';
             this.spotify_status = '#3AB700';
             this.spotify_connect = true;
@@ -113,10 +111,7 @@ export class ServicePage implements OnInit, AfterViewInit {
             this.spotify_status = '8cb3ff';
             this.spotify_connect = false;
         }
-        if (
-            this.localStorage.getItem('twitch_token') &&
-            this.localStorage.getItem('twitch_token') !== 'null'
-        ) {
+        if (this.localStorage.getItem('twitch_token') === 'true') {
             this.twitch_text = 'Disconnection of twitch';
             this.twitch_status = '#3AB700';
             this.twitch_connect = true;
@@ -125,10 +120,7 @@ export class ServicePage implements OnInit, AfterViewInit {
             this.twitch_status = '8cb3ff';
             this.twitch_connect = false;
         }
-        if (
-            this.localStorage.getItem('github_token') &&
-            this.localStorage.getItem('github_token') !== 'null'
-        ) {
+        if (this.localStorage.getItem('github_token') === 'true') {
             this.github_text = 'Disconnection of Github';
             this.github_status = '#3AB700';
             this.github_connect = true;
@@ -137,10 +129,7 @@ export class ServicePage implements OnInit, AfterViewInit {
             this.github_status = '8cb3ff';
             this.github_connect = false;
         }
-        if (
-            this.localStorage.getItem('google_token') &&
-            this.localStorage.getItem('google_token') !== 'null'
-        ) {
+        if (this.localStorage.getItem('google_token') === 'true') {
             this.google_text = 'Disconnection of Google';
             this.google_status = '#3AB700';
             this.google_connect = true;
@@ -149,10 +138,7 @@ export class ServicePage implements OnInit, AfterViewInit {
             this.google_status = '8cb3ff';
             this.google_connect = false;
         }
-        if (
-            this.localStorage.getItem('discord_token') &&
-            this.localStorage.getItem('discord_token') !== 'null'
-        ) {
+        if (this.localStorage.getItem('discord_token') === 'true') {
             this.discord_text = 'Disconnection of Discord';
             this.discord_status = '#3AB700';
             this.discord_connect = true;
@@ -202,51 +188,25 @@ export class ServicePage implements OnInit, AfterViewInit {
                         const token = this.localStorage.getItem(
                             service + '_token'
                         );
-                        if (token && (service != 'spotify' && service !== 'google' && service !== 'github')) {
-                            this.tokenService
-                                .revokeToken(service, token)
-                                .subscribe(() => {
-                                    this.localStorage.removeItem(
-                                        service + '_token'
-                                    );
-                                    this.localStorage.removeItem(
+
+                        this.localStorage.setItem(service + '_token', 'false');
+                        this.localStorage.setItem(
+                            service + '_refresh',
+                            'false'
+                        );
+                        this.tokenService
+                            .setTokenInDb('', email, service + '_token')
+                            .subscribe((response) => {
+                                this.tokenService
+                                    .setTokenInDb(
+                                        '',
+                                        email,
                                         service + '_refresh'
-                                    );
-                                    this.tokenService
-                                        .setTokenInDb(
-                                            '',
-                                            email,
-                                            service + '_token'
-                                        )
-                                        .subscribe((response) => {
-                                            this.tokenService
-                                                .setTokenInDb(
-                                                    '',
-                                                    email,
-                                                    service + '_refresh'
-                                                )
-                                                .subscribe((response) => {
-                                                    window.location.reload();
-                                                });
-                                        });
-                                });
-                        } else if (token && (service === 'spotify' || service === 'google' || service === 'github')) {
-                            this.localStorage.removeItem(service + '_token');
-                            this.localStorage.removeItem(service + '_refresh');
-                            this.tokenService
-                                .setTokenInDb('', email, service + '_token')
-                                .subscribe((response) => {
-                                    this.tokenService
-                                        .setTokenInDb(
-                                            '',
-                                            email,
-                                            service + '_refresh'
-                                        )
-                                        .subscribe((response) => {
-                                            window.location.reload();
-                                        });
-                                });
-                        }
+                                    )
+                                    .subscribe((response) => {
+                                        window.location.reload();
+                                    });
+                            });
                     });
             }
         }
