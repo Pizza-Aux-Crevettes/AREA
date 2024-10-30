@@ -1,7 +1,6 @@
 import { Injectable, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import { LocalStorageService } from '../localStorage/localStorage.service';
 import { IonSelect } from '@ionic/angular';
@@ -24,65 +23,13 @@ export class UtilsService {
         'discord_refresh',
     ];
     API_URL = this.localStorage.getItem('userInputIP');
+
     constructor(
         private http: HttpClient,
         private localStorage: LocalStorageService,
         private router: Router,
         private tokenService: TokenService
     ) {}
-
-    getDiscordMe(Discordtoken: string): Observable<any> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + Discordtoken,
-        });
-        try {
-            return this.http.get<any>(`${this.API_URL}/discord/me`, {
-                headers: headers,
-            });
-        } catch (error) {
-            console.error('Error :', error);
-            return of({
-                status: 500,
-                error: true,
-                message: 'Error',
-                data: {},
-            });
-        }
-    }
-
-    setUsernameDiscordInDB(
-        token: string,
-        username: string,
-        nbGuilds: number
-    ): Observable<any> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-        });
-        try {
-            return this.http.post<any>(
-                `${this.API_URL}/discord/setUsername`,
-                JSON.parse(
-                    JSON.stringify({
-                        token: token,
-                        username: username,
-                        nbGuilds: nbGuilds,
-                    })
-                ),
-                {
-                    headers: headers,
-                }
-            );
-        } catch (error) {
-            console.error('Error :', error);
-            return of({
-                status: 500,
-                error: true,
-                message: 'Error',
-                data: {},
-            });
-        }
-    }
 
     fetchAdaptability(userToken: string | null) {
         this.tokenService.getAdaptabilityUser(userToken).subscribe(
