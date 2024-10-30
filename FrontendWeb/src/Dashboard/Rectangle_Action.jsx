@@ -22,7 +22,13 @@ import icon_news from '../assets/news.png'
 
 import Cookies from 'cookies-js';
 
-const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
+const applyAcRea = async (
+    action,
+    reaction,
+    inputAction,
+    inputReaction,
+    apiUrl
+) => {
     if (
         action === 'DiscordUsername' ||
         action === 'DiscordGuilds' ||
@@ -34,7 +40,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         inputReaction = 'Nothing';
     }
     if (action && reaction && inputReaction && inputAction) {
-        fetch('http://localhost:8080/api/setArea', {
+        fetch(`${apiUrl}/api/setArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,6 +113,8 @@ function RectangleDashboard({
 
     const [idDiscordInput, setIdDiscordInput] = useState('');
     const [idDiscordInputFinal, setIdDiscordInputFinal] = useState('');
+
+    const apiUrl = localStorage.getItem('userInputIP');
 
     useEffect(() => {
         const checkConnection = async () => {
@@ -400,7 +408,7 @@ function RectangleDashboard({
     const emailInputChange = (value) => {
         setEmailInput(value);
         setEmailInputFinal(value + ' ');
-    }
+    };
 
     const handleInputEmail = () => {
         return (
@@ -415,12 +423,12 @@ function RectangleDashboard({
                 />
             </>
         );
-    }
+    };
 
     const idDiscordInputChange = (value) => {
         setIdDiscordInput(value);
         setIdDiscordInputFinal(value + ' ');
-    }
+    };
 
     const handleInputIdDiscord = () => {
         return (
@@ -435,7 +443,7 @@ function RectangleDashboard({
                 />
             </>
         );
-    }
+    };
 
     const handleWeather = () => {
         const cities = [
@@ -523,7 +531,12 @@ function RectangleDashboard({
                 <div className="cont-rect">
                     <Menu width={220} shadow="md">
                         <Menu.Target>
-                            <Button className="button-menu" size="lg" disabled={alreadyExist} ref={buttonRef}>
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                disabled={alreadyExist}
+                                ref={buttonRef}
+                            >
                                 {action}
                                 <IconChevronDown size={16} />
                             </Button>
@@ -533,12 +546,22 @@ function RectangleDashboard({
                             {menuItemsAction.map((item, index) => (
                                 <Fragment key={item.action}>
                                     <div
-                                        onMouseOver={() => MouseHover(item.action, item.connected)}
+                                        onMouseOver={() =>
+                                            MouseHover(
+                                                item.action,
+                                                item.connected
+                                            )
+                                        }
                                         onMouseLeave={handleMouseLeave}
                                     >
                                         <Menu.Item
-                                            onClick={() => setAction(item.action)}
-                                            disabled={action === item.action || !item.connected}
+                                            onClick={() =>
+                                                setAction(item.action)
+                                            }
+                                            disabled={
+                                                action === item.action ||
+                                                !item.connected
+                                            }
                                         >
                                             <div className='container-icon'>
                                                 <img src={item.icon} className='icon-item'/>  
@@ -546,12 +569,13 @@ function RectangleDashboard({
                                             </div>
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsAction.length - 1 && <MenuDivider />}
+                                    {index !== menuItemsAction.length - 1 && (
+                                        <MenuDivider />
+                                    )}
                                 </Fragment>
                             ))}
                         </Menu.Dropdown>
                     </Menu>
-
 
                     {action === 'Weather' ? handleWeather() : null}
                     {action === 'Alerts' ? handleAlerts() : null}
@@ -568,17 +592,22 @@ function RectangleDashboard({
                         ? handleRep()
                         : null}
                     {reaction === 'MP' ||
-                        reaction === 'Clip' ||
-                        reaction === 'Event' ||
-                        reaction === 'Issue' ||
-                        reaction === 'Branch' ||
-                        reaction === 'sendEmail'
+                    reaction === 'Clip' ||
+                    reaction === 'Event' ||
+                    reaction === 'Issue' ||
+                    reaction === 'Branch' ||
+                    reaction === 'sendEmail'
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
                     <Menu width={220} shadow="md">
                         <Menu.Target>
-                            <Button className="button-menu" size="lg" ref={buttonRef} disabled={alreadyExist}>
+                            <Button
+                                className="button-menu"
+                                size="lg"
+                                ref={buttonRef}
+                                disabled={alreadyExist}
+                            >
                                 {reaction}
                                 <IconChevronDown size={16} />
                             </Button>
@@ -588,12 +617,22 @@ function RectangleDashboard({
                             {menuItemsReaction.map((item, index) => (
                                 <Fragment key={item.reaction}>
                                     <div
-                                        onMouseOver={() => MouseHover(item.reaction, item.connected)}
+                                        onMouseOver={() =>
+                                            MouseHover(
+                                                item.reaction,
+                                                item.connected
+                                            )
+                                        }
                                         onMouseLeave={handleMouseLeave}
                                     >
                                         <Menu.Item
-                                            onClick={() => settupReaction(item.reaction)}
-                                            disabled={ action === item.reaction || item.connected === false }
+                                            onClick={() =>
+                                                settupReaction(item.reaction)
+                                            }
+                                            disabled={
+                                                action === item.reaction ||
+                                                item.connected === false
+                                            }
                                         >
                                             <div className='container-icon'>
                                                 <img src={item.icon} className='icon-item'/>  
@@ -601,7 +640,9 @@ function RectangleDashboard({
                                             </div>
                                         </Menu.Item>
                                     </div>
-                                    {index !== menuItemsReaction.length - 1 && ( <MenuDivider /> )}
+                                    {index !== menuItemsReaction.length - 1 && (
+                                        <MenuDivider />
+                                    )}
                                 </Fragment>
                             ))}
                         </Menu.Dropdown>
@@ -619,7 +660,12 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            idDiscordInputFinal + emailInputFinal + orgfinal + repfinal + inputContentReact
+                            idDiscordInputFinal +
+                                emailInputFinal +
+                                orgfinal +
+                                repfinal +
+                                inputContentReact,
+                            apiUrl
                         )
                     }
                 >

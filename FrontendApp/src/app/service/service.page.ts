@@ -4,12 +4,14 @@ import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { IonSelect } from '@ionic/angular';
+import { catchError, of } from 'rxjs';
+import { Browser } from '@capacitor/browser';
 @Component({
     selector: 'app-service',
     templateUrl: './service.page.html',
     styleUrls: ['./service.page.scss'],
 })
-export class ServicePage implements OnInit, AfterViewInit {
+export class ServicePage implements OnInit {
     isDislexicFontEnabled?: boolean;
     serviceList: string[] = [
         'spotify_token',
@@ -24,26 +26,26 @@ export class ServicePage implements OnInit, AfterViewInit {
         'github_refresh'
     ];
 
-    public spotify_text: string = '';
-    public google_text: string = '';
-    public twitch_text: string = '';
-    public discord_text: string = '';
-    public github_text: string = '';
-
-    public spotify_status: string = '';
-    public google_status: string = '';
-    public twitch_status: string = '';
-    public discord_status: string = '';
-    public github_status: string = '';
-
     public spotify_connect: boolean = false;
     public google_connect: boolean = false;
     public twitch_connect: boolean = false;
     public discord_connect: boolean = false;
     public github_connect: boolean = false;
 
+    services: string[] = [
+        'spotify_token',
+        'google_token',
+        'twitch_token',
+        'discord_token',
+        'github_token',
+        'spotify_refresh',
+        'google_refresh',
+        'twitch_refresh',
+        'discord_refresh',
+    ];
+
     constructor(
-        private localStorage: LocalStorageService,
+        protected localStorage: LocalStorageService,
         private tokenService: TokenService,
         private utilsService: UtilsService
     ) {}
@@ -59,108 +61,40 @@ export class ServicePage implements OnInit, AfterViewInit {
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
             this.isDislexicFontEnabled = fontState;
         });
-        for (let i = 0; i < this.serviceList.length; i++) {
-            if (params.get(this.serviceList[i]) && userToken !== null) {
-                this.tokenService
-                    .getUserData(userToken)
-                    .subscribe((response) => {
-                        email = response.email;
-                        token = `${params.get(this.serviceList[i])}`;
-                        this.localStorage.setItem(this.serviceList[i], token);
-                        this.tokenService
-                            .setTokenInDb(token, email, this.serviceList[i])
-                            .subscribe((response) => {
-                                this.clearUrl();
-                                this.ngAfterViewInit();
-                            });
-                        const discord_token =
-                            this.localStorage.getItem('discord_token');
-                        if (discord_token !== null) {
-                            this.utilsService
-                                .getDiscordMe(discord_token)
-                                .subscribe((response) => {
-                                    const token =
-                                        this.localStorage.getItem('token');
-                                    if (token !== null) {
-                                        console.log(response.userData.username);
-                                        this.utilsService
-                                            .setUsernameDiscordInDB(
-                                                token,
-                                                response.userData.username,
-                                                response.guildCount
-                                            )
-                                            .subscribe((response) => {
-                                                window.location.reload();
-                                            });
-                                    }
-                                });
-                        }
-                    });
-            }
-        }
+        this.loadServices();
     }
 
-    ngAfterViewInit() {
-        if (
-            this.localStorage.getItem('spotify_token') &&
-            this.localStorage.getItem('spotify_token') !== 'null'
-        ) {
-            this.spotify_text = 'Disconnection of Spotify';
-            this.spotify_status = '#3AB700';
-            this.spotify_connect = true;
-        } else {
-            this.spotify_text = 'Connect to Spotify';
-            this.spotify_status = '8cb3ff';
-            this.spotify_connect = false;
-        }
-        if (
-            this.localStorage.getItem('twitch_token') &&
-            this.localStorage.getItem('twitch_token') !== 'null'
-        ) {
-            this.twitch_text = 'Disconnection of twitch';
-            this.twitch_status = '#3AB700';
-            this.twitch_connect = true;
-        } else {
-            this.twitch_text = 'Connect to twitch';
-            this.twitch_status = '8cb3ff';
-            this.twitch_connect = false;
-        }
-        if (
-            this.localStorage.getItem('github_token') &&
-            this.localStorage.getItem('github_token') !== 'null'
-        ) {
-            this.github_text = 'Disconnection of Github';
-            this.github_status = '#3AB700';
-            this.github_connect = true;
-        } else {
-            this.github_text = 'Connect to Github';
-            this.github_status = '8cb3ff';
-            this.github_connect = false;
-        }
-        if (
-            this.localStorage.getItem('google_token') &&
-            this.localStorage.getItem('google_token') !== 'null'
-        ) {
-            this.google_text = 'Disconnection of Google';
-            this.google_status = '#3AB700';
-            this.google_connect = true;
-        } else {
-            this.google_text = 'Connect to Google';
-            this.google_status = '8cb3ff';
-            this.google_connect = false;
-        }
-        if (
-            this.localStorage.getItem('discord_token') &&
-            this.localStorage.getItem('discord_token') !== 'null'
-        ) {
-            this.discord_text = 'Disconnection of Discord';
-            this.discord_status = '#3AB700';
-            this.discord_connect = true;
-        } else {
-            this.discord_text = 'Connect to Discord';
-            this.discord_status = '8cb3ff';
-            this.discord_connect = false;
-        }
+    loadServices() {
+        this.tokenService
+            .getServicesTokens(this.localStorage.getItem('email'))
+            .pipe(
+                catchError((error) => {
+                    console.error(error);
+                    return of(null);
+                })
+            )
+            .subscribe((res) => {
+                for (let i = 0; i < this.services.length; i++) {
+                    if (res[0][this.services[i]] !== null) {
+                        this.localStorage.setItem(
+                            this.services[i],
+                            res[0][this.services[i]]
+                        );
+                    }
+                }
+                this.spotify_connect = !!(this.localStorage.getItem('spotify_token') &&
+                    this.localStorage.getItem('spotify_token') !== 'null');
+                this.twitch_connect = !!(this.localStorage.getItem('twitch_token') &&
+                    this.localStorage.getItem('twitch_token') !== 'null');
+                this.github_connect = !!(this.localStorage.getItem('github_token') &&
+                    this.localStorage.getItem('github_token') !== 'null');
+                this.google_connect = !!(this.localStorage.getItem('google_token') &&
+                    this.localStorage.getItem('google_token') !== 'null');
+                this.discord_connect = !!(this.localStorage.getItem('discord_token') &&
+                    this.localStorage.getItem('discord_token') !== 'null');
+            });
+
+
     }
 
     clearUrl() {
@@ -189,9 +123,13 @@ export class ServicePage implements OnInit, AfterViewInit {
         this.utilsService.onSelectParam(event, this);
     }
 
-    ManageService(service: string, status: boolean) {
+    async ManageService(service: string, status: boolean) {
         if (!status) {
-            window.location.href = `${environment.api}/${service}/login`;
+            await Browser.open({url: `${environment.api}/${service}/login/${this.localStorage.getItem('email')}`});
+
+            await Browser.addListener('browserFinished', () => {
+                window.location.reload();
+            });
         } else {
             let userToken = this.localStorage.getItem('token');
             if (userToken) {
@@ -202,7 +140,7 @@ export class ServicePage implements OnInit, AfterViewInit {
                         const token = this.localStorage.getItem(
                             service + '_token'
                         );
-                        if (token && (service != 'spotify' && service !== 'google' && service !== 'github')) {
+                        if (token && service != 'spotify' && service != 'google') {
                             this.tokenService
                                 .revokeToken(service, token)
                                 .subscribe(() => {
@@ -230,7 +168,7 @@ export class ServicePage implements OnInit, AfterViewInit {
                                                 });
                                         });
                                 });
-                        } else if (token && (service === 'spotify' || service === 'google' || service === 'github')) {
+                        } else {
                             this.localStorage.removeItem(service + '_token');
                             this.localStorage.removeItem(service + '_refresh');
                             this.tokenService
