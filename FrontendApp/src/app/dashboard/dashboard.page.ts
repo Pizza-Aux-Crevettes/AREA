@@ -367,6 +367,8 @@ export class DashboardPage implements OnInit {
     }
 
     orgsVal(value: any) {
+        this.repChosen = '';
+        this.repfinal = '';
         this.orgChosen = value.detail.value;
         this.orgfinal = value.detail.value + ' ';
         this.filterRep = this.githubRep.filter(userRep => userRep.owner.login === this.orgChosen);

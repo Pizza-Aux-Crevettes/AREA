@@ -230,6 +230,8 @@ function RectangleDashboard({
     };
 
     const orgsVal = (value) => {
+        setRepChosen('');
+        setRepfinal('');
         setOrgChosen(value);
         setOrgfinal(value + ' ');
     };
