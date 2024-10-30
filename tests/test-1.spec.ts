@@ -138,3 +138,34 @@ test.describe('select News and calendar', () => {
     await expect(page.locator(disable_input)).toBeVisible();
   });
 });
+
+test.describe('select receive mail and github issue', () => {
+  test('select email action', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
+    await page.getByRole('menuitem', { name: 'When I receive an email' }).click();
+    await expect(page.getByRole('button', { name: 'Email', exact: true })).toBeVisible();
+  });
+
+  test('select send mp (discord)', async ({ page }) => {
+    await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Create an issue on github' }).click();
+  })
+
+  test('fill github issue', async ({ page }) => {
+    await page.getByPlaceholder('Organisations github').click();
+    await page.getByText('EnzoDIWLK').click();
+    await page.getByPlaceholder('Repos github').click();
+    await page.getByRole('option', { name: 'EnzoDIWLK' }).locator('span').click();
+    const input_issue = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input'][@value='']";
+    await page.locator(input_issue).click();
+    await page.locator(input_issue).fill('test');
+  })
+
+  test('apply email/github', async ({ page }) => {
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
+    const disable_input = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'EnzoDIWLK EnzoDIWLK test']";
+    await expect(page.locator(disable_input)).toBeVisible();
+  });
+});
