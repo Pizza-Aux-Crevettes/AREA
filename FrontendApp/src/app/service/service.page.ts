@@ -76,8 +76,9 @@ export class ServicePage implements OnInit {
                 let tokenList = res[0];
                 for (let i = 0; i < this.serviceList.length; i++) {
                     if (tokenList[`${this.serviceList[i]}`]) {
-                        console.log(this.serviceList[i]);
                         this.localStorage.setItem(this.serviceList[i], 'true');
+                    } else {
+                        this.localStorage.setItem(this.serviceList[i], 'false');
                     }
                 }
                 this.ngAfterViewInit();

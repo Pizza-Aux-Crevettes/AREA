@@ -91,6 +91,20 @@ function Service() {
     const [githubConnect, setGithubConnect] = useState(false);
 
     const apiUrl = localStorage.getItem('userInputIP');
+
+    const serviceList = [
+        'spotify_token',
+        'twitch_token',
+        'google_token',
+        'discord_token',
+        'github_token',
+        'discord_refresh',
+        'spotify_refresh',
+        'google_refresh',
+        'twitch_refresh',
+        'github_refresh',
+    ];
+
     useEffect(() => {
         if (Cookies.get('token') === null) {
             navigate('/');
@@ -99,24 +113,14 @@ function Service() {
         const search = window.location.search;
         const params = new URLSearchParams(search);
         let token = '';
-        const serviceList = [
-            'spotify_token',
-            'twitch_token',
-            'google_token',
-            'discord_token',
-            'github_token',
-            'discord_refresh',
-            'spotify_refresh',
-            'google_refresh',
-            'twitch_refresh',
-            'github_refresh',
-        ];
+
+        loadService();
 
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
-                Cookies.set(serviceList[i], true);
-                if (Cookies.get(serviceList[i]) === true) {
+                Cookies.set(serviceList[i], 'true');
+                if (Cookies.get(serviceList[i]) === 'true') {
                     registerService(serviceList[i]);
                     if (serviceList[i] === 'discord_token') {
                         fetch(`${apiUrl}/discord/me`, {
@@ -139,61 +143,13 @@ function Service() {
                 }
             }
         }
+
         clearUrl();
         window.history.replaceState(null, '', window.location.pathname);
-        if (Cookies.get('spotify_token') === 'true') {
-            setSpotifyText('disconnection of Spotify');
-            setSpotifyStatus('#3AB700');
-            setSpotifyConnect(true);
-        } else {
-            setSpotifyText('Connect to Spotify');
-            setSpotifyStatus('#33478f');
-            setSpotifyConnect(false);
-        }
-
-        if (Cookies.get('twitch_token') === 'true') {
-            setTwitchText('disconnection of twitch');
-            setTwitchStatus('#3AB700');
-            setTwitchConnect(true);
-        } else {
-            setTwitchText('Connect to twitch');
-            setTwitchStatus('#33478f');
-            setTwitchConnect(false);
-        }
-
-        if (Cookies.get('google_token') === 'true') {
-            setGoogleText('disconnection of Google');
-            setGoogleStatus('#3AB700');
-            setGoogleConnect(true);
-        } else {
-            setGoogleText('Connect to Google');
-            setGoogleStatus('#33478f');
-            setGoogleConnect(false);
-        }
-
-        if (Cookies.get('discord_token') === 'true') {
-            setDiscordText('disconnection of Discord');
-            setDiscordStatus('#3AB700');
-            setDiscordConnect(true);
-        } else {
-            setDiscordText('Connect to Discord');
-            setDiscordStatus('#33478f');
-            setDiscordConnect(false);
-        }
-        console.log('COOKIES = ', Cookies.get('google_refresh'));
-        if (Cookies.get('github_token') === 'true') {
-            console.log('test');
-            setGithubText('disconnection of Github');
-            setGithubStatus('#3AB700');
-            setGithubConnect(true);
-        } else {
-            setGithubText('Connect to Github');
-            setGithubStatus('#33478f');
-            setGithubConnect(false);
-        }
+        defineStatusService();
     }, [navigate, location]);
 
-    const setUsernameDiscordInDB = (userName, nbGuilds) => {
+    const setUsernameDiscordInDB = async (userName, nbGuilds) => {
         fetch(`${apiUrl}/discord/setUsername`, {
             method: 'POST',
             headers: {
@@ -205,6 +161,99 @@ function Service() {
                 nbGuilds: nbGuilds,
             }),
         });
+    };
+
+    const defineStatusService = async () => {
+        if (Cookies.get('spotify_token') === 'true') {
+            setSpotifyText('Disconnection of Spotify');
+            setSpotifyStatus('#3AB700');
+            setSpotifyConnect(true);
+        } else {
+            setSpotifyText('Connect to Spotify');
+            setSpotifyStatus('#33478f');
+            setSpotifyConnect(false);
+        }
+
+        if (Cookies.get('twitch_token') === 'true') {
+            setTwitchText('Disconnection of Twitch');
+            setTwitchStatus('#3AB700');
+            setTwitchConnect(true);
+        } else {
+            setTwitchText('Connect to Twitch');
+            setTwitchStatus('#33478f');
+            setTwitchConnect(false);
+        }
+
+        if (Cookies.get('google_token') === 'true') {
+            setGoogleText('Disconnection of Google');
+            setGoogleStatus('#3AB700');
+            setGoogleConnect(true);
+        } else {
+            setGoogleText('Connect to Google');
+            setGoogleStatus('#33478f');
+            setGoogleConnect(false);
+        }
+
+        if (Cookies.get('discord_token') === 'true') {
+            setDiscordText('Disconnection of Discord');
+            setDiscordStatus('#3AB700');
+            setDiscordConnect(true);
+        } else {
+            setDiscordText('Connect to Discord');
+            setDiscordStatus('#33478f');
+            setDiscordConnect(false);
+        }
+        if (Cookies.get('github_token') === 'true') {
+            console.log('test');
+            setGithubText('Disconnection of Github');
+            setGithubStatus('#3AB700');
+            setGithubConnect(true);
+        } else {
+            setGithubText('Connect to Github');
+            setGithubStatus('#33478f');
+            setGithubConnect(false);
+        }
+    };
+
+    const loadService = async () => {
+        const token = Cookies.get('token');
+        fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                fetch(`${apiUrl}/api/getToken`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_email: json.email }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((tokenList) => {
+                        for (let i = 0; i < serviceList.length; i++) {
+                            if (tokenList[0][`${serviceList[i]}`] !== null) {
+                                console.debug(
+                                    serviceList[i],
+                                    tokenList[0][`${serviceList[i]}`]
+                                );
+                                Cookies.set(serviceList[i], 'true');
+                            } else {
+                                Cookies.set(serviceList[i], 'false');
+                            }
+                        }
+                        defineStatusService();
+                    });
+            });
     };
 
     const clearUrl = () => {
@@ -234,6 +283,18 @@ function Service() {
                         Cookies.set(service + '_refresh', '', {
                             expires: -1,
                         });
+                        if (service.toLowerCase() === 'discord') {
+                            console.log('test');
+                            fetch(`${apiUrl}/discord/username`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${Cookies.get('token')}`,
+                                },
+                            }).then((res) => {
+                                console.log(res.json());
+                            });
+                        }
                         fetch(`${apiUrl}/api/setNewToken`, {
                             method: 'POST',
                             headers: {
