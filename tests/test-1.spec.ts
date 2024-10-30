@@ -69,3 +69,38 @@ test.describe('select receive mail and send mp(discord)', () => {
     await expect(page.locator(disable_input)).toBeVisible();
   });
 });
+
+test.describe('select alerts and twitch clip', () => {
+  test('select alerts action', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
+    await page.getByRole('menuitem', { name: 'When it is alerts' }).click();
+    await expect(page.getByRole('button', { name: 'Alerts' })).toBeVisible();
+  });
+
+  test('select city (Tokyo)', async ({ page }) => {
+    await page.locator("//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@placeholder='City']").click();
+    await page.getByRole('option', { name: 'Tokyo' }).click();
+    const city_alert = page.locator("//div[@class='rectangle']//input[@value='Tokyo'][not(@type='hidden')]");
+    await expect(city_alert).toBeVisible();
+  })
+
+
+  test('select twitch reaction', async ({ page }) => {
+    await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Create a twitch clip' }).click();
+  })
+
+  test('fill twitch input', async ({ page }) => {await page.getByRole('button', { name: 'Select reaction' }).click();
+    const input_twitch = "//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']";
+    await page.locator(input_twitch).click();
+    await page.locator(input_twitch).fill('tokyo');
+  })
+
+  test('apply alerts/twitch', async ({ page }) => {
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
+    const disable_input = "//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@placeholder='Enter your input']";
+    await expect(page.locator(disable_input)).toBeVisible();
+  });
+});
