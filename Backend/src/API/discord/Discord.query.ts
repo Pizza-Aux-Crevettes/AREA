@@ -20,3 +20,16 @@ export async function setUserName(
         return false;
     }
 }
+
+export async function delUsername(email: string) {
+    try {
+        const { error } = await supabase
+            .from('DiscordUserDatas')
+            .delete()
+            .match({ email: email });
+        return true;
+    } catch (error) {
+        console.error('update Discord Username', error);
+        return false;
+    }
+}

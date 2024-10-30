@@ -105,4 +105,24 @@ export class ApiService {
             });
         }
     }
+
+    deleteDiscordInfo(token: string) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+        });
+        try {
+            return this.http.delete<any>(`${this.API_URL}/discord/username`, {
+                headers: headers,
+            });
+        } catch (error) {
+            console.error('Error :', error);
+            return of({
+                status: 500,
+                error: true,
+                message: 'Error',
+                data: {},
+            });
+        }
+    }
 }

@@ -1,7 +1,8 @@
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
 import axios from 'axios';
-import { setUserName } from './Discord.query';
+import { delUsername, setUserName } from './Discord.query';
 import { updateService } from '../../routes/services/services.query';
+import { auth } from '../../middleware/auth';
 
 const client_id = process.env.DISCORD_CLIENT_ID!;
 const client_secret = process.env.DISCORD_CLIENT_SECRET!;
@@ -29,11 +30,10 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        if (req.params.email)
-            origin += `_${req.params.email}`;
+        if (req.params.email) origin += `_${req.params.email}`;
         console.log(origin);
         const scope = 'identify email guilds guilds.members.read bot';
-        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/discord/callback")}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/discord/callback')}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
     });
 
@@ -52,7 +52,9 @@ module.exports = (app: Express) => {
             client_secret: client_secret,
             grant_type: 'authorization_code',
             code: code as string,
-            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/discord/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@')
+                ? 'https://area.leafs-studio.com/discord/callback'
+                : redirect_uri,
         });
 
         try {
@@ -68,17 +70,11 @@ module.exports = (app: Express) => {
             const origin = state[0];
             if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
                 const email = state[1];
-                await updateService(
-                    email,
-                    access_token,
-                    "discord_token"
+                await updateService(email, access_token, 'discord_token');
+                await updateService(email, refresh_token, 'discord_refresh');
+                res.send(
+                    '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
-                await updateService(
-                    email,
-                    refresh_token,
-                    "discord_refresh"
-                );
-                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
                 res.redirect(
                     `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
@@ -175,6 +171,7 @@ module.exports = (app: Express) => {
             );
         }
     });
+
     app.post('/discord/setUsername', async (req, res) => {
         console.log(req.body);
         const user_info = req.body;
@@ -189,9 +186,38 @@ module.exports = (app: Express) => {
             res.status(400).json({
                 msg: "Erreur lors de l'insertion du nom Discord de l'utilisateur ",
             });
+            return;
         }
         res.status(200).json({
             msg: "le nom d'utilisateur Discord a bien été set",
         });
     });
+
+    app.delete(
+        '/discord/username',
+        auth,
+        async (req: Request, res: Response) => {
+            const decoded = jwt.verify(
+                `${req.headers.authorization}`.split(' ')[1],
+                process.env.SECRET
+            );
+
+            if (decoded.email) {
+                const result = await delUsername(decoded.email);
+                if (!result) {
+                    res.status(400).json({
+                        msg: "Erreur lors de la deletion du nom Discord de l'utilisateur ",
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    msg: "le nom d'utilisateur Discord a bien été supprimé",
+                });
+            } else {
+                res.status(400).json({
+                    msg: "Erreur lors de la deletion du nom Discord de l'utilisateur ",
+                });
+            }
+        }
+    );
 };
