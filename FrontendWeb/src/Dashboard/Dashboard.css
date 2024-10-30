@@ -135,3 +135,18 @@
     width: 30vh;
     height: 5vh;
 }
+
+.alreadyExist {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    background-color: #b5ceff;
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    width: 30vh;
+    height: 5.5vh;
+    padding: 10px;
+    gap: 8px;
+    overflow-y: auto;
+}

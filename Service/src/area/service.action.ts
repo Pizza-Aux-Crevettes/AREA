@@ -20,30 +20,30 @@ export async function setActions(
     let result;
     const token = await getTokens(email);
     switch (action) {
-        case 'Weather':
-            result = await IsActive(
-                './WeatherFile.json',
-                inputAction,
-                getWeatherDatas,
-                email,
-                id
-            );
-            break;
-        case 'Alert':
-            result = await IsActive(
-                './AlertFile.json',
-                inputAction,
-                getAlertsDatas,
-                email,
-                id
-            );
-            break;
+        // case 'Weather':
+        //     result = await IsActive(
+        //         './WeatherFile.json',
+        //         inputAction,
+        //         getWeatherDatas,
+        //         email,
+        //         id
+        //     );
+        //     break;
+        // case 'Alert':
+        //     result = await IsActive(
+        //         './AlertFile.json',
+        //         inputAction,
+        //         getAlertsDatas,
+        //         email,
+        //         id
+        //     );
+            // break;
         case 'News':
             result = await getNewsDatas(email, inputAction);
             break;
-        case 'Email':
-            result = await haveMail(email, token[0].google_token);
-            break;
+        // case 'Email':
+        //     result = await haveMail(email, token[0].google_token);
+        //     break;
         case 'DiscordUsername':
             result = await ifChangeUsername(token[0].discord_token, email);
             break;
