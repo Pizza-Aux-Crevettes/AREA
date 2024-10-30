@@ -104,3 +104,37 @@ test.describe('select alerts and twitch clip', () => {
     await expect(page.locator(disable_input)).toBeVisible();
   });
 });
+
+test.describe('select News and calendar', () => {
+  test('select news action', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
+    await page.getByRole('menuitem', { name: 'When news appears' }).click();
+    await expect(page.getByRole('button', { name: 'News' })).toBeVisible();
+  });
+
+  test('fill input news', async ({ page }) => {
+    const news_input = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']";
+    await page.locator(news_input).click();
+    await page.locator(news_input).fill('Tesla');
+  })
+
+
+  test('select calendar reaction', async ({ page }) => {
+    await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Create a Event on Google' }).click();
+  })
+
+  test('fill calendar input', async ({ page }) => {await page.getByRole('button', { name: 'Select reaction' }).click();
+    const input_calendar = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input'][@value='']";
+    await page.locator(input_calendar).click();
+    await page.locator(input_calendar).fill('tesla news');
+  })
+
+  test('apply News/calendar', async ({ page }) => {
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
+    const disable_input = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value='Tesla']"
+    await expect(page.locator(disable_input)).toBeVisible();
+  });
+});
