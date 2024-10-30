@@ -147,7 +147,7 @@ test.describe('select receive mail and github issue', () => {
     await expect(page.getByRole('button', { name: 'Email', exact: true })).toBeVisible();
   });
 
-  test('select send mp (discord)', async ({ page }) => {
+  test('select github issue', async ({ page }) => {
     await page.getByRole('button', { name: 'Select reaction' }).click();
     await page.getByRole('menuitem', { name: 'Create an issue on github' }).click();
   })
@@ -166,6 +166,35 @@ test.describe('select receive mail and github issue', () => {
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
     const disable_input = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'EnzoDIWLK EnzoDIWLK test']";
+    await expect(page.locator(disable_input)).toBeVisible();
+  });
+});
+
+test.describe('select receive mail and github branch', () => {
+  test('select email action', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
+    await page.getByRole('menuitem', { name: 'When I receive an email' }).click();
+    await expect(page.getByRole('button', { name: 'Email', exact: true })).toBeVisible();
+  });
+
+  test('select github branch', async ({ page }) => {
+    await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Create a branch on github' }).click();
+  })
+
+  test('fill github branch', async ({ page }) => {
+    await page.locator("//span[text() = 'Branch']/parent::span/parent::button/parent::div//input[@placeholder='Organisations github']").click();
+    await page.getByRole('option', { name: 'EnzoDIWLK' }).click();
+    await page.locator("//span[text() = 'Branch']/parent::span/parent::button/parent::div//input[@placeholder='Repos github']").getByText('EnzoDIWLK').click();
+    await page.locator("//span[text() = 'Branch']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']").fill('test branch');
+    await page.getByRole('button', { name: 'Apply' }).click();
+  })
+
+  test('apply email/github branch', async ({ page }) => {
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
+    const disable_input = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'EnzoDIWLK EnzoDIWLK test branch']";
     await expect(page.locator(disable_input)).toBeVisible();
   });
 });
