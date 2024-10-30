@@ -15,7 +15,13 @@ import './Dashboard.css';
 import logo_cross from '../assets/cross.png';
 import Cookies from 'cookies-js';
 
-const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
+const applyAcRea = async (
+    action,
+    reaction,
+    inputAction,
+    inputReaction,
+    apiUrl
+) => {
     if (
         action === 'DiscordUsername' ||
         action === 'DiscordGuilds' ||
@@ -27,7 +33,7 @@ const applyAcRea = async (action, reaction, inputAction, inputReaction) => {
         inputReaction = 'Nothing';
     }
     if (action && reaction && inputReaction && inputAction) {
-        fetch('http://localhost:8080/api/setArea', {
+        fetch(`${apiUrl}/api/setArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,6 +126,8 @@ function RectangleDashboard({
 
     const [idDiscordInput, setIdDiscordInput] = useState('');
     const [idDiscordInputFinal, setIdDiscordInputFinal] = useState('');
+
+    const apiUrl = localStorage.getItem('userInputIP');
 
     useEffect(() => {
         const checkConnection = async () => {
@@ -413,7 +421,7 @@ function RectangleDashboard({
     const emailInputChange = (value) => {
         setEmailInput(value);
         setEmailInputFinal(value + ' ');
-    }
+    };
 
     const handleInputEmail = () => {
         return (
@@ -428,12 +436,12 @@ function RectangleDashboard({
                 />
             </>
         );
-    }
+    };
 
     const idDiscordInputChange = (value) => {
         setIdDiscordInput(value);
         setIdDiscordInputFinal(value + ' ');
-    }
+    };
 
     const handleInputIdDiscord = () => {
         return (
@@ -448,7 +456,7 @@ function RectangleDashboard({
                 />
             </>
         );
-    }
+    };
 
     const handleWeather = () => {
         const cities = [
@@ -499,6 +507,8 @@ function RectangleDashboard({
         return (
             <>
                 <Select
+                    radius="md"
+                    size="lg"
                     disabled={alreadyExist}
                     placeholder="City"
                     value={inputContentAct}
@@ -610,13 +620,14 @@ function RectangleDashboard({
                             <Button
                                 className="button-menu"
                                 size="lg"
-                                ref={buttonRef}
                                 disabled={alreadyExist}
+                                ref={buttonRef}
                             >
                                 {action}
                                 <IconChevronDown size={16} />
                             </Button>
                         </Menu.Target>
+
                         <Menu.Dropdown>
                             {menuItemsAction.map((item, index) => (
                                 <Fragment key={item.action}>
@@ -624,15 +635,10 @@ function RectangleDashboard({
                                         onMouseOver={() =>
                                             MouseHover(
                                                 item.action,
-
                                                 item.connected
                                             )
                                         }
                                         onMouseLeave={handleMouseLeave}
-                                        style={{
-                                            display: 'inline-block',
-                                            position: 'relative',
-                                        }}
                                     >
                                         <Menu.Item
                                             onClick={() =>
@@ -640,7 +646,7 @@ function RectangleDashboard({
                                             }
                                             disabled={
                                                 action === item.action ||
-                                                item.connected === false
+                                                !item.connected
                                             }
                                         >
                                             {item.label}
@@ -698,15 +704,10 @@ function RectangleDashboard({
                                         onMouseOver={() =>
                                             MouseHover(
                                                 item.reaction,
-
                                                 item.connected
                                             )
                                         }
                                         onMouseLeave={handleMouseLeave}
-                                        style={{
-                                            display: 'inline-block',
-                                            position: 'relative',
-                                        }}
                                     >
                                         <Menu.Item
                                             onClick={() =>
@@ -740,7 +741,12 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            idDiscordInputFinal + emailInputFinal + orgfinal + repfinal + inputContentReact
+                            idDiscordInputFinal +
+                                emailInputFinal +
+                                orgfinal +
+                                repfinal +
+                                inputContentReact,
+                            apiUrl
                         )
                     }
                 >

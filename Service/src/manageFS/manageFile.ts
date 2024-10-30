@@ -7,6 +7,9 @@ export async function manageFile(
     email: string,
     id: string
 ): Promise<any> {
+    if (!fs.existsSync(fileName)) {
+        await fsPromises.writeFile(fileName, JSON.stringify({}));
+    }
     const file = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
     if (!file[`status-${email}-${id}`]) file[`status-${email}-${id}`] = {};
     file[`status-${email}-${id}`].status = fileContent;

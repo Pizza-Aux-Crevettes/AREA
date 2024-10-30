@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class LoginService {
-    private API_URL = environment.api;
+    API_URL = localStorage.getItem('userInputIP');
 
     constructor(private http: HttpClient) {}
 

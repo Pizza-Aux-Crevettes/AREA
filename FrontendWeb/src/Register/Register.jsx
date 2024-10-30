@@ -15,6 +15,21 @@ function Register() {
     const [alreadyUse, setAlreadyUse] = useState('');
     const [accountCreated, setAccountCreated] = useState(false);
     const [loading, setLoading] = useState(false);
+    const apiUrl = localStorage.getItem('userInputIP');
+
+    useEffect(() => {
+        if (!localStorage.getItem('userInputIP')) {
+            const userInput = window.prompt(
+                'Please enter an IP address :',
+                'http://localhost:8080'
+            );
+            if (userInput) {
+                localStorage.setItem('userInputIP', userInput);
+            } else {
+                localStorage.setItem('userInputIP', 'http://localhost:8080');
+            }
+        }
+    }, []);
 
     function goToLogin() {
         navigate('/');
@@ -42,7 +57,7 @@ function Register() {
             surname !== '' &&
             username !== ''
         ) {
-            fetch('http://localhost:8080/api/register', {
+            fetch(`${apiUrl}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +73,7 @@ function Register() {
                 .then((response) => {
                     setLoading(false);
                     if (response.ok) {
-                        fetch('http://localhost:8080/api/setNewUSer', {
+                        fetch(`${apiUrl}/api/setNewUSer`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

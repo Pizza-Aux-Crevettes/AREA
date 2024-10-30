@@ -69,7 +69,7 @@
     align-items: center;
     padding: 2%;
     box-shadow: 2px 3px 1px 1px rgb(124, 137, 190);
-    position: relative;
+    position: relative; 
 }
 
 .dashboard .cont-rect {
@@ -129,7 +129,7 @@
 .popUp {
     background-color: #e90808 !important;
     position: absolute;
-    left: 42%;
+    left: 42.5%;
     top: 70px;
     border: 1px solid black;
     width: 30vh;

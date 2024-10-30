@@ -11,6 +11,7 @@
           <ion-select #menu1 interface="action-sheet" (ionChange)="onSelectNavigate($event)" style="display: none;">
             <ion-select-option value="Dashboard">Dashboard</ion-select-option>
             <ion-select-option value="Service">Service Connection</ion-select-option>
+              <ion-select-option value="ChangeIPAdress">Change IP adress</ion-select-option>
           </ion-select>
         </ion-list>
       </div>
@@ -32,28 +33,38 @@
     <div class="flex-rectangle">
       <div class="main-rectangle">
           <img src="assets/discord.png" class="icon-container" />
-          <ion-text class="connection-rect"  [style.background-color]="discord_status"
-          (click)="ManageService('discord', discord_connect)"><h3>{{ discord_text }}</h3></ion-text>
+          <ion-text class="connection-rect {{localStorage.getItem('discord_token') &&
+            localStorage.getItem('discord_token') !== 'null' ? 'connected' : 'notConnected'}}"
+          (click)="ManageService('discord', discord_connect)"><h3>{{ localStorage.getItem('discord_token') &&
+          localStorage.getItem('discord_token') !== 'null' ? 'Disconnect of' : 'Connect to' }} discord</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/twitch.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="twitch_status"
-        (click)="ManageService('twitch', twitch_connect)"><h3>{{ twitch_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{localStorage.getItem('twitch_token') &&
+            localStorage.getItem('twitch_token') !== 'null' ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('twitch', twitch_connect)"><h3>{{ localStorage.getItem('twitch_token') &&
+        localStorage.getItem('twitch_token') !== 'null' ? 'Disconnect of' : 'Connect to' }} twitch</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/google.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="google_status"
-        (click)="ManageService('google', google_connect)"><h3>{{ google_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{localStorage.getItem('google_token') &&
+            localStorage.getItem('google_token') !== 'null' ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('google', google_connect)"><h3>{{ localStorage.getItem('google_token') &&
+        localStorage.getItem('google_token') !== 'null' ? 'Disconnect of' : 'Connect to' }} google</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/spotify.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="spotify_status"
-        (click)="ManageService('spotify', spotify_connect)"><h3>{{ spotify_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{localStorage.getItem('spotify_token') &&
+            localStorage.getItem('spotify_token') !== 'null' ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('spotify', spotify_connect)"><h3>{{ localStorage.getItem('spotify_token') &&
+        localStorage.getItem('spotify_token') !== 'null' ? 'Disconnect of' : 'Connect to' }} spotify</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/github.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="github_status"
-        (click)="ManageService('github', github_connect)"><h3>{{ github_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{localStorage.getItem('github_token') &&
+            localStorage.getItem('github_token') !== 'null' ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('github', github_connect)"><h3>{{ localStorage.getItem('github_token') &&
+        localStorage.getItem('github_token') !== 'null' ? 'Disconnect of' : 'Connect to' }} github</h3></ion-text>
       </div>
   </div>
   

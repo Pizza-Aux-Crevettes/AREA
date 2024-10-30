@@ -21,7 +21,9 @@ function Dashboard() {
 
     useEffect(() => {
         const token = Cookies.get('token');
-        fetch('http://localhost:8080/api/getArea', {
+        const apiUrl = localStorage.getItem('userInputIP');
+        console.log('apiUrl', apiUrl);
+        fetch(`${apiUrl}/api/getArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,8 +67,9 @@ function Dashboard() {
     };
 
     const removeArea = (id, action, reaction, inputAction, inputReaction) => {
-        console.log(action, reaction, inputAction, inputReaction);
-        fetch('http://localhost:8080/api/delArea', {
+        const apiUrl = localStorage.getItem('userInputIP');
+
+        fetch(`${apiUrl}/api/delArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +84,7 @@ function Dashboard() {
             }),
         })
             .then((response) => {
-                fetch('http://localhost:8080/api/DelEmailUser', {
+                fetch(`${apiUrl}/api/DelEmailUser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

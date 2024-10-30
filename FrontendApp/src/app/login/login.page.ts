@@ -4,6 +4,9 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TokenService } from '../services/token/token.service';
+import { AreaService } from '../services/area/area.service';
+import { UtilsService } from '../services/utils/utils.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -30,6 +33,8 @@ export class LoginPage implements OnInit {
     constructor(
         private loginService: LoginService,
         private tokenService: TokenService,
+        private areaService: AreaService,
+        private utilService: UtilsService,
         private localStorage: LocalStorageService,
         private router: Router
     ) {
@@ -37,7 +42,23 @@ export class LoginPage implements OnInit {
         this.inputPassword = '';
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (!localStorage.getItem('userInputIP')) {
+            const userInput = window.prompt(
+                'Please enter an IP address :',
+                environment.api
+            );
+            if (userInput) {
+                localStorage.setItem('userInputIP', userInput);
+            } else {
+                localStorage.setItem('userInputIP', environment.api);
+            }
+            this.loginService.API_URL = localStorage.getItem('userInputIP');
+            this.tokenService.API_URL = localStorage.getItem('userInputIP');
+            this.areaService.API_URL = localStorage.getItem('userInputIP');
+            this.utilService.API_URL = localStorage.getItem('userInputIP');
+        }
+    }
 
     onLogin() {
         this.loginService
@@ -61,6 +82,7 @@ export class LoginPage implements OnInit {
                         })
                     )
                     .subscribe((res) => {
+                        this.localStorage.setItem('email', res.email);
                         this.tokenService
                             .getServicesTokens(res.email)
                             .pipe(

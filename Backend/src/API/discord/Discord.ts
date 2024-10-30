@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import axios from 'axios';
 import { setUserName } from './Discord.query';
+import { updateService } from '../../routes/services/services.query';
 
 const client_id = process.env.DISCORD_CLIENT_ID!;
 const client_secret = process.env.DISCORD_CLIENT_SECRET!;
@@ -15,8 +16,24 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
+        console.log(origin);
         const scope = 'identify email guilds guilds.members.read bot';
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
+        res.redirect(authUrl);
+    });
+
+    app.get('/discord/login/:email', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
+        if (req.params.email)
+            origin += `_${req.params.email}`;
+        console.log(origin);
+        const scope = 'identify email guilds guilds.members.read bot';
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/discord/callback")}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
     });
 
@@ -35,7 +52,7 @@ module.exports = (app: Express) => {
             client_secret: client_secret,
             grant_type: 'authorization_code',
             code: code as string,
-            redirect_uri: redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/discord/callback" : redirect_uri,
         });
 
         try {
@@ -46,10 +63,27 @@ module.exports = (app: Express) => {
             );
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
-            const origin = req.query.state;
-            res.redirect(
-                `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
-            );
+            let state: any = req.query.state;
+            state = state.split('_');
+            const origin = state[0];
+            if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
+                const email = state[1];
+                await updateService(
+                    email,
+                    access_token,
+                    "discord_token"
+                );
+                await updateService(
+                    email,
+                    refresh_token,
+                    "discord_refresh"
+                );
+                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
+            } else {
+                res.redirect(
+                    `${origin}service?discord_token=${access_token}&discord_refresh=${refresh_token}`
+                );
+            }
         } catch (error) {
             console.error('Error retrieving access token:', error);
             res.send('Error during token retrieval');
