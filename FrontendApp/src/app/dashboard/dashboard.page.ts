@@ -44,6 +44,8 @@ export class DashboardPage implements OnInit {
     idDiscordInput: string = '';
     idDiscordInputFinal: string = '';
 
+    formattedReaction: string = '';
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -85,7 +87,7 @@ export class DashboardPage implements OnInit {
     menuItemsAction = [
         { action: 'Weather', label: 'When it rains', connected: false },
         { action: 'Email', label: 'When I receive an email', connected: false },
-        { action: 'Alerts', label: 'When it is alerts', connected: false },
+        { action: 'Alerts', label: 'When there are alerts', connected: false },
         { action: 'News', label: 'When news appears', connected: false },
         {
             action: 'DiscordUsername',
@@ -356,6 +358,7 @@ export class DashboardPage implements OnInit {
                                     }
                                 });
                         });
+
                 }
             } catch (error) {
                 console.error(
@@ -366,7 +369,83 @@ export class DashboardPage implements OnInit {
         }
     }
 
+
+    private async fetchGitHubData(url: string): Promise<any> {
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Erreur lors de l'appel de l'API GitHub :", error);
+            throw error;
+        }
+    }
+
+    private async getRep(githubOrgs: any[]) {
+        try {
+            const orgFetchPromises = githubOrgs.map(org =>
+                fetch(`https://api.github.com/users/${org.login}/repos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+            );
+            const orgRepos = await Promise.all(orgFetchPromises);
+            const flatOrgRepos = orgRepos.reduce((acc, val) => acc.concat(val), []);
+            return flatOrgRepos;
+        } catch (error) {
+            console.error('Failed to fetch repositories:', error);
+            return null;
+        }
+    }
+
+    existingReaction(reactInput: string, reaction: string) {
+        const spaceIndex = reactInput.indexOf(' ');
+
+        if (reaction === 'MP') {
+            console.log("MP: ", reaction)
+            const idDiscord = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            return `Id Discord: ${idDiscord}, Message: ${mess}`;
+        } else if (reaction === 'sendEmail') {
+            console.log("sendEmail: ", reaction)
+            const email = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            return `Email: ${email}, Message: ${mess}`;
+        } else if (reaction === 'Branch' || reaction === 'Issue') {
+            console.log("Issue: ", reaction)
+            const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
+            const orgUser = reactInput.substring(0, spaceIndex);
+            const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
+            const name = reactInput.substring(secondSpaceIndex + 1);
+            return `Organisation/User: ${orgUser}, Repos: ${repos}, Name/Title: ${name}`;
+        }
+        return reactInput;
+    }
+
     orgsVal(value: any) {
+        this.repChosen = '';
+        this.repfinal = '';
         this.orgChosen = value.detail.value;
         this.orgfinal = value.detail.value + ' ';
         this.filterRep = this.githubRep.filter(
@@ -408,7 +487,7 @@ export class DashboardPage implements OnInit {
             this.areaService.delArea(token, body).subscribe(() => {
                 this.areas = this.areas.filter((area) => area.id !== id);
             });
-            this.areaService.DelEmailUser(token).subscribe(() => {});
+            this.areaService.DelEmailUser(token).subscribe(() => { });
         }
     }
 

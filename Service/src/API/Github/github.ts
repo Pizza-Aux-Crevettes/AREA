@@ -1,8 +1,12 @@
 import { createIssue, createBranch } from "./github.query";
 
 export async function issueGithub(token:string, infos: string) {
-    const info = infos.split(' ');
-    const result = await createIssue(token, info[0], info[1], info[2])
+    const spaceIndex = infos.indexOf(' ');
+    const secondSpaceIndex = infos.indexOf(' ', spaceIndex + 1);
+    const owner = infos.substring(0, spaceIndex);
+    const repName = infos.substring(spaceIndex + 1, secondSpaceIndex);
+    const title = infos.substring(secondSpaceIndex + 1);
+    const result = await createIssue(token, owner, repName, title)
     if (result !== null) {
         return result;
     }
@@ -11,10 +15,14 @@ export async function issueGithub(token:string, infos: string) {
 }
 
 export async function branchGithub(token: string, infos: string) {
-    const info = infos.split(' ');
+    const spaceIndex = infos.indexOf(' ');
+    const secondSpaceIndex = infos.indexOf(' ', spaceIndex + 1);
+    const owner = infos.substring(0, spaceIndex);
+    const repName = infos.substring(spaceIndex + 1, secondSpaceIndex);
+    const title = infos.substring(secondSpaceIndex + 1);
     const randomInt = Math.floor(Math.random() * 3500) + 1;
     const randomIntToStr = randomInt.toString();
-    const result = await createBranch(token, info[0], info[1], info[2] + randomIntToStr)
+    const result = await createBranch(token, owner, repName, title + randomIntToStr)
     if (result !== null) {
         return result;
     }

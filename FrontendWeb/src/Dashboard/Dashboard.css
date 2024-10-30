@@ -80,6 +80,19 @@
     gap: 1%;
 }
 
+
+.container-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-item {
+    display: flex;
+    width: 1.8vw;
+    align-items: center;
+}
+
 .dashboard .rectangle-add {
     background-color: #7289da;
     border: 1px solid black;
@@ -129,7 +142,28 @@
 .popUp {
     background-color: #e90808 !important;
     position: absolute;
-    left: 42.5%;
-    top: 70px;
+    display: flex;
+    align-items: center;
+    top: 8%;
+    padding: 10px;
     border: 1px solid black;
+    width: 30vh;
+    height: 5vh;
+    border-radius: 5px;
+    z-index: 100;
+}
+
+.alreadyExist {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    background-color: #b5ceff;
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    width: 30vh;
+    height: 5.5vh;
+    padding: 10px;
+    gap: 8px;
+    overflow-y: auto;
 }

@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    api: 'http://10.0.2.2:8080',
+    api: 'https://area.leafs-studio.com',
 };

@@ -8,10 +8,19 @@ import {
     MenuDivider,
     Select,
     getBreakpointValue,
+    Tooltip,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
 import logo_cross from '../assets/cross.png';
+import icon_discord from '../assets/discord_black.png'
+import icon_github from '../assets/github.png'
+import icon_google from '../assets/google-black.png'
+import icon_spotify from '../assets/spotify-black.png'
+import icon_twitch from '../assets/twitch.png'
+import icon_weather from '../assets/weather.png'
+import icon_news from '../assets/news.png'
+
 import Cookies from 'cookies-js';
 
 const applyAcRea = async (
@@ -73,44 +82,24 @@ function RectangleDashboard({
     const [reaction, setReaction] = useState(contentReact);
     const buttonRef = useRef(null);
     const [menuItemsAction, setMenuItemsAction] = useState([
-        { action: 'Weather', label: 'When it rains', connected: false },
-        { action: 'Email', label: 'When I receive an email', connected: false },
-        { action: 'Alerts', label: 'When it is alerts', connected: false },
-        { action: 'News', label: 'When news appears', connected: false },
-        {
-            action: 'DiscordUsername',
-            label: 'When my discord username changes',
-            connected: false,
-        },
-        {
-            action: 'DiscordGuilds',
-            label: 'When my number of discord guilds change',
-            connected: false,
-        },
+        { action: 'Weather', label: 'When it rains', icon: icon_weather, connected: false },
+        { action: 'Email', label: 'When I receive an email', icon: icon_google, connected: false },
+        { action: 'Alerts', label: 'When an alert happens', icon: icon_weather, connected: false },
+        { action: 'News', label: 'When news is published', icon: icon_news, connected: false },
+        { action: 'DiscordUsername', label: 'When my username changes', icon: icon_discord, connected: false },
+        { action: 'DiscordGuilds', label: 'When my guild count changes', icon: icon_discord, connected: false },
     ]);
-
+    
     const [menuItemsReaction, setMenuItemsReaction] = useState([
-        { reaction: 'Spotify', label: 'Sad music is played', connected: false },
-        { reaction: 'sendEmail', label: 'Send an email', connected: false },
-        { reaction: 'MP', label: 'Send a mp', connected: false },
-        { reaction: 'Clip', label: 'Create a twitch clip', connected: false },
-        {
-            reaction: 'Event',
-            label: 'Create a Event on Google Calendar',
-            connected: false,
-        },
-        {
-            reaction: 'Issue',
-            label: 'Create an issue on github',
-            connected: false,
-        },
-        {
-            reaction: 'Branch',
-            label: 'Create a Branch on github',
-            connected: false,
-        },
+        { reaction: 'Spotify', label: 'Play sad music', icon: icon_spotify, connected: false },
+        { reaction: 'sendEmail', label: 'Send an email', icon: icon_google, connected: false },
+        { reaction: 'MP', label: 'Send a private message', icon: icon_discord, connected: false },
+        { reaction: 'Clip', label: 'Create a clip', icon: icon_twitch, connected: false },
+        { reaction: 'Event', label: 'Create an event on Google Calendar', icon: icon_google, connected: false },
+        { reaction: 'Issue', label: 'Create an issue', icon: icon_github, connected: false },
+        { reaction: 'Branch', label: 'Create a branch', icon: icon_github, connected: false },
     ]);
-
+    
     const [hoverText, setHoverText] = useState('');
 
     const [githubOrgs, setGithubOrgs] = useState([]);
@@ -286,6 +275,8 @@ function RectangleDashboard({
     };
 
     const orgsVal = (value) => {
+        setRepChosen('');
+        setRepfinal('');
         setOrgChosen(value);
         setOrgfinal(value + ' ');
     };
@@ -566,20 +557,73 @@ function RectangleDashboard({
         );
     };
 
+    const existingReaction = (reactInput) => {
+        const spaceIndex = reactInput.indexOf(' ');
+        if (reaction === 'MP') {
+            const idDiscord = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            const displayInput = 'Id Discord: ' + idDiscord + ", Message: " + mess;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else if (reaction === 'sendEmail') {
+            const email = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            const displayInput = 'Email: ' + email + ", Message: " + mess;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else if (reaction === 'Branch' || reaction === 'Issue') {
+            const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
+            const orgUser = reactInput.substring(0, spaceIndex);
+            const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
+            const name = reactInput.substring(secondSpaceIndex + 1);
+            const displayInput = 'Organisation/User: ' + orgUser + ", Repos: " + repos + ", Name/Title: " + name;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else {
+            <Tooltip label={reactInput}>
+                <div className='alreadyExist'>
+                    {reactInput}
+                </div>
+            </Tooltip>
+        }
+    }
+
+    const existingArea = () => {
+        return (
+            <>
+                {inputContentAct !== "Nothing" ?
+                    <Tooltip label={inputContentAct}>
+                        <div className='alreadyExist'>
+                            {inputContentAct}
+                        </div>
+                    </Tooltip> : null}
+                {inputContentReact !== "Nothing" && inputContentReact !== undefined ?
+                    existingReaction(inputContentReact)
+                    : null}
+
+            </>
+        )
+    }
+
     return (
         <>
             {hoverText ? (
-                <div
-                    className="popUp"
-                    style={{
-                        position: 'absolute',
-                        backgroundColor: 'white',
-                        padding: '10px',
-                        borderRadius: '5px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                        zIndex: 100,
-                    }}
-                >
+                <div className="popUp">
                     {hoverText}
                 </div>
             ) : (
@@ -596,7 +640,7 @@ function RectangleDashboard({
                     <Button onClick={handleRemove}>Yes</Button>
                 </Modal>
                 <div className="cont-rect">
-                    <Menu width={200} shadow="md">
+                    <Menu width={220} shadow="md">
                         <Menu.Target>
                             <Button
                                 className="button-menu"
@@ -630,7 +674,10 @@ function RectangleDashboard({
                                                 !item.connected
                                             }
                                         >
-                                            {item.label}
+                                            <div className='container-icon'>
+                                                <img src={item.icon} className='icon-item'/>  
+                                                {item.label}
+                                            </div>
                                         </Menu.Item>
                                     </div>
                                     {index !== menuItemsAction.length - 1 && (
@@ -641,30 +688,31 @@ function RectangleDashboard({
                         </Menu.Dropdown>
                     </Menu>
 
-                    {action === 'Weather' ? handleWeather() : null}
-                    {action === 'Alerts' ? handleAlerts() : null}
-                    {action === 'News'
+                    {alreadyExist ? existingArea() : null}
+                    {action === 'Weather' && !alreadyExist ? handleWeather() : null}
+                    {action === 'Alerts' && !alreadyExist ? handleAlerts() : null}
+                    {action === 'News' && !alreadyExist
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
 
-                    {reaction === 'Branch' || reaction == 'Issue'
+                    {(reaction === 'Branch' || reaction == 'Issue') && !alreadyExist
                         ? handleOrgs()
                         : null}
-                    {reaction === 'MP' ? handleInputIdDiscord() : null}
-                    {reaction === 'sendEmail' ? handleInputEmail() : null}
-                    {reaction === 'Branch' || reaction == 'Issue'
+                    {reaction === 'MP' && !alreadyExist ? handleInputIdDiscord() : null}
+                    {reaction === 'sendEmail' && !alreadyExist ? handleInputEmail() : null}
+                    {(reaction === 'Branch' || reaction == 'Issue') && !alreadyExist
                         ? handleRep()
                         : null}
-                    {reaction === 'MP' ||
-                    reaction === 'Clip' ||
-                    reaction === 'Event' ||
-                    reaction === 'Issue' ||
-                    reaction === 'Branch' ||
-                    reaction === 'sendEmail'
+                    {(reaction === 'MP' ||
+                        reaction === 'Clip' ||
+                        reaction === 'Event' ||
+                        reaction === 'Issue' ||
+                        reaction === 'Branch' ||
+                        reaction === 'sendEmail') && !alreadyExist
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
-                    <Menu width={200} shadow="md">
+                    <Menu width={220} shadow="md">
                         <Menu.Target>
                             <Button
                                 className="button-menu"
@@ -698,7 +746,10 @@ function RectangleDashboard({
                                                 item.connected === false
                                             }
                                         >
-                                            {item.label}
+                                            <div className='container-icon'>
+                                                <img src={item.icon} className='icon-item'/>  
+                                                {item.label}
+                                            </div>
                                         </Menu.Item>
                                     </div>
                                     {index !== menuItemsReaction.length - 1 && (
