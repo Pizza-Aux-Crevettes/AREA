@@ -39,6 +39,8 @@ export class DashboardPage implements OnInit {
     idDiscordInput: string = '';
     idDiscordInputFinal: string = '';
 
+    formattedReaction: string = '';
+
     serviceList: string[] = [
         'spotify_token',
         'twitch_token',
@@ -277,7 +279,7 @@ export class DashboardPage implements OnInit {
             try {
                 const orgsUser = await this.fetchGitHubData('https://api.github.com/user/orgs');
                 const personnalUser = await this.fetchGitHubData('https://api.github.com/user');
-                
+
                 if (orgsUser && personnalUser) {
                     this.githubOrgs = [...orgsUser, personnalUser];
                 }
@@ -305,7 +307,7 @@ export class DashboardPage implements OnInit {
             if (!response.ok) {
                 throw new Error(`Erreur HTTP! Statut: ${response.status}`);
             }
-    
+
             return await response.json();
         } catch (error) {
             console.error("Erreur lors de l'appel de l'API GitHub :", error);
@@ -340,28 +342,51 @@ export class DashboardPage implements OnInit {
         }
     }
 
-    orgsVal (value: any) {
-        console.log(this.githubRep)
+    existingReaction(reactInput: string, reaction: string) {
+        const spaceIndex = reactInput.indexOf(' ');
+
+        if (reaction === 'MP') {
+            console.log("MP: ", reaction)
+            const idDiscord = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            return `Id Discord: ${idDiscord}, Message: ${mess}`;
+        } else if (reaction === 'sendEmail') {
+            console.log("sendEmail: ", reaction)
+            const email = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            return `Email: ${email}, Message: ${mess}`;
+        } else if (reaction === 'Branch' || reaction === 'Issue') {
+            console.log("Issue: ", reaction)
+            const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
+            const orgUser = reactInput.substring(0, spaceIndex);
+            const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
+            const name = reactInput.substring(secondSpaceIndex + 1);
+            return `Organisation/User: ${orgUser}, Repos: ${repos}, Name/Title: ${name}`;
+        }
+        return reactInput;
+    }
+
+    orgsVal(value: any) {
         this.orgChosen = value.detail.value;
         this.orgfinal = value.detail.value + ' ';
         this.filterRep = this.githubRep.filter(userRep => userRep.owner.login === this.orgChosen);
     }
 
-    repsVal (value: any) {
-        this.repChosen= value.detail.value;
-        this.repfinal= value.detail.value + ' ';
+    repsVal(value: any) {
+        this.repChosen = value.detail.value;
+        this.repfinal = value.detail.value + ' ';
     }
 
     onSelectCity(event: any, area: Area) {
         area.inputAction = event.detail.value;
     }
 
-    emailInputChange (value: any){
+    emailInputChange(value: any) {
         this.emailInput = value.detail.value;
         this.emailInputFinal = value.detail.value + ' ';
     }
 
-    idDiscordInputChange (value: any){
+    idDiscordInputChange(value: any) {
         this.idDiscordInput = value.detail.value;
         this.idDiscordInputFinal = value.detail.value + ' ';
     }
@@ -381,7 +406,7 @@ export class DashboardPage implements OnInit {
             this.areaService.delArea(token, body).subscribe(() => {
                 this.areas = this.areas.filter((area) => area.id !== id);
             });
-            this.areaService.DelEmailUser(token).subscribe(() => {});
+            this.areaService.DelEmailUser(token).subscribe(() => { });
         }
     }
 
@@ -392,10 +417,10 @@ export class DashboardPage implements OnInit {
         inputReaction?: string
     ) {
         if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
-          inputAction = 'Nothing';
+            inputAction = 'Nothing';
         }
         if (reaction === 'Spotify') {
-          inputReaction = 'Nothing';
+            inputReaction = 'Nothing';
         }
         if (
             action === '' ||

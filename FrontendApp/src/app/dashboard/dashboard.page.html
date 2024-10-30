@@ -28,7 +28,7 @@
     </div>
 
 
-    <div class="flex-rectangle" *ngFor="let area of areas">
+    <div class="flex-rectangle" *ngFor="let area of areas; let i = index">
       <div class="main-rectangle">
         <div class="actionReaction-rect">
           <ion-list class="action-list">
@@ -43,7 +43,30 @@
             </ion-item>
           </ion-list>
 
-          <div *ngIf="area.action === 'Weather'" class="city-div">
+          <div id="hover-trigger-act-{{i}}" *ngIf="!area.local && area.inputAction !== 'Nothing'" class="input-div">
+            {{'hover-trigger-act-' + i}}
+            <ion-input class="input-balise" size="small" [value]="area.inputAction"
+              [disabled]="!area.local"></ion-input>
+            <ion-popover trigger="hover-trigger-act-{{i}}" triggerAction="click">
+              <ng-template>
+                <ion-content class="ion-padding">{{area.inputAction}}</ion-content>
+              </ng-template>
+            </ion-popover>
+          </div>
+
+          <div id="hover-trigger-react-{{i}}" *ngIf="!area.local && area.inputReaction !== 'Nothing'"
+            class="input-div">
+            {{i}}
+            <ion-input class="input-balise" size="small" [value]="existingReaction(area.inputReaction, area.reaction)"
+              [disabled]="!area.local"></ion-input>
+            <ion-popover trigger="hover-trigger-react-{{i}}" triggerAction="click">
+              <ng-template>
+                <ion-content class="ion-padding">{{existingReaction(area.inputReaction, area.reaction)}}</ion-content>
+              </ng-template>
+            </ion-popover>
+          </div>
+
+          <div *ngIf="area.action === 'Weather' && area.local" class="city-div">
             <ion-list class="city-list">
               <ion-item>
                 <ion-select aria-label="City" interface="popover" placeholder="City"
@@ -54,7 +77,7 @@
             </ion-list>
           </div>
 
-          <div *ngIf="area.action === 'Alert'" class="city-div">
+          <div *ngIf="area.action === 'Alert' && area.local" class="city-div">
             <ion-list class="city-list">
               <ion-item>
                 <ion-select aria-label="City" interface="popover" placeholder="City"
@@ -66,12 +89,12 @@
             </ion-list>
           </div>
 
-          <div *ngIf="area.action !== 'Weather' && area.action !== 'Alert'" class="input-div">
+          <div *ngIf="area.action === 'News' && area.local" class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputAction" placeholder="Enter a text"
               value="{{area.inputAction}}" [disabled]="!area.local"></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'Issue' || area.reaction === 'Branch'" class="city-div">
+          <div *ngIf="(area.reaction === 'Issue' || area.reaction === 'Branch') && area.local" class="city-div">
             <ion-list class="city-list">
               <ion-item>
                 <ion-select [disabled]="!area.local" interface="popover" placeholder="Organisations GitHub"
@@ -84,7 +107,7 @@
             </ion-list>
           </div>
 
-          <div *ngIf="area.reaction === 'Issue' || area.reaction === 'Branch'" class="city-div">
+          <div *ngIf="(area.reaction === 'Issue' || area.reaction === 'Branch') && area.local" class="city-div">
             <ion-list class="city-list">
               <ion-item>
                 <ion-select [disabled]="!area.local" interface="popover" placeholder="Repos GitHub"
@@ -97,20 +120,16 @@
             </ion-list>
           </div>
 
-          <div *ngIf="area.reaction === 'sendEmail'" class="input-div">
+          <div *ngIf="area.reaction === 'sendEmail' && area.local" class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="emailInput" placeholder="Email"
-            (ionInput)="emailInputChange($event)" [disabled]="!area.local"></ion-input>
+              (ionInput)="emailInputChange($event)" [disabled]="!area.local"></ion-input>
           </div>
 
-          <div *ngIf="area.reaction === 'MP'" class="input-div">
-            <ion-input class="input-balise" size="small" [(ngModel)]="idDiscordInput" placeholder="id Discord"
-            (ionInput)="idDiscordInputChange($event)" [disabled]="!area.local"></ion-input>
-          </div>
-
-          <div *ngIf="area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
-          area.reaction === 'Event' || area.reaction === 'Branch' || area.reaction === 'sendEmail'" class="input-div">
+          <div *ngIf="(area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
+          area.reaction === 'Event' || area.reaction === 'Branch' || area.reaction === 'sendEmail') && area.local"
+            class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
-              value="{{area.inputReaction}}"></ion-input>
+              value="{{area.inputReaction}}" [disabled]="!area.local"></ion-input>
           </div>
 
           <ion-list class="reaction-list">

@@ -8,6 +8,7 @@ import {
     MenuDivider,
     Select,
     getBreakpointValue,
+    Tooltip,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import './Dashboard.css';
@@ -509,6 +510,69 @@ function RectangleDashboard({
         );
     };
 
+    const existingReaction = (reactInput) => {
+        const spaceIndex = reactInput.indexOf(' ');
+        if (reaction === 'MP') {
+            const idDiscord = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            const displayInput = 'Id Discord: ' + idDiscord + ", Message: " + mess;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else if (reaction === 'sendEmail') {
+            const email = reactInput.substring(0, spaceIndex);
+            const mess = reactInput.substring(spaceIndex + 1);
+            const displayInput = 'Email: ' + email + ", Message: " + mess;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else if (reaction === 'Branch' || reaction === 'Issue') {
+            const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
+            const orgUser = reactInput.substring(0, spaceIndex);
+            const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
+            const name = reactInput.substring(secondSpaceIndex + 1);
+            const displayInput = 'Organisation/User: ' + orgUser + ", Repos: " + repos + ", Name/Title: " + name;
+            return (
+                <Tooltip label={displayInput}>
+                    <div className='alreadyExist'>
+                        {displayInput}
+                    </div>
+                </Tooltip>
+            )
+        } else {
+            <Tooltip label={reactInput}>
+                <div className='alreadyExist'>
+                    {reactInput}
+                </div>
+            </Tooltip>
+        }
+    }
+
+    const existingArea = () => {
+        return (
+            <>
+                {inputContentAct !== "Nothing" ?
+                    <Tooltip label={inputContentAct}>
+                        <div className='alreadyExist'>
+                            {inputContentAct}
+                        </div>
+                    </Tooltip> : null}
+                {inputContentReact !== "Nothing" && inputContentReact !== undefined ?
+                    existingReaction(inputContentReact)
+                    : null}
+
+            </>
+        )
+    }
+
     return (
         <>
             {hoverText ? (
@@ -577,26 +641,27 @@ function RectangleDashboard({
                         </Menu.Dropdown>
                     </Menu>
 
-                    {action === 'Weather' ? handleWeather() : null}
-                    {action === 'Alerts' ? handleAlerts() : null}
-                    {action === 'News'
+                    {alreadyExist ? existingArea() : null}
+                    {action === 'Weather' && !alreadyExist ? handleWeather() : null}
+                    {action === 'Alerts' && !alreadyExist ? handleAlerts() : null}
+                    {action === 'News' && !alreadyExist
                         ? handleInput(inputContentAct, 'inputAction')
                         : null}
 
-                    {reaction === 'Branch' || reaction == 'Issue'
+                    {(reaction === 'Branch' || reaction == 'Issue') && !alreadyExist
                         ? handleOrgs()
                         : null}
-                    {reaction === 'MP' ? handleInputIdDiscord() : null}
-                    {reaction === 'sendEmail' ? handleInputEmail() : null}
-                    {reaction === 'Branch' || reaction == 'Issue'
+                    {reaction === 'MP' && !alreadyExist ? handleInputIdDiscord() : null}
+                    {reaction === 'sendEmail' && !alreadyExist ? handleInputEmail() : null}
+                    {(reaction === 'Branch' || reaction == 'Issue') && !alreadyExist
                         ? handleRep()
                         : null}
-                    {reaction === 'MP' ||
-                    reaction === 'Clip' ||
-                    reaction === 'Event' ||
-                    reaction === 'Issue' ||
-                    reaction === 'Branch' ||
-                    reaction === 'sendEmail'
+                    {(reaction === 'MP' ||
+                        reaction === 'Clip' ||
+                        reaction === 'Event' ||
+                        reaction === 'Issue' ||
+                        reaction === 'Branch' ||
+                        reaction === 'sendEmail') && !alreadyExist
                         ? handleInput(inputContentReact, 'inputReaction')
                         : null}
 
