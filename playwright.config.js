@@ -60,18 +60,9 @@ module.exports = defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: [
-    {
-      command: 'cd Backend && npm run dev',
-      url: 'http://localhost:8080',
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'cd FrontendWeb && npm run start',
-      url: 'http://localhost:8081',
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-    }
-  ],
+  webServer: {
+    // command: './launch_docker.sh',
+    url: 'http://localhost:8081/',
+    reuseExistingServer: !process.env.CI,
+  },
 });

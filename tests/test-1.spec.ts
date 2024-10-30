@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:8081/');
   await page.getByPlaceholder('Email').click();
   await page.getByPlaceholder('Email').fill('areaepitech18@gmail.com');
   await page.getByPlaceholder('Password').click();
@@ -10,64 +9,63 @@ test.beforeEach(async ({ page }) => {
   await page.getByRole('heading', { name: 'Dashboard' }).isVisible();
 });
 
-test.describe('check weather and spotify work', () => {
+test.describe('select weather and send email work', () => {
   test('select weather action', async ({ page }) => {
-    await page.getByRole('button', { name: 'Action', exact: true }).first().click();
-    await expect(page.getByRole('menuitem', { name: 'When I recieve an email' })).toBeVisible();
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
     await page.getByRole('menuitem', { name: 'When it rains' }).click();
-    await page.getByRole('button', { name: 'Weather' }).isVisible();
+    await expect(page.getByRole('button', { name: 'Weather' })).toBeVisible();
   });
 
   test('select city (Lille)', async ({ page }) => {
-    await page.getByRole('button', { name: 'City' }).click();
-    await expect(page.getByRole('menuitem', { name: 'Lyon' })).toBeVisible();
-    await page.getByRole('menuitem', { name: 'Lille' }).click();
-    await page.getByRole('button', { name: 'Lille' }).isVisible();
+    await page.getByPlaceholder('City').click();
+    await page.getByText('Lille').click();
+    const city_weather = page.locator("//div[@class='rectangle']//input[@value='Lille'][not(@type='hidden')]");
+    await expect(city_weather).toBeVisible();
   })
 
-  test('select spotify reaction', async ({ page }) => {
-    await page.getByRole('button', { name: 'Action', exact: true }).first().click();
-    await expect(page.getByRole('menuitem', { name: 'When I recieve an email' })).toBeVisible();
-    await page.getByRole('menuitem', { name: 'When it rains' }).click();
-    await page.getByRole('button', { name: 'Spotify' }).isVisible();
+
+  test('select send email reaction', async ({ page }) => {await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Send an email' }).click();
+    await page.getByPlaceholder('Enter an email').click();
+    await page.getByPlaceholder('Enter an email').fill('test@gmail.com');
+    await page.getByPlaceholder('Enter your input').click();
+    await page.getByPlaceholder('Enter your input').fill('jojo');
+
   })
 
   test('apply weather/spotify', async ({ page }) => {
-    await page.getByRole('button', { name: 'Apply' }).first().click();
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    const disable_input = page.locator("//input[@placeholder = 'Enter an email'][@data-disabled = 'true']");
+    await expect(disable_input).toBeVisible();
+
   });
 });
 
-test('test', async ({ page }) => {
-  await page.getByRole('button', { name: 'Apply' }).first().click();
-  await page.getByRole('button', { name: 'City' }).click();
+test.describe('select receive mail and send mp(discord)', () => {
+  test('select email action', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add new area' }).click();
+    await page.getByRole('button', { name: 'Select action' }).click();
+    await page.getByRole('menuitem', { name: 'When I receive an email' }).click();
+    await expect(page.getByRole('button', { name: 'Email', exact: true })).toBeVisible();
+  });
 
-  await page.getByRole('button', { name: 'Apply' }).first().click();
+  test('select send mp (discord)', async ({ page }) => {
+    await page.getByRole('button', { name: 'Select reaction' }).click();
+    await page.getByRole('menuitem', { name: 'Send a mp' }).click();
+    await page.getByPlaceholder('Enter an id Discord').click();
+    await page.getByPlaceholder('Enter an id Discord').fill('id');
+    await page.locator('#mantine-j2rssfpmv').click();
+    await page.locator('#mantine-j2rssfpmv').fill('test');
+    await page.locator('#mantine-dpyc7fkh1-dropdown > div').first().click();
+    await page.locator('#mantine-hcomx40wf').fill('test');
+  })
 
-  await page.getByRole('button', { name: 'Add new area' }).click();
-  await expect(page.getByText('ActionReaction').nth(2)).toBeVisible();
-
-  await expect(page.getByRole('button', { name: 'Exit logo' })).toBeVisible();
-
-  await page.getByRole('img', { name: 'Menu logo' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Dashboard' })).toBeVisible();
-
-  await page.getByRole('menuitem', { name: 'Service Connection' }).click();
-  await expect(page.getByRole('heading', { name: 'Service Connection' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Connect to discord' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Connect to Twitch' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Connect to Google' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Connect to Spotify' })).toBeVisible();
-
-  await page.getByRole('button', { name: 'Connect to Spotify' }).click();
-  await page.getByTestId('login-username').click();
-  await page.getByTestId('login-username').fill('areaepitech18@gmail.com');
-  await page.getByTestId('login-password').click();
-  await page.getByTestId('login-password').fill('AreaEpitech31.');
-  await page.getByTestId('login-button').click();
-
-  await page.getByRole('img', { name: 'Menu logo' }).click();
-  await page.getByRole('menuitem', { name: 'Dashboard' }).click();
-
-  await page.getByRole('button', { name: 'Exit logo' }).click();
-  await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
+  test('apply email/mp(discord)', async ({ page }) => {
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
+    const disable_input = "//span[text() = 'MP']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'id test']";
+    await expect(page.locator(disable_input)).toBeVisible();
+  });
 });
