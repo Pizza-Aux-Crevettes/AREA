@@ -78,9 +78,9 @@ function Login() {
             const data = await resultToken.json();
             for (let i = 0; i < services.length; i++) {
                 if (data[0][`${services[i]}`] !== null) {
-                    Cookies.set(services[i], true);
+                    localStorage.setItem(services[i], true);
                 } else {
-                    Cookies.set(services[i], false);
+                    localStorage.setItem(services[i], false);
                 }
             }
             window.location.reload();

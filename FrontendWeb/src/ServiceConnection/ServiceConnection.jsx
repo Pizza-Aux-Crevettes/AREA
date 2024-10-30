@@ -119,8 +119,8 @@ function Service() {
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
-                Cookies.set(serviceList[i], 'true');
-                if (Cookies.get(serviceList[i]) === 'true') {
+                localStorage.setItem(serviceList[i], 'true');
+                if (localStorage.getItem(serviceList[i]) === 'true') {
                     registerService(serviceList[i]);
                     if (serviceList[i] === 'discord_token') {
                         fetch(`${apiUrl}/discord/me`, {
@@ -164,7 +164,7 @@ function Service() {
     };
 
     const defineStatusService = async () => {
-        if (Cookies.get('spotify_token') === 'true') {
+        if (localStorage.getItem('spotify_token') === 'true') {
             setSpotifyText('Disconnection of Spotify');
             setSpotifyStatus('#3AB700');
             setSpotifyConnect(true);
@@ -174,7 +174,7 @@ function Service() {
             setSpotifyConnect(false);
         }
 
-        if (Cookies.get('twitch_token') === 'true') {
+        if (localStorage.getItem('twitch_token') === 'true') {
             setTwitchText('Disconnection of Twitch');
             setTwitchStatus('#3AB700');
             setTwitchConnect(true);
@@ -184,7 +184,7 @@ function Service() {
             setTwitchConnect(false);
         }
 
-        if (Cookies.get('google_token') === 'true') {
+        if (localStorage.getItem('google_token') === 'true') {
             setGoogleText('Disconnection of Google');
             setGoogleStatus('#3AB700');
             setGoogleConnect(true);
@@ -194,7 +194,7 @@ function Service() {
             setGoogleConnect(false);
         }
 
-        if (Cookies.get('discord_token') === 'true') {
+        if (localStorage.getItem('discord_token') === 'true') {
             setDiscordText('Disconnection of Discord');
             setDiscordStatus('#3AB700');
             setDiscordConnect(true);
@@ -203,8 +203,7 @@ function Service() {
             setDiscordStatus('#33478f');
             setDiscordConnect(false);
         }
-        if (Cookies.get('github_token') === 'true') {
-            console.log('test');
+        if (localStorage.getItem('github_token') === 'true') {
             setGithubText('Disconnection of Github');
             setGithubStatus('#3AB700');
             setGithubConnect(true);
@@ -246,9 +245,9 @@ function Service() {
                                     serviceList[i],
                                     tokenList[0][`${serviceList[i]}`]
                                 );
-                                Cookies.set(serviceList[i], 'true');
+                                localStorage.setItem(serviceList[i], 'true');
                             } else {
-                                Cookies.set(serviceList[i], 'false');
+                                localStorage.setItem(serviceList[i], 'false');
                             }
                         }
                         defineStatusService();
@@ -277,12 +276,8 @@ function Service() {
                     })
                     .then((json) => {
                         const email = json.email;
-                        Cookies.set(service + '_token', '', {
-                            expires: -1,
-                        });
-                        Cookies.set(service + '_refresh', '', {
-                            expires: -1,
-                        });
+                        localStorage.removeItem(service + '_refresh');
+                        localStorage.removeItem(service + '_token');
                         if (service.toLowerCase() === 'discord') {
                             console.log('test');
                             fetch(`${apiUrl}/discord/username`, {
