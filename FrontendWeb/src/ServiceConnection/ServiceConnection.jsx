@@ -26,7 +26,7 @@ function RectangleService({ text, logo, Click, color_status }) {
     );
 }
 
-const registerService = async (service) => {
+const registerService = async (service, service_token) => {
     const apiUrl = localStorage.getItem('userInputIP');
 
     try {
@@ -43,7 +43,6 @@ const registerService = async (service) => {
         const json = await response.json();
 
         if (json && json.email) {
-            const token = localStorage.getItem(service);
             const userEmail = json.email;
             fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
@@ -53,7 +52,7 @@ const registerService = async (service) => {
                 },
                 body: JSON.stringify({
                     userEmail: userEmail,
-                    token: token,
+                    token: service_token,
                     service: service,
                 }),
             })
@@ -122,7 +121,7 @@ function Service() {
                 console.log("oui j'ai un token");
                 localStorage.setItem(serviceList[i], 'true');
                 if (localStorage.getItem(serviceList[i]) === 'true') {
-                    registerService(serviceList[i]);
+                    registerService(serviceList[i], token);
                     if (serviceList[i] === 'discord_token') {
                         fetch(`${apiUrl}/discord/me`, {
                             method: 'GET',
