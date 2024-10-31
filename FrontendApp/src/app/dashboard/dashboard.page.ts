@@ -423,17 +423,14 @@ export class DashboardPage implements OnInit {
         const spaceIndex = reactInput.indexOf(' ');
 
         if (reaction === 'MP') {
-            console.log("MP: ", reaction)
             const idDiscord = reactInput.substring(0, spaceIndex);
             const mess = reactInput.substring(spaceIndex + 1);
             return `Id Discord: ${idDiscord}, Message: ${mess}`;
         } else if (reaction === 'sendEmail') {
-            console.log("sendEmail: ", reaction)
             const email = reactInput.substring(0, spaceIndex);
             const mess = reactInput.substring(spaceIndex + 1);
             return `Email: ${email}, Message: ${mess}`;
         } else if (reaction === 'Branch' || reaction === 'Issue') {
-            console.log("Issue: ", reaction)
             const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
             const orgUser = reactInput.substring(0, spaceIndex);
             const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
@@ -502,6 +499,18 @@ export class DashboardPage implements OnInit {
         }
         if (reaction === 'Spotify') {
             inputReaction = 'Nothing';
+        }
+        if ((reaction === 'Branch' || reaction === 'Issue') && this.orgfinal === '' && this.repfinal === '') {
+            alert('Please complete all fields');
+            return;
+        }
+        if (reaction === 'MP' && this.idDiscordInputFinal === '') {
+            alert('Please complete all fields');
+            return;
+        }
+        if (reaction === 'sendEmail' && this.emailInputFinal === '') {
+            alert('Please complete all fields');
+            return;
         }
         if (
             action === '' ||

@@ -27,6 +27,10 @@ const applyAcRea = async (
     action,
     reaction,
     inputAction,
+    idDiscordInputFinal,
+    emailInputFinal,
+    orgfinal,
+    repfinal,
     inputReaction,
     apiUrl
 ) => {
@@ -40,6 +44,18 @@ const applyAcRea = async (
     if (reaction === 'Spotify') {
         inputReaction = 'Nothing';
     }
+    if ((reaction === 'Branch' || reaction === 'Issue') && orgfinal === '' && repfinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
+    if (reaction === 'MP' && idDiscordInputFinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
+    if (reaction === 'sendEmail' && emailInputFinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
     if (action && reaction && inputReaction && inputAction) {
         fetch(`${apiUrl}/api/setArea`, {
             method: 'POST',
@@ -52,7 +68,7 @@ const applyAcRea = async (
                 action: action,
                 reaction: reaction,
                 inputAct: inputAction,
-                inputReact: inputReaction,
+                inputReact: idDiscordInputFinal + emailInputFinal + orgfinal + repfinal + inputReaction,
             }),
         })
             .then((response) => {
@@ -89,7 +105,7 @@ function RectangleDashboard({
         { action: 'DiscordUsername', label: 'When my username changes', icon: icon_discord, connected: false },
         { action: 'DiscordGuilds', label: 'When my guild count changes', icon: icon_discord, connected: false },
     ]);
-    
+
     const [menuItemsReaction, setMenuItemsReaction] = useState([
         { reaction: 'Spotify', label: 'Play sad music', icon: icon_spotify, connected: false },
         { reaction: 'sendEmail', label: 'Send an email', icon: icon_google, connected: false },
@@ -99,7 +115,7 @@ function RectangleDashboard({
         { reaction: 'Issue', label: 'Create an issue', icon: icon_github, connected: false },
         { reaction: 'Branch', label: 'Create a branch', icon: icon_github, connected: false },
     ]);
-    
+
     const [hoverText, setHoverText] = useState('');
 
     const [githubOrgs, setGithubOrgs] = useState([]);
@@ -595,11 +611,13 @@ function RectangleDashboard({
                 </Tooltip>
             )
         } else {
-            <Tooltip label={reactInput}>
-                <div className='alreadyExist'>
-                    {reactInput}
-                </div>
-            </Tooltip>
+            return (
+                <Tooltip label={reactInput}>
+                    <div className='alreadyExist'>
+                        {reactInput}
+                    </div>
+                </Tooltip>
+            )
         }
     }
 
@@ -675,7 +693,7 @@ function RectangleDashboard({
                                             }
                                         >
                                             <div className='container-icon'>
-                                                <img src={item.icon} className='icon-item'/>  
+                                                <img src={item.icon} className='icon-item' />
                                                 {item.label}
                                             </div>
                                         </Menu.Item>
@@ -747,7 +765,7 @@ function RectangleDashboard({
                                             }
                                         >
                                             <div className='container-icon'>
-                                                <img src={item.icon} className='icon-item'/>  
+                                                <img src={item.icon} className='icon-item' />
                                                 {item.label}
                                             </div>
                                         </Menu.Item>
@@ -772,11 +790,11 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            idDiscordInputFinal +
-                                emailInputFinal +
-                                orgfinal +
-                                repfinal +
-                                inputContentReact,
+                            idDiscordInputFinal,
+                            emailInputFinal,
+                            orgfinal,
+                            repfinal,
+                            inputContentReact,
                             apiUrl
                         )
                     }
