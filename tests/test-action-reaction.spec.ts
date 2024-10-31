@@ -23,7 +23,7 @@ test.afterEach(async ({ page }) => {
 test.describe('create action and reaction', () => {
   test('select weather and send email work', async ({ page }) => {
     await page.getByRole('button', { name: 'Add new area' }).click();
-    await page.getByRole('button', { name: 'Select action' }).click();
+      await page.getByRole('button', { name: 'Select action' }).click();
     await page.getByRole('menuitem', { name: 'When it rains' }).click();
     // select city (Lille)
     await page.getByPlaceholder('City').click();
@@ -42,7 +42,7 @@ test.describe('create action and reaction', () => {
     // apply weather/spotify
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
-    const disable_input = page.locator("//input[@placeholder = 'Enter an email'][@data-disabled = 'true']");
+    const disable_input = page.locator("//div[@class = 'alreadyExist'][text() = 'Lille']");
     await expect(disable_input).toBeVisible();
   });
 
@@ -53,7 +53,7 @@ test.describe('create action and reaction', () => {
 
     // select send mp (discord)
     await page.getByRole('button', { name: 'Select reaction' }).click();
-    await page.getByRole('menuitem', { name: 'Send a mp' }).click();
+    await page.getByRole('menuitem', { name: 'Send a private message' }).click();
     await page.getByPlaceholder('Enter an id Discord').click();
     await page.getByPlaceholder('Enter an id Discord').fill('id');
     const input_clip = "//span[text() = 'MP']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']"
@@ -62,15 +62,15 @@ test.describe('create action and reaction', () => {
 
     // apply email/mp(discord)
     await page.getByRole('button', { name: 'Apply' }).click();
-    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
-    const disable_input = "//span[text() = 'MP']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'id test']";
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    const disable_input = "//div[@class = 'alreadyExist'][text() = 'Id Discord: id, Message: test']";
     await expect(page.locator(disable_input)).toBeVisible();
   });
 
   test('select alerts and twitch clip', async ({ page }) => {
     await page.getByRole('button', { name: 'Add new area' }).click();
     await page.getByRole('button', { name: 'Select action' }).click();
-    await page.getByRole('menuitem', { name: 'When it is alerts' }).click();
+    await page.getByRole('menuitem', { name: 'When an alert happens' }).click();
 
     // select city (Tokyo)
     await page.locator("//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@placeholder='City']").click();
@@ -80,7 +80,7 @@ test.describe('create action and reaction', () => {
 
     // select twitch reaction
     await page.getByRole('button', { name: 'Select reaction' }).click();
-    await page.getByRole('menuitem', { name: 'Create a twitch clip' }).click();
+    await page.getByRole('menuitem', { name: 'Create a clip' }).click();
 
     // fill twitch input
     const input_twitch = "//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']";
@@ -90,14 +90,15 @@ test.describe('create action and reaction', () => {
     // apply alerts/twitch
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
-    const disable_input = "//span[text() = 'Alerts']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@placeholder='Enter your input']";
+    //! to check
+    const disable_input = "//div[@class = 'alreadyExist'][text() = 'Tokyo']";
     await expect(page.locator(disable_input)).toBeVisible();
   });
 
   test('select News and calendar', async ({ page }) => {
     await page.getByRole('button', { name: 'Add new area' }).click();
     await page.getByRole('button', { name: 'Select action' }).click();
-    await page.getByRole('menuitem', { name: 'When news appears' }).click();
+    await page.getByRole('menuitem', { name: 'When news is published' }).click();
 
     // fill input news
     const news_input = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input']";
@@ -106,7 +107,7 @@ test.describe('create action and reaction', () => {
 
     // select calendar reaction
     await page.getByRole('button', { name: 'Select reaction' }).click();
-    await page.getByRole('menuitem', { name: 'Create a Event on Google' }).click();
+    await page.getByRole('menuitem', { name: 'Create an event on Google Calendar' }).click();
 
     // fill calendar input
     const input_calendar = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@placeholder='Enter your input'][@value='']";
@@ -116,7 +117,7 @@ test.describe('create action and reaction', () => {
     // apply News/calendar'
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
-    const disable_input = "//span[text() = 'News']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value='Tesla']"
+    const disable_input = "//div[@class = 'alreadyExist'][text() = 'Tesla']"
     await expect(page.locator(disable_input)).toBeVisible();
   });
 
@@ -127,7 +128,7 @@ test.describe('create action and reaction', () => {
 
     // select github issue'
     await page.getByRole('button', { name: 'Select reaction' }).click();
-    await page.getByRole('menuitem', { name: 'Create an issue on github' }).click();
+    await page.getByRole('menuitem', { name: 'Create an issue' }).click();
 
     // fill github issue'
     await page.getByPlaceholder('Organisations github').click();
@@ -141,7 +142,7 @@ test.describe('create action and reaction', () => {
     // apply email/github
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
-    const disable_input = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'EnzoDIWLK EnzoDIWLK test']";
+    const disable_input = "//div[@class = 'alreadyExist'][text() = 'Organisation/User: EnzoDIWLK, Repos: EnzoDIWLK, Name/Title: test']";
     await expect(page.locator(disable_input)).toBeVisible();
   });
 
@@ -152,7 +153,7 @@ test.describe('create action and reaction', () => {
 
     // select github branch
     await page.getByRole('button', { name: 'Select reaction' }).click();
-    await page.getByRole('menuitem', { name: 'Create a branch on github' }).click();
+    await page.getByRole('menuitem', { name: 'Create a branch' }).click();
 
     // fill github branch
     await page.getByPlaceholder('Organisations github').click();
@@ -166,7 +167,7 @@ test.describe('create action and reaction', () => {
     // apply email/github branch
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();;
-    const disable_input = "//span[text() = 'Email']/parent::span/parent::button/parent::div//input[@data-disabled='true'][@value= 'EnzoDIWLK EnzoDIWLK test']";
+    const disable_input = "//div[@class = 'alreadyExist'][text() = 'Organisation/User: EnzoDIWLK, Repos: EnzoDIWLK, Name/Title: test']";
     await expect(page.locator(disable_input)).toBeVisible();
   });
 });
