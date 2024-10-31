@@ -346,47 +346,47 @@ function RectangleDashboard({
     const checkServicesConnexion = async (area) => {
         switch (area) {
             case 'Email':
-                if (Cookies.get('google_token') === 'false') {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordUsername':
-                if (Cookies.get('discord_token') === 'false') {
+                if (localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordGuilds':
-                if (Cookies.get('discord_token') === 'false') {
+                if (localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Spotify':
-                if (Cookies.get('spotify_token') === 'false') {
+                if (localStorage.getItem('spotify_token') === 'false') {
                     return false;
                 }
                 break;
             case 'sendEmail':
-                if (Cookies.get('google_token') === 'false') {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Clip':
-                if (Cookies.get('twitch_token') === 'false') {
+                if (localStorage.getItem('twitch_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Event':
-                if (Cookies.get('google_token') === 'false') {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Issue':
-                if (Cookies.get('github_token') === 'false') {
+                if (localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Branch':
-                if (Cookies.get('github_token') === 'false') {
+                if (localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
