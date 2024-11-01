@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AreaService } from 'src/app/services/area/area.service';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
-import { IonSelect } from '@ionic/angular';
+import { IonSelect, ActionSheetController } from '@ionic/angular';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { TokenService } from '../services/token/token.service';
 import { ApiService } from '../services/api/api.service';
@@ -23,6 +23,11 @@ interface Area {
 export class DashboardPage implements OnInit {
     isDislexicFontEnabled?: boolean;
     hoverText: string = '';
+    selectedActionLabel = 'Action';
+    selectedActionIcon = 'ellipse';
+    selectedReactionLabel = 'Reaction';
+    selectedReactionIcon = 'ellipse';
+    showIcon = false;
 
     areas: Area[] = [];
 
@@ -85,42 +90,22 @@ export class DashboardPage implements OnInit {
     ];
 
     menuItemsAction = [
-        { action: 'Weather', label: 'When it rains', connected: false },
-        { action: 'Email', label: 'When I receive an email', connected: false },
-        { action: 'Alerts', label: 'When there are alerts', connected: false },
-        { action: 'News', label: 'When news appears', connected: false },
-        {
-            action: 'DiscordUsername',
-            label: 'When my discord username changes',
-            connected: false,
-        },
-        {
-            action: 'DiscordGuilds',
-            label: 'When my number of discord guilds change',
-            connected: false,
-        },
+        { action: 'Weather', label: 'When it rains', icon: 'rainy-outline', connected: false },
+        { action: 'Email', label: 'When I receive an email', icon: 'logo-google', connected: false },
+        { action: 'Alerts', label: 'When an alert happens', icon: 'rainy-outline', connected: false },
+        { action: 'News', label: 'When news is published', icon: 'newspaper', connected: false },
+        { action: 'DiscordUsername', label: 'When my username changes', icon: 'logo-discord', connected: false },
+        { action: 'DiscordGuilds', label: 'When my guild count changes', icon: 'logo-discord', connected: false },
     ];
 
     menuItemsReaction = [
-        { reaction: 'Spotify', label: 'Sad music is played', connected: false },
-        { reaction: 'sendEmail', label: 'Send an email', connected: false },
-        { reaction: 'MP', label: 'Send a mp', connected: false },
-        { reaction: 'Clip', label: 'Create a twitch clip', connected: false },
-        {
-            reaction: 'Event',
-            label: 'Create a Event on Google Calendar',
-            connected: false,
-        },
-        {
-            reaction: 'Issue',
-            label: 'Create an issue github',
-            connected: false,
-        },
-        {
-            reaction: 'Branch',
-            label: 'Create a branch github',
-            connected: false,
-        },
+        { reaction: 'Spotify', label: 'Play sad music', icon: 'musical-notes', connected: false },
+        { reaction: 'sendEmail', label: 'Send an email', icon: 'logo-google', connected: false },
+        { reaction: 'MP', label: 'Send a private message', icon: 'logo-discord', connected: false },
+        { reaction: 'Clip', label: 'Create a clip', icon: 'logo-twitch', connected: false },
+        { reaction: 'Event', label: 'Create an event on Google Calendar', icon: 'logo-google', connected: false },
+        { reaction: 'Issue', label: 'Create an issue', icon: 'logo-github', connected: false },
+        { reaction: 'Branch', label: 'Create a branch', icon: 'logo-github', connected: false },
     ];
 
     emptyField: string = '';
@@ -130,6 +115,8 @@ export class DashboardPage implements OnInit {
         private areaService: AreaService,
         private utilsService: UtilsService,
         private tokenService: TokenService,
+        private actionSheetCtrl: ActionSheetController,
+        private reactionSheetCtrl: ActionSheetController
         private apiService: ApiService
     ) {}
 
@@ -270,12 +257,12 @@ export class DashboardPage implements OnInit {
         this.utilsService.onSelectParam(event, this);
     }
 
-    onSelectAction(event: any, area: Area) {
-        area.action = event.detail.value;
+    onSelectAction(action: string, area: Area) {
+        area.action = action;
     }
 
-    async onSelectReaction(event: any, area: Area) {
-        area.reaction = event.detail.value;
+    async onSelectReaction(reaction: string, area: Area) {
+        area.reaction = reaction;
         this.orgChosen = '';
         this.orgfinal = '';
         this.repChosen = '';
@@ -368,6 +355,52 @@ export class DashboardPage implements OnInit {
             }
         }
     }
+
+    async openActionSheet(area: Area) {
+        const buttons = this.menuItemsAction.map(item => ({
+            text: item.label,
+            icon: item.icon,
+            cssClass: item.connected ? '' : 'disabled-button',
+            handler: () => {
+            if (item.connected) {
+                    this.onSelectAction(item.action, area);
+                    this.selectedActionLabel = item.action;
+                    this.selectedActionIcon = item.icon;
+                }
+            },
+                disabled: !item.connected
+        }));
+      
+        const actionSheet = await this.actionSheetCtrl.create({
+          header: 'Select Action',
+          buttons: buttons
+        });
+      
+        await actionSheet.present();
+      }      
+
+      async openReactionSheet(area: Area) {
+        const buttons = this.menuItemsReaction.map(item => ({
+            text: item.label,
+            icon: item.icon,
+            cssClass: item.connected ? '' : 'disabled-button',
+            handler: () => {
+                if (item.connected) {
+                    this.onSelectReaction(item.reaction, area);
+                    this.selectedReactionLabel = item.reaction;
+                    this.selectedReactionIcon = item.icon;
+                }
+            },
+            disabled: !item.connected
+        }));
+    
+        const reactionSheet = await this.reactionSheetCtrl.create({
+          header: 'Select Reaction',
+          buttons: buttons
+        });
+    
+        await reactionSheet.present();
+      }
 
 
     private async fetchGitHubData(url: string): Promise<any> {
