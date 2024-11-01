@@ -116,7 +116,7 @@ export class DashboardPage implements OnInit {
         private utilsService: UtilsService,
         private tokenService: TokenService,
         private actionSheetCtrl: ActionSheetController,
-        private reactionSheetCtrl: ActionSheetController
+        private reactionSheetCtrl: ActionSheetController,
         private apiService: ApiService
     ) {}
 
