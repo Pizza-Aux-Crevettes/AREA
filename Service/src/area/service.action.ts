@@ -39,7 +39,7 @@ export async function setActions(
             );
             break;
         case 'News':
-            result = await getNewsDatas(email, inputAction);
+            result = await getNewsDatas(email, inputAction, id);
             break;
         case 'Email':
             result = await haveMail(email, token[0].google_token);
