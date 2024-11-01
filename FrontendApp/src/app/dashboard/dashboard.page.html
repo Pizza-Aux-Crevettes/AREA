@@ -27,21 +27,13 @@
       </div>
     </div>
 
-
     <div class="flex-rectangle" *ngFor="let area of areas; let i = index">
       <div class="main-rectangle">
         <div class="actionReaction-rect">
-          <ion-list class="action-list">
-            <ion-item>
-              <ion-select aria-label="Action" interface="popover" placeholder="Action"
-                (ionChange)="onSelectAction($event, area)" [(ngModel)]="area.action" [disabled]="!area.local">
-                <ion-select-option *ngFor="let item of menuItemsAction" [value]="item.action"
-                  [disabled]="area.action === item.action || !item.connected">
-                  {{ item.label }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
+            <ion-button (click)="openActionSheet(area)" [disabled]="!area.local" class="button-action-style">
+              <ion-icon *ngIf="showIcon && selectedActionIcon" [src]="selectedActionIcon" slot="start" color="black"></ion-icon>
+              {{ selectedActionLabel || 'Select Action' }}
+            </ion-button>
 
           <div id="hover-trigger-act-{{i}}" *ngIf="!area.local && area.inputAction !== 'Nothing'" class="input-div">
             {{'hover-trigger-act-' + i}}
@@ -77,7 +69,7 @@
             </ion-list>
           </div>
 
-          <div *ngIf="area.action === 'Alert' && area.local" class="city-div">
+          <div *ngIf="area.action === 'Alerts' && area.local" class="city-div">
             <ion-list class="city-list">
               <ion-item>
                 <ion-select aria-label="City" interface="popover" placeholder="City"
@@ -131,19 +123,11 @@
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
               value="{{area.inputReaction}}" [disabled]="!area.local"></ion-input>
           </div>
+              <ion-button (click)="openReactionSheet(area)" class="button-reaction-style">
+                <ion-icon *ngIf="showIcon && selectedReactionIcon" [src]="selectedReactionIcon" slot="start"></ion-icon>
+                <ion-text>{{ selectedReactionLabel || 'Select Reaction' }}</ion-text>
+              </ion-button>
 
-          <ion-list class="reaction-list">
-            <ion-item>
-              <ion-select aria-label="Reaction" interface="popover" placeholder="Reaction"
-                (ionChange)="onSelectReaction($event, area)" [(ngModel)]="area.reaction" value="{{area.reaction}}"
-                [disabled]="!area.local">
-                <ion-select-option *ngFor="let item of menuItemsReaction" [value]="item.reaction"
-                  [disabled]="area.reaction === item.reaction || !item.connected">
-                  {{ item.label }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
 
           <ion-button *ngIf="area.local" size="small" fill="solid" class="apply-button"
             (click)="ApplyArea(area.action, area.reaction, area.inputAction, area.inputReaction)">
