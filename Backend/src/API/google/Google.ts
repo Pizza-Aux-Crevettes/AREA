@@ -31,11 +31,10 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        if (req.params.email)
-            origin += `_${req.params.email}`;
+        if (req.params.email) origin += `_${req.params.email}`;
         const scope =
             'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/google/callback")}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/google/callback')}&state=${encodeURIComponent(origin)}&access_type=offline&prompt=consent`;
         res.redirect(authUrl);
     });
 
@@ -53,7 +52,9 @@ module.exports = (app: Express) => {
             code: code as string,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/google/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@')
+                ? 'https://area.leafs-studio.com/google/callback'
+                : redirect_uri,
             grant_type: 'authorization_code',
         });
 
@@ -71,24 +72,18 @@ module.exports = (app: Express) => {
             const origin = state[0];
             if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
                 const email = state[1];
-                await updateService(
-                    email,
-                    access_token,
-                    "google_token"
+                await updateService(email, access_token, 'google_token');
+                await updateService(email, access_token, 'google_refresh');
+                res.send(
+                    '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
-                await updateService(
-                    email,
-                    access_token,
-                    "google_refresh"
-                );
-                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
                 res.redirect(
                     `${origin}service?google_token=${access_token}&google_refresh=${refresh_token}`
                 );
             }
         } catch (error) {
-            console.error('Error retrieving access token:', error);
+            console.error('Error retrieving access token :', error);
             res.send('Error during token retrieval');
         }
     });
@@ -100,10 +95,11 @@ module.exports = (app: Express) => {
         const result = await delMailUser(decoded.email);
 
         if (result === null) {
-            res.status(400).json({ msg: 'Cannot delete the Email' });
+            res.status(400).json({ msg: 'Cannot delete the email' });
+            return;
         }
         res.status(200).json({
-            msg: 'Email deleted successfully.',
+            msg: 'Email deleted successfully',
         });
     });
 };

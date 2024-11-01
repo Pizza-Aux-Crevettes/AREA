@@ -20,7 +20,7 @@ export async function setNewArea(
         ])
         .select();
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return data;
@@ -28,13 +28,6 @@ export async function setNewArea(
 }
 
 export async function delArea(email: string, body: any): Promise<any> {
-    console.log(
-        email,
-        body.action,
-        body.reaction,
-        body.inputAct,
-        body.inputReact
-    );
     if (body.inputReact) {
         const { data, error } = await supabase.from('ActReact').delete().match({
             userEmail: email,
@@ -44,7 +37,7 @@ export async function delArea(email: string, body: any): Promise<any> {
             inputReaction: body.inputReact,
         });
         if (error) {
-            console.log(error);
+            console.error(error);
             return null;
         } else {
             return true;
@@ -57,7 +50,7 @@ export async function delArea(email: string, body: any): Promise<any> {
             inputAction: body.inputAct,
         });
         if (error) {
-            console.log(error);
+            console.error(error);
             return null;
         } else {
             return true;
@@ -71,7 +64,7 @@ export async function getArea(user_email: string): Promise<any> {
         .select('*')
         .eq('userEmail', user_email);
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return data;

@@ -22,7 +22,6 @@ function Dashboard() {
     useEffect(() => {
         const token = Cookies.get('token');
         const apiUrl = localStorage.getItem('userInputIP');
-        console.log('apiUrl', apiUrl);
         fetch(`${apiUrl}/api/getArea`, {
             method: 'POST',
             headers: {

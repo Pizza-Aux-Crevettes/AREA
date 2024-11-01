@@ -7,7 +7,7 @@ const client_secret = process.env.GITHUB_CLIENT_SECRET!;
 const redirect_uri = 'http://localhost:8080/github/callback';
 
 module.exports = (app: Express) => {
-    app.get("/github/login", (req, res) => {
+    app.get('/github/login', (req, res) => {
         let origin: string;
         if (req.headers.referer !== undefined) {
             origin = req.headers.referer;
@@ -15,23 +15,22 @@ module.exports = (app: Express) => {
             origin = '';
         }
         const scope = 'repo user admin:org write:issue';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
-    })
+    });
 
-    app.get("/github/login/:email", (req, res) => {
+    app.get('/github/login/:email', (req, res) => {
         let origin: string;
         if (req.headers.referer !== undefined) {
             origin = req.headers.referer;
         } else {
             origin = '';
         }
-        if (req.params.email)
-            origin += `_${req.params.email}`;
+        if (req.params.email) origin += `_${req.params.email}`;
         const scope = 'repo user write:issue';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/github/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/github/callback')}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
-    })
+    });
 
     app.get('/github/callback', async (req, res) => {
         const code = req.query.code || null;
@@ -42,7 +41,9 @@ module.exports = (app: Express) => {
             code: code as string,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/github/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@')
+                ? 'https://area.leafs-studio.com/github/callback'
+                : redirect_uri,
         });
 
         const headers = {
@@ -50,12 +51,9 @@ module.exports = (app: Express) => {
         };
 
         try {
-            const response = await axios.post(
-                tokenUrl,
-                bodyParams,
-                {headers}
-            );
-            console.log(response.data)
+            const response = await axios.post(tokenUrl, bodyParams, {
+                headers,
+            });
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
             let state: any = req.query.state;
@@ -63,44 +61,18 @@ module.exports = (app: Express) => {
             const origin = state[0];
             if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
                 const email = state[1];
-                await updateService(
-                    email,
-                    access_token,
-                    "github_token"
+                await updateService(email, access_token, 'github_token');
+                res.send(
+                    '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
-                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
-
                 res.redirect(
                     `${origin}service?github_token=${access_token}&github_refresh=${refresh_token}`
                 );
             }
         } catch (error) {
-            console.error('Error retrieving access token:', error);
+            console.error('Error retrieving access token :', error);
             res.send('Error during token retrieval');
         }
     });
-
-    app.get('/github/refresh_token', async (req, res) => {
-        const refresh_token = req.query.refresh_token || null;
-        const githubrefreshURL = 'https://github.com/login/oauth/access_token';
-        const bodyParams = new URLSearchParams({
-            client_id: client_id,
-            client_secret: client_secret,
-            refresh_token: refresh_token as string,
-            grant_type: 'refresh_token',
-        });
-
-        try {
-            const response = await axios.post(githubrefreshURL, bodyParams);
-            res.json({
-                access_token: response.data.access_token,
-                refresh_token: response.data.refresh_token || refresh_token,
-                expires_in: response.data.expires_in,
-            });
-        } catch (error) {
-            console.error('Error refreshing Twitch token:', error);
-            res.status(500).send('Error during token refresh');
-        }
-    });
-}
+};

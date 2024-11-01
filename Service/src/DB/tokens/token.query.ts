@@ -6,7 +6,7 @@ export async function getTokensConnections(email: string): Promise<any> {
         .select('*')
         .eq('user_email', email);
     if (error) {
-        console.log(error);
+        console.error('Error when getting connexions tokens :', error);
         return null;
     } else {
         return data;

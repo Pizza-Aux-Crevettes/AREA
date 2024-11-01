@@ -72,7 +72,6 @@ export class ServicePage implements OnInit {
         this.tokenService.getUserData(this.token).subscribe((res) => {
             let email = res.email;
             this.tokenService.getServicesTokens(email).subscribe((res) => {
-                console.log(res);
                 let tokenList = res[0];
                 for (let i = 0; i < this.serviceList.length; i++) {
                     if (tokenList[`${this.serviceList[i]}`]) {
@@ -92,27 +91,11 @@ export class ServicePage implements OnInit {
                                     res.userData.username,
                                     res.guildCount
                                 )
-                                .subscribe((res) => {
-                                    console.log(res);
-                                });
+                                .subscribe((res) => {});
                         });
                 }
             });
         });
-    }
-
-    clearUrl() {
-        const url = window.location.href.split('?')[0];
-        window.history.replaceState({}, document.title, url);
-    }
-
-    toggleDislexicFont() {
-        const userToken = this.localStorage.getItem('token');
-        this.utilsService.toggleDislexicFont(userToken, this);
-    }
-
-    deleteCookies() {
-        this.utilsService.deleteCookies(this.serviceList);
     }
 
     openMenu(menu: IonSelect) {
@@ -163,9 +146,7 @@ export class ServicePage implements OnInit {
                             });
                         this.apiService
                             .deleteDiscordInfo(this.token)
-                            .subscribe((res) => {
-                                console.log(res);
-                            });
+                            .subscribe((res) => {});
                     });
             }
         }

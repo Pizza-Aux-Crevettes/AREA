@@ -48,9 +48,7 @@ export class UtilsService {
         const newFontState = !currentFontState;
         this.isDislexicFontSubject.next(newFontState);
         this.tokenService.setAdaptabilityUser(userToken).subscribe(
-            (response) => {
-                console.log('Updated adaptability response:', response);
-            },
+            (response) => {},
             (error) => {
                 console.error('Error updating adaptability:', error);
             }
@@ -72,7 +70,7 @@ export class UtilsService {
         if (menu) {
             menu.open();
         } else {
-            console.log('Menu not found');
+            console.error('Menu not found');
         }
     }
 

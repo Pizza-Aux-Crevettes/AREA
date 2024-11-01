@@ -26,10 +26,9 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        if (req.params.email)
-            origin += `_${req.params.email}`;
+        if (req.params.email) origin += `_${req.params.email}`;
         const scope = 'clips:edit user:read:email';
-        const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent("https://area.leafs-studio.com/twitch/callback")}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
+        const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/twitch/callback')}&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}&state=random_string&code_challenge=challenge_code&code_challenge_method=plain`;
         res.redirect(authUrl);
     });
 
@@ -43,7 +42,9 @@ module.exports = (app: Express) => {
             grant_type: 'authorization_code',
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/twitch/callback" : redirect_uri,
+            redirect_uri: `${req.query.state}`.includes('@')
+                ? 'https://area.leafs-studio.com/twitch/callback'
+                : redirect_uri,
             code_verifier: 'challenge_code',
         });
 
@@ -56,48 +57,19 @@ module.exports = (app: Express) => {
             const origin = state[0];
             if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
                 const email = state[1];
-                await updateService(
-                    email,
-                    access_token,
-                    "twitch_token"
+                await updateService(email, access_token, 'twitch_token');
+                await updateService(email, access_token, 'twitch_refresh');
+                res.send(
+                    '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
-                await updateService(
-                    email,
-                    access_token,
-                    "twitch_refresh"
-                );
-                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
                 res.redirect(
                     `${origin}service?twitch_token=${access_token}&twitch_refresh=${refresh_token}`
                 );
             }
         } catch (error) {
-            console.error('Error retrieving access token:', error);
+            console.error('Error retrieving access token :', error);
             res.send('Error during token retrieval');
-        }
-    });
-
-    app.get('/twitch/refresh_token', async (req, res) => {
-        const refresh_token = req.query.refresh_token || null;
-        const twitchrefreshURL = 'https://id.twitch.tv/oauth2/token';
-        const bodyParams = new URLSearchParams({
-            client_id: client_id,
-            client_secret: client_secret,
-            refresh_token: refresh_token as string,
-            grant_type: 'refresh_token',
-        });
-
-        try {
-            const response = await axios.post(twitchrefreshURL, bodyParams);
-            res.json({
-                access_token: response.data.access_token,
-                refresh_token: response.data.refresh_token || refresh_token,
-                expires_in: response.data.expires_in,
-            });
-        } catch (error) {
-            console.error('Error refreshing twitch token:', error);
-            res.status(500).send('Error during token refresh');
         }
     });
 };

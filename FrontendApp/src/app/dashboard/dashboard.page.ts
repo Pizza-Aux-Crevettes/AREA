@@ -90,22 +90,87 @@ export class DashboardPage implements OnInit {
     ];
 
     menuItemsAction = [
-        { action: 'Weather', label: 'When it rains', icon: 'rainy-outline', connected: false },
-        { action: 'Email', label: 'When I receive an email', icon: 'logo-google', connected: false },
-        { action: 'Alerts', label: 'When an alert happens', icon: 'rainy-outline', connected: false },
-        { action: 'News', label: 'When news is published', icon: 'newspaper', connected: false },
-        { action: 'DiscordUsername', label: 'When my username changes', icon: 'logo-discord', connected: false },
-        { action: 'DiscordGuilds', label: 'When my guild count changes', icon: 'logo-discord', connected: false },
+        {
+            action: 'Weather',
+            label: 'When it rains',
+            icon: 'rainy-outline',
+            connected: false,
+        },
+        {
+            action: 'Email',
+            label: 'When I receive an email',
+            icon: 'logo-google',
+            connected: false,
+        },
+        {
+            action: 'Alerts',
+            label: 'When an alert happens',
+            icon: 'rainy-outline',
+            connected: false,
+        },
+        {
+            action: 'News',
+            label: 'When news is published',
+            icon: 'newspaper',
+            connected: false,
+        },
+        {
+            action: 'DiscordUsername',
+            label: 'When my username changes',
+            icon: 'logo-discord',
+            connected: false,
+        },
+        {
+            action: 'DiscordGuilds',
+            label: 'When my guild count changes',
+            icon: 'logo-discord',
+            connected: false,
+        },
     ];
 
     menuItemsReaction = [
-        { reaction: 'Spotify', label: 'Play sad music', icon: 'musical-notes', connected: false },
-        { reaction: 'sendEmail', label: 'Send an email', icon: 'logo-google', connected: false },
-        { reaction: 'MP', label: 'Send a private message', icon: 'logo-discord', connected: false },
-        { reaction: 'Clip', label: 'Create a clip', icon: 'logo-twitch', connected: false },
-        { reaction: 'Event', label: 'Create an event on Google Calendar', icon: 'logo-google', connected: false },
-        { reaction: 'Issue', label: 'Create an issue', icon: 'logo-github', connected: false },
-        { reaction: 'Branch', label: 'Create a branch', icon: 'logo-github', connected: false },
+        {
+            reaction: 'Spotify',
+            label: 'Play sad music',
+            icon: 'musical-notes',
+            connected: false,
+        },
+        {
+            reaction: 'sendEmail',
+            label: 'Send an email',
+            icon: 'logo-google',
+            connected: false,
+        },
+        {
+            reaction: 'MP',
+            label: 'Send a private message',
+            icon: 'logo-discord',
+            connected: false,
+        },
+        {
+            reaction: 'Clip',
+            label: 'Create a clip',
+            icon: 'logo-twitch',
+            connected: false,
+        },
+        {
+            reaction: 'Event',
+            label: 'Create an event on Google Calendar',
+            icon: 'logo-google',
+            connected: false,
+        },
+        {
+            reaction: 'Issue',
+            label: 'Create an issue',
+            icon: 'logo-github',
+            connected: false,
+        },
+        {
+            reaction: 'Branch',
+            label: 'Create a branch',
+            icon: 'logo-github',
+            connected: false,
+        },
     ];
 
     emptyField: string = '';
@@ -137,9 +202,6 @@ export class DashboardPage implements OnInit {
             this.isDislexicFontEnabled = fontState;
         });
         this.checkConnection();
-    }
-    isAreaDisabled(area: Area): boolean {
-        return area.inputAction !== '';
     }
 
     checkServicesConnexion(area: string): boolean {
@@ -229,20 +291,6 @@ export class DashboardPage implements OnInit {
             local: true,
         };
         this.areas.push(newArea);
-    }
-
-    clearUrl() {
-        const url = window.location.href.split('?')[0];
-        window.history.replaceState({}, document.title, url);
-    }
-
-    toggleDislexicFont() {
-        const userToken = this.localStorage.getItem('token');
-        this.utilsService.toggleDislexicFont(userToken, this);
-    }
-
-    deleteCookies() {
-        this.utilsService.deleteCookies(this.serviceList);
     }
 
     openMenu(menu: IonSelect) {
@@ -335,7 +383,7 @@ export class DashboardPage implements OnInit {
                                                                     },
                                                                     (error) => {
                                                                         console.error(
-                                                                            'Error fetching repositories:',
+                                                                            'Error fetching repositories :',
                                                                             error
                                                                         );
                                                                     }
@@ -345,42 +393,38 @@ export class DashboardPage implements OnInit {
                                     }
                                 });
                         });
-
                 }
             } catch (error) {
-                console.error(
-                    'Erreur lors de la récupération des données GitHub :',
-                    error
-                );
+                console.error('Error fetching Github datas :', error);
             }
         }
     }
 
     async openActionSheet(area: Area) {
-        const buttons = this.menuItemsAction.map(item => ({
+        const buttons = this.menuItemsAction.map((item) => ({
             text: item.label,
             icon: item.icon,
             cssClass: item.connected ? '' : 'disabled-button',
             handler: () => {
-            if (item.connected) {
+                if (item.connected) {
                     this.onSelectAction(item.action, area);
                     this.selectedActionLabel = item.action;
                     this.selectedActionIcon = item.icon;
                 }
             },
-                disabled: !item.connected
+            disabled: !item.connected,
         }));
-      
-        const actionSheet = await this.actionSheetCtrl.create({
-          header: 'Select Action',
-          buttons: buttons
-        });
-      
-        await actionSheet.present();
-      }      
 
-      async openReactionSheet(area: Area) {
-        const buttons = this.menuItemsReaction.map(item => ({
+        const actionSheet = await this.actionSheetCtrl.create({
+            header: 'Select Action',
+            buttons: buttons,
+        });
+
+        await actionSheet.present();
+    }
+
+    async openReactionSheet(area: Area) {
+        const buttons = this.menuItemsReaction.map((item) => ({
             text: item.label,
             icon: item.icon,
             cssClass: item.connected ? '' : 'disabled-button',
@@ -391,17 +435,16 @@ export class DashboardPage implements OnInit {
                     this.selectedReactionIcon = item.icon;
                 }
             },
-            disabled: !item.connected
+            disabled: !item.connected,
         }));
-    
-        const reactionSheet = await this.reactionSheetCtrl.create({
-          header: 'Select Reaction',
-          buttons: buttons
-        });
-    
-        await reactionSheet.present();
-      }
 
+        const reactionSheet = await this.reactionSheetCtrl.create({
+            header: 'Select Reaction',
+            buttons: buttons,
+        });
+
+        await reactionSheet.present();
+    }
 
     private async fetchGitHubData(url: string): Promise<any> {
         try {
@@ -409,42 +452,46 @@ export class DashboardPage implements OnInit {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                    Accept: 'application/vnd.github.v3+json',
+                    Authorization: `Bearer ${this.localStorage.getItem('github_token')}`,
                 },
             });
 
             if (!response.ok) {
-                throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+                throw new Error(` HTTP error ! Status: ${response.status}`);
             }
 
             return await response.json();
         } catch (error) {
-            console.error("Erreur lors de l'appel de l'API GitHub :", error);
+            console.error('Error calling GitHub API :', error);
             throw error;
         }
     }
 
     private async getRep(githubOrgs: any[]) {
         try {
-            const orgFetchPromises = githubOrgs.map(org =>
+            const orgFetchPromises = githubOrgs.map((org) =>
                 fetch(`https://api.github.com/users/${org.login}/repos`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${this.localStorage.getItem('github_token')}`,
+                        Accept: 'application/vnd.github.v3+json',
+                        Authorization: `Bearer ${this.localStorage.getItem('github_token')}`,
                     },
+                }).then((response) => {
+                    if (!response.ok) {
+                        throw new Error(
+                            `Error fetching repos for org ${org.login}: ${response.status}`
+                        );
+                    }
+                    return response.json();
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Error fetching repos for org ${org.login}: ${response.status}`);
-                        }
-                        return response.json();
-                    })
             );
             const orgRepos = await Promise.all(orgFetchPromises);
-            const flatOrgRepos = orgRepos.reduce((acc, val) => acc.concat(val), []);
+            const flatOrgRepos = orgRepos.reduce(
+                (acc, val) => acc.concat(val),
+                []
+            );
             return flatOrgRepos;
         } catch (error) {
             console.error('Failed to fetch repositories:', error);
@@ -466,7 +513,10 @@ export class DashboardPage implements OnInit {
         } else if (reaction === 'Branch' || reaction === 'Issue') {
             const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
             const orgUser = reactInput.substring(0, spaceIndex);
-            const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
+            const repos = reactInput.substring(
+                spaceIndex + 1,
+                secondSpaceIndex
+            );
             const name = reactInput.substring(secondSpaceIndex + 1);
             return `Organisation/User: ${orgUser}, Repos: ${repos}, Name/Title: ${name}`;
         }
@@ -517,7 +567,7 @@ export class DashboardPage implements OnInit {
             this.areaService.delArea(token, body).subscribe(() => {
                 this.areas = this.areas.filter((area) => area.id !== id);
             });
-            this.areaService.DelEmailUser(token).subscribe(() => { });
+            this.areaService.DelEmailUser(token).subscribe(() => {});
         }
     }
 
@@ -533,12 +583,16 @@ export class DashboardPage implements OnInit {
         if (reaction === 'Spotify') {
             inputReaction = 'Nothing';
         }
-        if ((reaction === 'Branch' || reaction === 'Issue') && this.orgfinal === '' && this.repfinal === '') {
+        if (
+            (reaction === 'Branch' || reaction === 'Issue') &&
+            this.orgfinal === '' &&
+            this.repfinal === ''
+        ) {
             alert('Please complete all fields');
             return;
         }
-        if(reaction === 'Branch' && inputReaction?.includes(' ')) {
-            alert('Please no space in branch name')
+        if (reaction === 'Branch' && inputReaction?.includes(' ')) {
+            alert('Please no space in branch name');
             return;
         }
         if (reaction === 'MP' && this.idDiscordInputFinal === '') {

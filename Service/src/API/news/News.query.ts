@@ -126,7 +126,7 @@ export async function getArticle(
             return false;
         }
     } catch (error) {
-        console.error('error during recovery of articles : ', error);
+        console.error('Error during recovery of articles :', error);
         return null;
     }
 }

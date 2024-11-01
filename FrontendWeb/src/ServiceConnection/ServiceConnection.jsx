@@ -56,15 +56,13 @@ const registerService = async (service, service_token) => {
                     service: service,
                 }),
             })
-                .then((response) => {
-                    console.log(response.json);
-                })
+                .then((response) => {})
                 .then(() => {});
         } else {
-            console.error('userEmail is empty');
+            console.error('UserEmail is empty');
         }
     } catch (error) {
-        console.error('An error occured', error);
+        console.error('An error occured :', error);
     }
 };
 
@@ -118,7 +116,6 @@ function Service() {
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
-                console.log("oui j'ai un token");
                 localStorage.setItem(serviceList[i], 'true');
                 if (localStorage.getItem(serviceList[i]) === 'true') {
                     registerService(serviceList[i], token);
@@ -279,16 +276,13 @@ function Service() {
                         localStorage.removeItem(service + '_refresh');
                         localStorage.removeItem(service + '_token');
                         if (service.toLowerCase() === 'discord') {
-                            console.log('test');
                             fetch(`${apiUrl}/discord/username`, {
                                 method: 'DELETE',
                                 headers: {
                                     'Content-Type': 'application/json',
                                     Authorization: `Bearer ${Cookies.get('token')}`,
                                 },
-                            }).then((res) => {
-                                console.log(res.json());
-                            });
+                            }).then((res) => {});
                         }
                         fetch(`${apiUrl}/api/setNewToken`, {
                             method: 'POST',

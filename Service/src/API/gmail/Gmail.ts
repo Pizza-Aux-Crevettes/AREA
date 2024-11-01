@@ -73,6 +73,6 @@ export async function refreshGmailToken(email: string) {
             await updateGoogleToken(email, new_access_token);
         }
     } catch (error) {
-        console.error('Error refreshing access token:', error);
+        console.error('Error refreshing access token :', error);
     }
 }
