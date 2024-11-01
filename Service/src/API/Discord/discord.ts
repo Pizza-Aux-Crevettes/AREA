@@ -32,9 +32,7 @@ discordClient
         console.error('Error connection :', err);
     });
 
-export async function discordSendMP(
-    infoDiscord: string
-): Promise<any> {
+export async function discordSendMP(infoDiscord: string): Promise<any> {
     const firstSpaceIndex = infoDiscord.indexOf(' ');
     const userId = infoDiscord.substring(0, firstSpaceIndex);
     const message = infoDiscord.substring(firstSpaceIndex + 1);
@@ -47,7 +45,6 @@ export async function discordSendMP(
         return result;
     } catch (e) {
         console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
         return false;
     }
 }
@@ -113,7 +110,7 @@ export async function updateNbGuilds(
         return result;
     } catch (e) {
         console.error('Error updating nb of Guilds', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
@@ -128,7 +125,7 @@ export async function getGuilds(email: string): Promise<any> {
         return result;
     } catch (e) {
         console.error('Error getting nb of Guilds', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
@@ -145,6 +142,7 @@ export async function ifNumberOfGuildsChange(token: string, email: string) {
 }
 
 export async function refreshTokenOfDiscord(email: string) {
+    console.log('email', email);
     const refresh_token: string = await getRefreshDiscordToken(email);
     const qs = require('qs');
     let data = qs.stringify({

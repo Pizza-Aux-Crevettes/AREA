@@ -19,6 +19,7 @@ export async function sendDM(
 }
 
 export async function getRefreshDiscordToken(email: string): Promise<any> {
+    console.log(email);
     try {
         const { data, error } = await supabase
             .from('Service')
@@ -27,6 +28,7 @@ export async function getRefreshDiscordToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
+        console.log(data);
         return data[0].discord_refresh;
     } catch (e) {
         console.error('getRefreshDiscordToken', e);
@@ -154,6 +156,14 @@ export async function getActualNbGuilds(token: string) {
 
             return response.data;
         } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response &&
+                error.response.status === 429
+            ) {
+                const retryAfter = error.response.headers['retry-after'];
+                console.log('retryAfter', retryAfter);
+            }
             console.error(
                 'Error when get the actual number of discord guilds ',
                 error
