@@ -19,6 +19,7 @@ export async function sendDM(
 }
 
 export async function getRefreshDiscordToken(email: string): Promise<any> {
+    console.log(email);
     try {
         const { data, error } = await supabase
             .from('Service')
@@ -27,6 +28,7 @@ export async function getRefreshDiscordToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
+        console.log(data);
         return data[0].discord_refresh;
     } catch (e) {
         console.error('getRefreshDiscordToken', e);

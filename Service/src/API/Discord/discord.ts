@@ -32,9 +32,7 @@ discordClient
         console.error('Error connection :', err);
     });
 
-export async function discordSendMP(
-    infoDiscord: string
-): Promise<any> {
+export async function discordSendMP(infoDiscord: string): Promise<any> {
     const firstSpaceIndex = infoDiscord.indexOf(' ');
     const userId = infoDiscord.substring(0, firstSpaceIndex);
     const message = infoDiscord.substring(firstSpaceIndex + 1);
@@ -47,7 +45,6 @@ export async function discordSendMP(
         return result;
     } catch (e) {
         console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
         return false;
     }
 }
@@ -65,7 +62,7 @@ export async function updateUsername(
         return result;
     } catch (e) {
         console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
@@ -80,7 +77,7 @@ export async function getUsername(email: string): Promise<any> {
         return result;
     } catch (e) {
         console.error('Error sending discord mp', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
@@ -90,14 +87,20 @@ export async function ifChangeUsername(
     email: string
 ): Promise<boolean> {
     const result = await discordUserMe(token);
-    const newUsername = result.global_name;
-    const username = await getUsername(email);
-    if (username[0].username !== newUsername) {
-        await updateUsername(email, newUsername);
-        return true;
-    } else {
+    if (result !== null && result === undefined) {
+        const newUsername = result.global_name;
+        const username = await getUsername(email);
+        if (username !== null && username !== undefined) {
+            if (username[0].username !== newUsername) {
+                await updateUsername(email, newUsername);
+                return true;
+            } else {
+                return false;
+            }
+        }
         return false;
     }
+    return false;
 }
 
 export async function updateNbGuilds(
@@ -113,7 +116,7 @@ export async function updateNbGuilds(
         return result;
     } catch (e) {
         console.error('Error updating nb of Guilds', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
@@ -128,23 +131,28 @@ export async function getGuilds(email: string): Promise<any> {
         return result;
     } catch (e) {
         console.error('Error getting nb of Guilds', e);
-        await refreshTokenOfDiscord('email');
+        await refreshTokenOfDiscord(email);
         return false;
     }
 }
 
 export async function ifNumberOfGuildsChange(token: string, email: string) {
     const result = await getActualNbGuilds(token);
-    const nbGuilds = await getGuilds(email);
+    if (result !== null && result !== undefined) {
+        const nbGuilds = await getGuilds(email);
 
-    if (nbGuilds[0].nbGuilds !== result.length) {
-        await updateNbGuilds(email, result.length);
-        return true;
+        if (nbGuilds[0].nbGuilds !== result.length) {
+            await updateNbGuilds(email, result.length);
+            return true;
+        }
+        return false;
     }
+
     return false;
 }
 
 export async function refreshTokenOfDiscord(email: string) {
+    console.log('email', email);
     const refresh_token: string = await getRefreshDiscordToken(email);
     const qs = require('qs');
     let data = qs.stringify({
