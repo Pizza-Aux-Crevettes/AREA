@@ -11,15 +11,15 @@ function Parameters(apiUrl) {
 
     function deleteCookies() {
         Cookies.set('token', '', { expires: -1 });
-        Cookies.set('spotify_token', '', { expires: -1 });
-        Cookies.set('google_token', '', { expires: -1 });
-        Cookies.set('discord_token', '', { expires: -1 });
-        Cookies.set('twitch_token', '', { expires: -1 });
-        Cookies.set('github_token', '', { expires: -1 });
-        Cookies.set('twitch_refresh', '', { expires: -1 });
-        Cookies.set('spotify_refresh', '', { expires: -1 });
-        Cookies.set('google_refresh', '', { expires: -1 });
-        Cookies.set('discord_refresh', '', { expires: -1 });
+        localStorage.removeItem('spotify_token');
+        localStorage.removeItem('google_token');
+        localStorage.removeItem('discord_token');
+        localStorage.removeItem('twitch_token');
+        localStorage.removeItem('github_token');
+        localStorage.removeItem('twitch_refresh');
+        localStorage.removeItem('spotify_refresh');
+        localStorage.removeItem('google_refresh');
+        localStorage.removeItem('discord_refresh');
         localStorage.removeItem('userInputIP');
         navigate('/');
         setTimeout(() => {

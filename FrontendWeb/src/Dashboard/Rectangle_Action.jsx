@@ -27,6 +27,10 @@ const applyAcRea = async (
     action,
     reaction,
     inputAction,
+    idDiscordInputFinal,
+    emailInputFinal,
+    orgfinal,
+    repfinal,
     inputReaction,
     apiUrl
 ) => {
@@ -40,6 +44,18 @@ const applyAcRea = async (
     if (reaction === 'Spotify') {
         inputReaction = 'Nothing';
     }
+    if ((reaction === 'Branch' || reaction === 'Issue') && orgfinal === '' && repfinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
+    if (reaction === 'MP' && idDiscordInputFinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
+    if (reaction === 'sendEmail' && emailInputFinal === '') {
+        alert('Please complete all fields');
+        return;
+    }
     if (action && reaction && inputReaction && inputAction) {
         fetch(`${apiUrl}/api/setArea`, {
             method: 'POST',
@@ -52,7 +68,7 @@ const applyAcRea = async (
                 action: action,
                 reaction: reaction,
                 inputAct: inputAction,
-                inputReact: inputReaction,
+                inputReact: idDiscordInputFinal + emailInputFinal + orgfinal + repfinal + inputReaction,
             }),
         })
             .then((response) => {
@@ -89,7 +105,7 @@ function RectangleDashboard({
         { action: 'DiscordUsername', label: 'When my username changes', icon: icon_discord, connected: false },
         { action: 'DiscordGuilds', label: 'When my guild count changes', icon: icon_discord, connected: false },
     ]);
-    
+
     const [menuItemsReaction, setMenuItemsReaction] = useState([
         { reaction: 'Spotify', label: 'Play sad music', icon: icon_spotify, connected: false },
         { reaction: 'sendEmail', label: 'Send an email', icon: icon_google, connected: false },
@@ -99,7 +115,7 @@ function RectangleDashboard({
         { reaction: 'Issue', label: 'Create an issue', icon: icon_github, connected: false },
         { reaction: 'Branch', label: 'Create a branch', icon: icon_github, connected: false },
     ]);
-    
+
     const [hoverText, setHoverText] = useState('');
 
     const [githubOrgs, setGithubOrgs] = useState([]);
@@ -145,6 +161,29 @@ function RectangleDashboard({
         setEmailInputFinal('');
         setIdDiscordInput('');
         setIdDiscordInputFinal('');
+
+        const response = await fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + Cookies.get('token'),
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const json = await response.json();
+        const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                user_email: json.email,
+            }),
+        });
+        const data = await resultToken.json();
         if (reaction === 'Branch' || reaction === 'Issue') {
             try {
                 const response = await fetch(
@@ -154,7 +193,7 @@ function RectangleDashboard({
                         headers: {
                             'Content-Type': 'application/json',
                             Accept: 'application/vnd.github.v3+json',
-                            Authorization: `Bearer ${Cookies.get('github_token')}`,
+                            Authorization: `Bearer ${data[0]['github_token']}`,
                         },
                     }
                 );
@@ -168,7 +207,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 });
                 if (!personnal.ok) {
@@ -184,6 +223,28 @@ function RectangleDashboard({
     }
 
     const getRep = async (orgsUser, personnalUser) => {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + Cookies.get('token'),
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const json = await response.json();
+        const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+            },
+            body: JSON.stringify({
+                user_email: json.email,
+            }),
+        });
+        const data = await resultToken.json();
         try {
             const orgFetchPromises = orgsUser.map((org) =>
                 fetch(`https://api.github.com/orgs/${org.login}/repos`, {
@@ -191,7 +252,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 }).then((response) => {
                     if (!response.ok) {
@@ -212,7 +273,7 @@ function RectangleDashboard({
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${Cookies.get('github_token')}`,
+                        Authorization: `Bearer ${data[0]['github_token']}`,
                     },
                 }
             );
@@ -230,6 +291,8 @@ function RectangleDashboard({
     };
 
     const orgsVal = (value) => {
+        setRepChosen('');
+        setRepfinal('');
         setOrgChosen(value);
         setOrgfinal(value + ' ');
     };
@@ -283,47 +346,47 @@ function RectangleDashboard({
     const checkServicesConnexion = async (area) => {
         switch (area) {
             case 'Email':
-                if (!Cookies.get('google_token')) {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordUsername':
-                if (!Cookies.get('discord_token')) {
+                if (localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordGuilds':
-                if (!Cookies.get('discord_token')) {
+                if (localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Spotify':
-                if (!Cookies.get('spotify_token')) {
+                if (localStorage.getItem('spotify_token') === 'false') {
                     return false;
                 }
                 break;
             case 'sendEmail':
-                if (!Cookies.get('google_token')) {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Clip':
-                if (!Cookies.get('twitch_token')) {
+                if (localStorage.getItem('twitch_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Event':
-                if (!Cookies.get('google_token')) {
+                if (localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Issue':
-                if (!Cookies.get('github_token')) {
+                if (localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Branch':
-                if (!Cookies.get('github_token')) {
+                if (localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
@@ -548,11 +611,13 @@ function RectangleDashboard({
                 </Tooltip>
             )
         } else {
-            <Tooltip label={reactInput}>
-                <div className='alreadyExist'>
-                    {reactInput}
-                </div>
-            </Tooltip>
+            return (
+                <Tooltip label={reactInput}>
+                    <div className='alreadyExist'>
+                        {reactInput}
+                    </div>
+                </Tooltip>
+            )
         }
     }
 
@@ -628,7 +693,7 @@ function RectangleDashboard({
                                             }
                                         >
                                             <div className='container-icon'>
-                                                <img src={item.icon} className='icon-item'/>  
+                                                <img src={item.icon} className='icon-item' />
                                                 {item.label}
                                             </div>
                                         </Menu.Item>
@@ -700,7 +765,7 @@ function RectangleDashboard({
                                             }
                                         >
                                             <div className='container-icon'>
-                                                <img src={item.icon} className='icon-item'/>  
+                                                <img src={item.icon} className='icon-item' />
                                                 {item.label}
                                             </div>
                                         </Menu.Item>
@@ -725,11 +790,11 @@ function RectangleDashboard({
                             action,
                             reaction,
                             inputContentAct,
-                            idDiscordInputFinal +
-                                emailInputFinal +
-                                orgfinal +
-                                repfinal +
-                                inputContentReact,
+                            idDiscordInputFinal,
+                            emailInputFinal,
+                            orgfinal,
+                            repfinal,
+                            inputContentReact,
                             apiUrl
                         )
                     }

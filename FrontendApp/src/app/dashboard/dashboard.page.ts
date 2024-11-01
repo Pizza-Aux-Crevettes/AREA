@@ -4,6 +4,7 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { IonSelect, ActionSheetController } from '@ionic/angular';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { TokenService } from '../services/token/token.service';
+import { ApiService } from '../services/api/api.service';
 interface Area {
     id: number;
     action: string;
@@ -37,6 +38,10 @@ export class DashboardPage implements OnInit {
     repChosen: string = '';
     repfinal: string = '';
     filterRep: any[] = [];
+
+    tokenGithub: string = '';
+    orgsUser: any;
+    personnalUser: any;
 
     emailInput: string = '';
     emailInputFinal: string = '';
@@ -112,7 +117,8 @@ export class DashboardPage implements OnInit {
         private tokenService: TokenService,
         private actionSheetCtrl: ActionSheetController,
         private reactionSheetCtrl: ActionSheetController
-    ) { }
+        private apiService: ApiService
+    ) {}
 
     ngOnInit() {
         let userToken = this.localStorage.getItem('token');
@@ -139,47 +145,47 @@ export class DashboardPage implements OnInit {
     checkServicesConnexion(area: string): boolean {
         switch (area) {
             case 'Email':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordUsername':
-                if (!this.localStorage.getItem('discord_token')) {
+                if (this.localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'DiscordGuilds':
-                if (!this.localStorage.getItem('discord_token')) {
+                if (this.localStorage.getItem('discord_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Spotify':
-                if (!this.localStorage.getItem('spotify_token')) {
+                if (this.localStorage.getItem('spotify_token') === 'false') {
                     return false;
                 }
                 break;
             case 'sendEmail':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Clip':
-                if (!this.localStorage.getItem('twitch_token')) {
+                if (this.localStorage.getItem('twitch_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Event':
-                if (!this.localStorage.getItem('google_token')) {
+                if (this.localStorage.getItem('google_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Issue':
-                if (!this.localStorage.getItem('github_token')) {
+                if (this.localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
             case 'Branch':
-                if (!this.localStorage.getItem('github_token')) {
+                if (this.localStorage.getItem('github_token') === 'false') {
                     return false;
                 }
                 break;
@@ -268,18 +274,84 @@ export class DashboardPage implements OnInit {
 
         if (area.reaction === 'Branch' || area.reaction === 'Issue') {
             try {
-                const orgsUser = await this.fetchGitHubData('https://api.github.com/user/orgs');
-                const personnalUser = await this.fetchGitHubData('https://api.github.com/user');
+                const userToken = localStorage.getItem('token');
+                if (userToken) {
+                    this.tokenService
+                        .getUserData(userToken)
+                        .subscribe((res) => {
+                            this.tokenService
+                                .getServicesTokens(res.email)
+                                .subscribe((res) => {
+                                    this.tokenGithub = res[0].github_token;
+                                    if (this.tokenGithub) {
+                                        this.apiService
+                                            .fetchGitHubData(
+                                                'https://api.github.com/user/orgs',
+                                                this.tokenGithub
+                                            )
+                                            .subscribe((res) => {
+                                                this.orgsUser = res;
 
-                if (orgsUser && personnalUser) {
-                    this.githubOrgs = [...orgsUser, personnalUser];
-                }
-                const allRep = await this.getRep(this.githubOrgs);
-                if (allRep) {
-                    this.githubRep = allRep;
+                                                this.personnalUser =
+                                                    this.apiService
+                                                        .fetchGitHubData(
+                                                            'https://api.github.com/user',
+                                                            this.tokenGithub
+                                                        )
+                                                        .subscribe((res) => {
+                                                            this.personnalUser =
+                                                                res;
+
+                                                            if (
+                                                                this.orgsUser &&
+                                                                this
+                                                                    .personnalUser
+                                                            ) {
+                                                                this.githubOrgs =
+                                                                    [
+                                                                        ...this
+                                                                            .orgsUser,
+                                                                        this
+                                                                            .personnalUser,
+                                                                    ];
+                                                            }
+                                                            this.apiService
+                                                                .getRep(
+                                                                    this
+                                                                        .githubOrgs,
+                                                                    this
+                                                                        .tokenGithub
+                                                                )
+                                                                .subscribe(
+                                                                    (
+                                                                        allRep
+                                                                    ) => {
+                                                                        if (
+                                                                            allRep
+                                                                        ) {
+                                                                            this.githubRep =
+                                                                                allRep;
+                                                                        }
+                                                                    },
+                                                                    (error) => {
+                                                                        console.error(
+                                                                            'Error fetching repositories:',
+                                                                            error
+                                                                        );
+                                                                    }
+                                                                );
+                                                        });
+                                            });
+                                    }
+                                });
+                        });
+
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données GitHub :", error);
+                console.error(
+                    'Erreur lors de la récupération des données GitHub :',
+                    error
+                );
             }
         }
     }
@@ -384,17 +456,14 @@ export class DashboardPage implements OnInit {
         const spaceIndex = reactInput.indexOf(' ');
 
         if (reaction === 'MP') {
-            console.log("MP: ", reaction)
             const idDiscord = reactInput.substring(0, spaceIndex);
             const mess = reactInput.substring(spaceIndex + 1);
             return `Id Discord: ${idDiscord}, Message: ${mess}`;
         } else if (reaction === 'sendEmail') {
-            console.log("sendEmail: ", reaction)
             const email = reactInput.substring(0, spaceIndex);
             const mess = reactInput.substring(spaceIndex + 1);
             return `Email: ${email}, Message: ${mess}`;
         } else if (reaction === 'Branch' || reaction === 'Issue') {
-            console.log("Issue: ", reaction)
             const secondSpaceIndex = reactInput.indexOf(' ', spaceIndex + 1);
             const orgUser = reactInput.substring(0, spaceIndex);
             const repos = reactInput.substring(spaceIndex + 1, secondSpaceIndex);
@@ -405,9 +474,13 @@ export class DashboardPage implements OnInit {
     }
 
     orgsVal(value: any) {
+        this.repChosen = '';
+        this.repfinal = '';
         this.orgChosen = value.detail.value;
         this.orgfinal = value.detail.value + ' ';
-        this.filterRep = this.githubRep.filter(userRep => userRep.owner.login === this.orgChosen);
+        this.filterRep = this.githubRep.filter(
+            (userRep) => userRep.owner.login === this.orgChosen
+        );
     }
 
     repsVal(value: any) {
@@ -460,13 +533,25 @@ export class DashboardPage implements OnInit {
         if (reaction === 'Spotify') {
             inputReaction = 'Nothing';
         }
+        if ((reaction === 'Branch' || reaction === 'Issue') && this.orgfinal === '' && this.repfinal === '') {
+            alert('Please complete all fields');
+            return;
+        }
+        if (reaction === 'MP' && this.idDiscordInputFinal === '') {
+            alert('Please complete all fields');
+            return;
+        }
+        if (reaction === 'sendEmail' && this.emailInputFinal === '') {
+            alert('Please complete all fields');
+            return;
+        }
         if (
             action === '' ||
             reaction === '' ||
             inputAction === '' ||
             inputReaction == ''
         ) {
-            alert("Please complete all fields");
+            alert('Please complete all fields');
         } else {
             this.emptyField = '';
             const token = this.localStorage.getItem('token');
@@ -477,7 +562,11 @@ export class DashboardPage implements OnInit {
                         action,
                         reaction,
                         inputAction,
-                        this.idDiscordInputFinal + this.emailInputFinal + this.orgfinal + this.repfinal + inputReaction
+                        this.idDiscordInputFinal +
+                            this.emailInputFinal +
+                            this.orgfinal +
+                            this.repfinal +
+                            inputReaction
                     )
                     .subscribe((response) => {
                         window.location.reload();

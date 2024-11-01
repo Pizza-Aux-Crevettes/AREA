@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
 import { environment } from '../../environments/environment';
 import { TokenService } from 'src/app/services/token/token.service';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { IonSelect } from '@ionic/angular';
-import { catchError, of } from 'rxjs';
+import { ApiService } from '../services/api/api.service';
 import { Browser } from '@capacitor/browser';
 @Component({
     selector: 'app-service',
@@ -23,7 +23,6 @@ export class ServicePage implements OnInit {
         'google_refresh',
         'twitch_refresh',
         'discord_refresh',
-        'github_refresh'
     ];
 
     public spotify_connect: boolean = false;
@@ -32,69 +31,74 @@ export class ServicePage implements OnInit {
     public discord_connect: boolean = false;
     public github_connect: boolean = false;
 
-    services: string[] = [
-        'spotify_token',
-        'google_token',
-        'twitch_token',
-        'discord_token',
-        'github_token',
-        'spotify_refresh',
-        'google_refresh',
-        'twitch_refresh',
-        'discord_refresh',
-    ];
+    token: string = '';
 
     constructor(
         protected localStorage: LocalStorageService,
         private tokenService: TokenService,
-        private utilsService: UtilsService
+        private utilsService: UtilsService,
+        private apiService: ApiService
     ) {}
 
     ngOnInit() {
-        let userToken = this.localStorage.getItem('token');
-        const search = window.location.search;
-        const params = new URLSearchParams(search);
-        let email = '';
-        let token = '';
+        this.token = `${this.localStorage.getItem('token')}`;
 
-        this.utilsService.fetchAdaptability(userToken);
+        this.utilsService.fetchAdaptability(this.token);
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
             this.isDislexicFontEnabled = fontState;
         });
         this.loadServices();
     }
 
+    ngAfterViewInit() {
+        this.spotify_connect = Boolean(
+            this.localStorage.getItem('spotify_token') === 'true'
+        );
+        this.twitch_connect = Boolean(
+            this.localStorage.getItem('twitch_token') === 'true'
+        );
+        this.github_connect = Boolean(
+            this.localStorage.getItem('github_token') === 'true'
+        );
+        this.google_connect = Boolean(
+            this.localStorage.getItem('google_token') === 'true'
+        );
+        this.discord_connect = Boolean(
+            this.localStorage.getItem('discord_token') === 'true'
+        );
+    }
+
     loadServices() {
-        this.tokenService
-            .getServicesTokens(this.localStorage.getItem('email'))
-            .pipe(
-                catchError((error) => {
-                    console.error(error);
-                    return of(null);
-                })
-            )
-            .subscribe((res) => {
-                for (let i = 0; i < this.services.length; i++) {
-                    if (res[0][this.services[i]] !== null) {
-                        this.localStorage.setItem(
-                            this.services[i],
-                            res[0][this.services[i]]
-                        );
+        this.tokenService.getUserData(this.token).subscribe((res) => {
+            let email = res.email;
+            this.tokenService.getServicesTokens(email).subscribe((res) => {
+                console.log(res);
+                let tokenList = res[0];
+                for (let i = 0; i < this.serviceList.length; i++) {
+                    if (tokenList[`${this.serviceList[i]}`]) {
+                        this.localStorage.setItem(this.serviceList[i], 'true');
+                    } else {
+                        this.localStorage.setItem(this.serviceList[i], 'false');
                     }
                 }
-                this.spotify_connect = !!(this.localStorage.getItem('spotify_token') &&
-                    this.localStorage.getItem('spotify_token') !== 'null');
-                this.twitch_connect = !!(this.localStorage.getItem('twitch_token') &&
-                    this.localStorage.getItem('twitch_token') !== 'null');
-                this.github_connect = !!(this.localStorage.getItem('github_token') &&
-                    this.localStorage.getItem('github_token') !== 'null');
-                this.google_connect = !!(this.localStorage.getItem('google_token') &&
-                    this.localStorage.getItem('google_token') !== 'null');
-                this.discord_connect = !!(this.localStorage.getItem('discord_token') &&
-                    this.localStorage.getItem('discord_token') !== 'null');
+                this.ngAfterViewInit();
+                if (tokenList.discord_token) {
+                    this.apiService
+                        .getDiscordMe(tokenList.discord_token)
+                        .subscribe((res) => {
+                            this.apiService
+                                .setUsernameDiscordInDB(
+                                    this.token,
+                                    res.userData.username,
+                                    res.guildCount
+                                )
+                                .subscribe((res) => {
+                                    console.log(res);
+                                });
+                        });
+                }
             });
-
-
+        });
     }
 
     clearUrl() {
@@ -125,7 +129,9 @@ export class ServicePage implements OnInit {
 
     async ManageService(service: string, status: boolean) {
         if (!status) {
-            await Browser.open({url: `${environment.api}/${service}/login/${this.localStorage.getItem('email')}`});
+            await Browser.open({
+                url: `${this.localStorage.getItem('userInputIP')}/${service}/login/${this.localStorage.getItem('email')}`,
+            });
 
             await Browser.addListener('browserFinished', () => {
                 window.location.reload();
@@ -137,54 +143,29 @@ export class ServicePage implements OnInit {
                     .getUserData(userToken)
                     .subscribe((response) => {
                         const email = response.email;
-                        const token = this.localStorage.getItem(
-                            service + '_token'
+                        this.localStorage.setItem(service + '_token', 'false');
+                        this.localStorage.setItem(
+                            service + '_refresh',
+                            'false'
                         );
-                        if (token && service != 'spotify' && service != 'google') {
-                            this.tokenService
-                                .revokeToken(service, token)
-                                .subscribe(() => {
-                                    this.localStorage.removeItem(
-                                        service + '_token'
-                                    );
-                                    this.localStorage.removeItem(
+                        this.tokenService
+                            .setTokenInDb('', email, service + '_token')
+                            .subscribe((response) => {
+                                this.tokenService
+                                    .setTokenInDb(
+                                        '',
+                                        email,
                                         service + '_refresh'
-                                    );
-                                    this.tokenService
-                                        .setTokenInDb(
-                                            '',
-                                            email,
-                                            service + '_token'
-                                        )
-                                        .subscribe((response) => {
-                                            this.tokenService
-                                                .setTokenInDb(
-                                                    '',
-                                                    email,
-                                                    service + '_refresh'
-                                                )
-                                                .subscribe((response) => {
-                                                    window.location.reload();
-                                                });
-                                        });
-                                });
-                        } else {
-                            this.localStorage.removeItem(service + '_token');
-                            this.localStorage.removeItem(service + '_refresh');
-                            this.tokenService
-                                .setTokenInDb('', email, service + '_token')
-                                .subscribe((response) => {
-                                    this.tokenService
-                                        .setTokenInDb(
-                                            '',
-                                            email,
-                                            service + '_refresh'
-                                        )
-                                        .subscribe((response) => {
-                                            window.location.reload();
-                                        });
-                                });
-                        }
+                                    )
+                                    .subscribe((response) => {
+                                        window.location.reload();
+                                    });
+                            });
+                        this.apiService
+                            .deleteDiscordInfo(this.token)
+                            .subscribe((res) => {
+                                console.log(res);
+                            });
                     });
             }
         }

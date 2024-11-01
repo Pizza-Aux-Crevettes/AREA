@@ -26,7 +26,7 @@ function RectangleService({ text, logo, Click, color_status }) {
     );
 }
 
-const registerService = async (service) => {
+const registerService = async (service, service_token) => {
     const apiUrl = localStorage.getItem('userInputIP');
 
     try {
@@ -43,7 +43,6 @@ const registerService = async (service) => {
         const json = await response.json();
 
         if (json && json.email) {
-            const token = Cookies.get(service);
             const userEmail = json.email;
             fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
@@ -53,7 +52,7 @@ const registerService = async (service) => {
                 },
                 body: JSON.stringify({
                     userEmail: userEmail,
-                    token: token,
+                    token: service_token,
                     service: service,
                 }),
             })
@@ -91,6 +90,20 @@ function Service() {
     const [githubConnect, setGithubConnect] = useState(false);
 
     const apiUrl = localStorage.getItem('userInputIP');
+
+    const serviceList = [
+        'spotify_token',
+        'twitch_token',
+        'google_token',
+        'discord_token',
+        'github_token',
+        'discord_refresh',
+        'spotify_refresh',
+        'google_refresh',
+        'twitch_refresh',
+        'github_refresh',
+    ];
+
     useEffect(() => {
         if (Cookies.get('token') === null) {
             navigate('/');
@@ -99,31 +112,21 @@ function Service() {
         const search = window.location.search;
         const params = new URLSearchParams(search);
         let token = '';
-        const serviceList = [
-            'spotify_token',
-            'twitch_token',
-            'google_token',
-            'discord_token',
-            'github_token',
-            'discord_refresh',
-            'spotify_refresh',
-            'google_refresh',
-            'twitch_refresh',
-            'github_refresh',
-        ];
+
+        loadService();
 
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
-                Cookies.set(serviceList[i], token);
-                if (Cookies.get(serviceList[i])) {
-                    registerService(serviceList[i]);
+                console.log("oui j'ai un token");
+                localStorage.setItem(serviceList[i], 'true');
+                if (localStorage.getItem(serviceList[i]) === 'true') {
+                    registerService(serviceList[i], token);
                     if (serviceList[i] === 'discord_token') {
                         fetch(`${apiUrl}/discord/me`, {
                             method: 'GET',
                             headers: {
-                                Authorization:
-                                    'Bearer ' + Cookies.get('discord_token'),
+                                Authorization: 'Bearer ' + token,
                                 'Content-Type': 'application/json',
                             },
                         })
@@ -140,60 +143,13 @@ function Service() {
                 }
             }
         }
+
         clearUrl();
         window.history.replaceState(null, '', window.location.pathname);
-        if (Cookies.get('spotify_token')) {
-            setSpotifyText('disconnection of Spotify');
-            setSpotifyStatus('#3AB700');
-            setSpotifyConnect(true);
-        } else {
-            setSpotifyText('Connect to Spotify');
-            setSpotifyStatus('#33478f');
-            setSpotifyConnect(false);
-        }
-
-        if (Cookies.get('twitch_token')) {
-            setTwitchText('disconnection of twitch');
-            setTwitchStatus('#3AB700');
-            setTwitchConnect(true);
-        } else {
-            setTwitchText('Connect to twitch');
-            setTwitchStatus('#33478f');
-            setTwitchConnect(false);
-        }
-
-        if (Cookies.get('google_token')) {
-            setGoogleText('disconnection of Google');
-            setGoogleStatus('#3AB700');
-            setGoogleConnect(true);
-        } else {
-            setGoogleText('Connect to Google');
-            setGoogleStatus('#33478f');
-            setGoogleConnect(false);
-        }
-
-        if (Cookies.get('discord_token')) {
-            setDiscordText('disconnection of Discord');
-            setDiscordStatus('#3AB700');
-            setDiscordConnect(true);
-        } else {
-            setDiscordText('Connect to Discord');
-            setDiscordStatus('#33478f');
-            setDiscordConnect(false);
-        }
-
-        if (Cookies.get('github_token')) {
-            setGithubText('disconnection of Github');
-            setGithubStatus('#3AB700');
-            setGithubConnect(true);
-        } else {
-            setGithubText('Connect to Github');
-            setGithubStatus('#33478f');
-            setGithubConnect(false);
-        }
+        defineStatusService();
     }, [navigate, location]);
 
-    const setUsernameDiscordInDB = (userName, nbGuilds) => {
+    const setUsernameDiscordInDB = async (userName, nbGuilds) => {
         fetch(`${apiUrl}/discord/setUsername`, {
             method: 'POST',
             headers: {
@@ -205,6 +161,98 @@ function Service() {
                 nbGuilds: nbGuilds,
             }),
         });
+    };
+
+    const defineStatusService = async () => {
+        if (localStorage.getItem('spotify_token') === 'true') {
+            setSpotifyText('Disconnection of Spotify');
+            setSpotifyStatus('#3AB700');
+            setSpotifyConnect(true);
+        } else {
+            setSpotifyText('Connect to Spotify');
+            setSpotifyStatus('#33478f');
+            setSpotifyConnect(false);
+        }
+
+        if (localStorage.getItem('twitch_token') === 'true') {
+            setTwitchText('Disconnection of Twitch');
+            setTwitchStatus('#3AB700');
+            setTwitchConnect(true);
+        } else {
+            setTwitchText('Connect to Twitch');
+            setTwitchStatus('#33478f');
+            setTwitchConnect(false);
+        }
+
+        if (localStorage.getItem('google_token') === 'true') {
+            setGoogleText('Disconnection of Google');
+            setGoogleStatus('#3AB700');
+            setGoogleConnect(true);
+        } else {
+            setGoogleText('Connect to Google');
+            setGoogleStatus('#33478f');
+            setGoogleConnect(false);
+        }
+
+        if (localStorage.getItem('discord_token') === 'true') {
+            setDiscordText('Disconnection of Discord');
+            setDiscordStatus('#3AB700');
+            setDiscordConnect(true);
+        } else {
+            setDiscordText('Connect to Discord');
+            setDiscordStatus('#33478f');
+            setDiscordConnect(false);
+        }
+        if (localStorage.getItem('github_token') === 'true') {
+            setGithubText('Disconnection of Github');
+            setGithubStatus('#3AB700');
+            setGithubConnect(true);
+        } else {
+            setGithubText('Connect to Github');
+            setGithubStatus('#33478f');
+            setGithubConnect(false);
+        }
+    };
+
+    const loadService = async () => {
+        const token = Cookies.get('token');
+        fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                fetch(`${apiUrl}/api/getToken`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_email: json.email }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((tokenList) => {
+                        for (let i = 0; i < serviceList.length; i++) {
+                            if (tokenList[0][`${serviceList[i]}`] !== null) {
+                                console.debug(
+                                    serviceList[i],
+                                    tokenList[0][`${serviceList[i]}`]
+                                );
+                                localStorage.setItem(serviceList[i], 'true');
+                            } else {
+                                localStorage.setItem(serviceList[i], 'false');
+                            }
+                        }
+                        defineStatusService();
+                    });
+            });
     };
 
     const clearUrl = () => {
@@ -228,75 +276,32 @@ function Service() {
                     })
                     .then((json) => {
                         const email = json.email;
-                        const tokenService = Cookies.get(service + '_token');
-                        console.log(service);
-                        if (
-                            tokenService &&
-                            service !== 'spotify' &&
-                            service !== 'google' &&
-                            service !== 'github'
-                        ) {
-                            fetch(`${apiUrl}/${service}/revoke`, {
-                                method: 'POST',
+                        localStorage.removeItem(service + '_refresh');
+                        localStorage.removeItem(service + '_token');
+                        if (service.toLowerCase() === 'discord') {
+                            console.log('test');
+                            fetch(`${apiUrl}/discord/username`, {
+                                method: 'DELETE',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${Cookies.get('token')}`,
                                 },
-                                body: JSON.stringify({
-                                    token: tokenService,
-                                }),
-                            }).then((response) => {
-                                if (response.ok) {
-                                    Cookies.set(service + '_token', '', {
-                                        expires: -1,
-                                    });
-                                    Cookies.set(service + '_refresh', '', {
-                                        expires: -1,
-                                    });
-                                    fetch(`${apiUrl}/api/setNewToken`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            Authorization: `Bearer ${Cookies.get('token')}`,
-                                        },
-                                        body: JSON.stringify({
-                                            userEmail: email,
-                                            token: '',
-                                            service: service + '_token',
-                                        }),
-                                    }).then((response) => {
-                                        if (response.ok) {
-                                            fetch(`${apiUrl}/api/setNewToken`, {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type':
-                                                        'application/json',
-                                                    Authorization: `Bearer ${Cookies.get('token')}`,
-                                                },
-                                                body: JSON.stringify({
-                                                    userEmail: email,
-                                                    token: '',
-                                                    service:
-                                                        service + '_refresh',
-                                                }),
-                                            }).then(() => {
-                                                window.location.reload();
-                                            });
-                                        }
-                                    });
-                                }
+                            }).then((res) => {
+                                console.log(res.json());
                             });
-                        } else if (
-                            tokenService &&
-                            (service === 'spotify' ||
-                                service === 'google' ||
-                                service === 'github')
-                        ) {
-                            Cookies.set(service + '_token', '', {
-                                expires: -1,
-                            });
-                            Cookies.set(service + '_refresh', '', {
-                                expires: -1,
-                            });
+                        }
+                        fetch(`${apiUrl}/api/setNewToken`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${Cookies.get('token')}`,
+                            },
+                            body: JSON.stringify({
+                                userEmail: email,
+                                token: '',
+                                service: service + '_token',
+                            }),
+                        }).then(() => {
                             fetch(`${apiUrl}/api/setNewToken`, {
                                 method: 'POST',
                                 headers: {
@@ -306,25 +311,12 @@ function Service() {
                                 body: JSON.stringify({
                                     userEmail: email,
                                     token: '',
-                                    service: service + '_token',
+                                    service: service + '_refresh',
                                 }),
                             }).then(() => {
-                                fetch(`${apiUrl}/api/setNewToken`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        Authorization: `Bearer ${Cookies.get('token')}`,
-                                    },
-                                    body: JSON.stringify({
-                                        userEmail: email,
-                                        token: '',
-                                        service: service + '_refresh',
-                                    }),
-                                }).then(() => {
-                                    window.location.reload();
-                                });
+                                window.location.reload();
                             });
-                        }
+                        });
                     });
             }
         } else {
