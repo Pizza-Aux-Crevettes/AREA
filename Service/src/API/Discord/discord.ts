@@ -27,7 +27,7 @@ const discordClient = new Client({
 
 discordClient
     .login(process.env.DISCORD_TOKEN)
-    .then(() => {})
+    .then(() => { })
     .catch((err) => {
         console.error('Error connection :', err);
     });
@@ -87,7 +87,7 @@ export async function ifChangeUsername(
     email: string
 ): Promise<boolean> {
     const result = await discordUserMe(token);
-    if (result !== null && result === undefined) {
+    if (result !== null && result !== undefined) {
         const newUsername = result.global_name;
         const username = await getUsername(email);
         if (username !== null && username !== undefined) {

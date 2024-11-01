@@ -10,9 +10,12 @@ const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 
 export async function createClipTwitch(
     username: string,
-    token: string
+    token: string,
+    email: string
 ): Promise<any> {
     const result = await clipTwitch(username, token);
+    if (result === undefined)
+        refreshTokenOfTwitch(email);
     if (result !== null) {
         return result;
     }
