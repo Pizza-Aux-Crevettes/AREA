@@ -23,7 +23,7 @@ export async function getAdaptability(user_email: string): Promise<any> {
         .select('adaptabilityText')
         .eq('email', user_email);
     if (error) {
-        console.error(error);
+        console.error('Error when getting adaptability :', error);
         return null;
     }
     if (data.length === 0) {
