@@ -156,14 +156,6 @@ export async function getActualNbGuilds(token: string) {
 
             return response.data;
         } catch (error) {
-            if (
-                axios.isAxiosError(error) &&
-                error.response &&
-                error.response.status === 429
-            ) {
-                const retryAfter = error.response.headers['retry-after'];
-                console.log('retryAfter', retryAfter);
-            }
             console.error(
                 'Error when get the actual number of discord guilds ',
                 error
