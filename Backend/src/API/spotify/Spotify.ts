@@ -8,11 +8,17 @@ const redirect_uri = 'http://localhost:8080/spotify/callback';
 
 module.exports = (app: Express) => {
     app.get('/spotify/login', (req, res) => {
+        let origin: string;
+        if (req.headers.referer !== undefined) {
+            origin = req.headers.referer;
+        } else {
+            origin = '';
+        }
         const scope =
             'user-read-private user-read-email user-modify-playback-state';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
             scope
-        )}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
+        )}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(origin)}`;
         res.redirect(authUrl);
     });
 
@@ -23,8 +29,7 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        if (req.params.email)
-            origin += `_${req.params.email}`;
+        if (req.params.email) origin += `_${req.params.email}`;
         const scope =
             'user-read-private user-read-email user-modify-playback-state';
         const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(
@@ -47,7 +52,9 @@ module.exports = (app: Express) => {
             },
             form: {
                 code: code,
-                redirect_uri: `${req.query.state}`.includes('@') ? "https://area.leafs-studio.com/spotify/callback" : redirect_uri,
+                redirect_uri: `${req.query.state}`.includes('@')
+                    ? 'https://area.leafs-studio.com/spotify/callback'
+                    : redirect_uri,
                 grant_type: 'authorization_code',
             },
             json: true,
@@ -63,20 +70,15 @@ module.exports = (app: Express) => {
             const refresh_token = response.data.refresh_token;
             let state: any = req.query.state;
             state = state.split('_');
+
             const origin = state[0];
             if (req.headers['user-agent']?.toLowerCase()?.includes('android')) {
                 const email = state[1];
-                await updateService(
-                    email,
-                    access_token,
-                    "spotify_token"
+                await updateService(email, access_token, 'spotify_token');
+                await updateService(email, refresh_token, 'spotify_refresh');
+                res.send(
+                    '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
-                await updateService(
-                    email,
-                    refresh_token,
-                    "spotify_refresh"
-                );
-                res.send("<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>");
             } else {
                 res.redirect(
                     `${origin}service?spotify_token=${access_token}&spotify_refresh=${refresh_token}`
