@@ -48,6 +48,10 @@ const applyAcRea = async (
         alert('Please complete all fields');
         return;
     }
+    if(reaction === 'Branch' && inputReaction.includes(' ')) {
+        alert('Please no space in branch name')
+        return;
+    }
     if (reaction === 'MP' && idDiscordInputFinal === '') {
         alert('Please complete all fields');
         return;
