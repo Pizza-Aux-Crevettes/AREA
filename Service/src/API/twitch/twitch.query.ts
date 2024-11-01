@@ -22,10 +22,10 @@ async function getUserId(username: string, token: string) {
 
         response = await result.json();
     } catch (error) {
-        console.error('error', error);
+        console.error('Error when getting twitch user id :', error);
         return null;
     }
-    return response.data?.[0]?.id || null;;
+    return response.data?.[0]?.id || null;
 }
 
 export async function clipTwitch(username: string, token: string) {
@@ -49,10 +49,9 @@ export async function clipTwitch(username: string, token: string) {
 
         data = await result.json();
     } catch (error) {
-        console.error('error', error);
+        console.error('Error when getting twitch clip :', error);
         return null;
     }
-    console.log(data)
     return data;
 }
 
@@ -67,7 +66,7 @@ export async function getRefreshTwitchToken(email: string): Promise<any> {
         }
         return data[0].twitch_refresh;
     } catch (e) {
-        console.error('getRefreshTwitchToken', e);
+        console.error('Error when getting twitch refresh token :', e);
         return '';
     }
 }
@@ -86,7 +85,7 @@ export async function updateTwitchToken(
             .select();
         return !error;
     } catch (error) {
-        console.error('updateTwitchToken', e);
+        console.error('Error when updating twitch refresh token :', e);
         return false;
     }
 }

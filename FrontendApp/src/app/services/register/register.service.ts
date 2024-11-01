@@ -40,7 +40,7 @@ export class RegisterService {
             )
             .pipe(
                 catchError((error: HttpErrorResponse) => {
-                    console.error('request error : ', error);
+                    console.error('Request error : ', error);
                     return throwError(error);
                 })
             );
@@ -66,7 +66,7 @@ export class RegisterService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when set new user in db',
                 data: {},
             });
         }

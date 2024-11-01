@@ -1,5 +1,5 @@
-import supabase from "../../config/db";
-import bcrypt from "bcryptjs";
+import supabase from '../../config/db';
+import bcrypt from 'bcryptjs';
 
 export async function register(
     user_name: string,
@@ -9,7 +9,7 @@ export async function register(
     user_email: string
 ): Promise<any> {
     const { data, error } = await supabase
-        .from("User")
+        .from('User')
         .insert([
             {
                 name: user_name,
@@ -21,7 +21,7 @@ export async function register(
         ])
         .select();
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return data;

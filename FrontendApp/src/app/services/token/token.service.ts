@@ -34,7 +34,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting all services token',
                 data: {},
             });
         }
@@ -55,7 +55,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting connected user datas',
                 data: {},
             });
         }
@@ -95,7 +95,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when set services token in db',
                 data: {},
             });
         }
@@ -106,7 +106,6 @@ export class TokenService {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
-        console.log('route =', `${this.API_URL}/${service}/revoke`);
         try {
             return this.http.post<any>(
                 `${this.API_URL}/${service}/revoke`,

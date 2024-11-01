@@ -19,8 +19,8 @@ export async function playSong(email: string, token: string): Promise<boolean> {
         );
         return response.status === 204;
     } catch (e) {
-        console.error(e);
-        //await refreshSpotifyToken(email);
+        console.error('Error when playing song :', e);
+        await refreshSpotifyToken(email);
         return false;
     }
 }
@@ -40,6 +40,6 @@ export async function refreshSpotifyToken(email: string) {
             await updateSpotifyToken(email, new_access_token);
         }
     } catch (error) {
-        console.error('Error refreshing access token:', error);
+        console.error('Error refreshing access token :', error);
     }
 }

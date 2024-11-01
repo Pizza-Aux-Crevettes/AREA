@@ -27,7 +27,7 @@ module.exports = (app: Express) => {
                 const decoded: any = jwt.verify(webToken, process.env.SECRET);
                 res.status(200).json({ email: decoded.email });
             } catch (error) {
-                console.error('JWT verification failed:', error);
+                console.error('JWT verification failed :', error);
                 res.status(401).json({ msg: 'Invalid or expired token' });
             }
         }
@@ -49,10 +49,10 @@ module.exports = (app: Express) => {
             }
             const result = setAdaptability(decoded.email);
             if (!result) {
-                res.status(400).json({ msg: 'invalid email' });
+                res.status(400).json({ msg: 'Invalid email' });
                 return;
             }
-            res.status(200).json({ msg: 'the adadptibily is set' });
+            res.status(200).json({ msg: 'The adaptibily is set' });
         }
     );
 
@@ -77,7 +77,7 @@ module.exports = (app: Express) => {
             }
             const result = await getAdaptability(decoded.email);
             if (!result) {
-                res.status(400).json({ msg: 'invalid email' });
+                res.status(400).json({ msg: 'Invalid email' });
                 return;
             }
             res.status(200).json(result);

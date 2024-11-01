@@ -84,53 +84,10 @@ module.exports = (app: Express) => {
         }
     });
 
-    app.get('/discord/refresh_token', async (req, res) => {
-        const refresh_token = req.query.refresh_token || null;
-
-        const authOptions = {
-            url: 'https://discord.com/api/oauth2/token',
-            headers: {
-                Authorization:
-                    'Basic ' +
-                    Buffer.from(`${client_id}:${client_secret}`).toString(
-                        'base64'
-                    ),
-            },
-            form: {
-                grant_type: 'refresh_token',
-                refresh_token: refresh_token,
-                client_id: client_id,
-                client_secret: client_secret,
-            },
-            json: true,
-        };
-
-        try {
-            const response = await axios.post(authOptions.url, null, {
-                headers: authOptions.headers,
-                params: authOptions.form,
-            });
-
-            const new_access_token = response.data.access_token;
-            const expires_in = response.data.expires_in;
-            const new_refresh_token =
-                response.data.refresh_token || refresh_token;
-
-            res.json({
-                access_token: new_access_token,
-                refresh_token: new_refresh_token,
-                expires_in: expires_in,
-            });
-        } catch (error) {
-            console.error('Error refreshing access token:', error);
-            res.status(500).send('Erreur lors du rafraîchissement du token');
-        }
-    });
-
     app.get('/discord/me', async (req, res) => {
         const accessToken = req.header('Authorization');
         if (!accessToken) {
-            res.status(500).send('Pas de token');
+            res.status(500).send('No token available');
             return;
         }
         let webToken = accessToken.toString().split(' ')[1];
@@ -160,35 +117,35 @@ module.exports = (app: Express) => {
                 guildCount,
             });
         } catch (error) {
-            console.error(
-                "Erreur lors de la récupération des infos de l'utilisateur:",
-                error
-            );
-            res.status(500).send(
-                'Erreur lors de la récupération des informations utilisateur (discord)'
-            );
+            console.error('Error retrieving user info :', error);
+            res.status(500).send('Error retrieving user info(discord)');
         }
     });
 
     app.post('/discord/setUsername', async (req, res) => {
-        console.log(req.body);
         const user_info = req.body;
         const decoded = jwt.verify(user_info.token, process.env.SECRET);
 
-        const result = await setUserName(
-            decoded.email,
-            user_info.username,
-            user_info.nbGuilds
-        );
-        if (!result) {
-            res.status(400).json({
-                msg: "Erreur lors de l'insertion du nom Discord de l'utilisateur ",
+        if (decoded.email) {
+            const result = await setUserName(
+                decoded.email,
+                user_info.username,
+                user_info.nbGuilds
+            );
+            if (!result) {
+                res.status(400).json({
+                    msg: 'Error inserting Discord user name',
+                });
+                return;
+            }
+            res.status(200).json({
+                msg: 'Discord username has been set successfully',
             });
-            return;
+        } else {
+            res.status(400).json({
+                msg: 'Invalid Email for deletion of Discord user name',
+            });
         }
-        res.status(200).json({
-            msg: "le nom d'utilisateur Discord a bien été set",
-        });
     });
 
     app.delete(
@@ -204,16 +161,16 @@ module.exports = (app: Express) => {
                 const result = await delUsername(decoded.email);
                 if (!result) {
                     res.status(400).json({
-                        msg: "Erreur lors de la deletion du nom Discord de l'utilisateur ",
+                        msg: 'Error deleting Discord user name',
                     });
                     return;
                 }
                 res.status(200).json({
-                    msg: "le nom d'utilisateur Discord a bien été supprimé",
+                    msg: 'Discord username has been successfully deleted',
                 });
             } else {
                 res.status(400).json({
-                    msg: "Erreur lors de la deletion du nom Discord de l'utilisateur ",
+                    msg: 'Invalid Email for deletion of Discord user name',
                 });
             }
         }

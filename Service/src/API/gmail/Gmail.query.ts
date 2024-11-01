@@ -61,12 +61,9 @@ export async function getGmailMsg(token: string, email: string) {
 }
 
 export async function sendGmail(token: string, dest: string, mess: string) {
-    const email = [
-        `To: ${dest}`,
-        'Subject: AREA: reaction',
-        '',
-        mess,
-    ].join('\n');
+    const email = [`To: ${dest}`, 'Subject: AREA: reaction', '', mess].join(
+        '\n'
+    );
     const encodedMessage = base64.encode(email);
 
     try {
@@ -87,10 +84,9 @@ export async function sendGmail(token: string, dest: string, mess: string) {
             return null;
         }
         const result = await res.json();
-        console.log('email send!', result);
         return result;
     } catch (error) {
-        console.error('error when sending the email:', error);
+        console.error('Error when sending the email :', error);
         return null;
     }
 }
@@ -146,10 +142,9 @@ export async function insertCalEvent(
             return null;
         }
         const result = await res.json();
-        console.log('event set!', result);
         return result;
     } catch (error) {
-        console.error('error when setting the event:', error);
+        console.error('Rrror when setting the event :', error);
         return null;
     }
 }
@@ -163,10 +158,9 @@ export async function getRefreshGoogleToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
-        console.log("coucou")
         return data[0].google_refresh;
     } catch (e) {
-        console.error('getRefreshGoogleToken', e);
+        console.error('Error when getting refresh Google token :', e);
         return '';
     }
 }
@@ -185,7 +179,7 @@ export async function updateGoogleToken(
             .select();
         return !error;
     } catch (error) {
-        console.error('updateGoogleToken', e);
+        console.error('Error when updating Google token :', e);
         return false;
     }
 }
@@ -206,7 +200,7 @@ async function getLastId(email: string) {
             .eq('userEmail', email);
         return data;
     } catch (error) {
-        console.error('updateGoogleToken', error);
+        console.error('Error when getting last email id in db :', error);
         return '';
     }
 }
@@ -239,7 +233,7 @@ async function updateEmailId(IdEmail: string, email: string) {
             .eq('userEmail', email)
             .select();
     } catch (error) {
-        console.error('updateEmailId', e);
+        console.error('Error when updating email Id in db :', e);
     }
 }
 async function setEmailId(IdEmail: string, email: string) {
@@ -249,6 +243,6 @@ async function setEmailId(IdEmail: string, email: string) {
             .insert([{ userEmail: email, lastIdEmail: IdEmail }])
             .select();
     } catch (error) {
-        console.error('updateEmailId', e);
+        console.error('Error when setting email Id in db :', e);
     }
 }
