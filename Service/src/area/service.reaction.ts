@@ -20,7 +20,7 @@ export async function setReaction(
             result = await sendMail(email, token[0].google_token, inputReaction);
             break;
         case 'Clip':
-            result = await createClipTwitch(inputReaction, token[0].twitch_token);
+            result = await createClipTwitch(inputReaction, token[0].twitch_token, email);
             break;
         case 'Event':
             result = await createCalEvent(token[0].google_token, email, inputReaction);
