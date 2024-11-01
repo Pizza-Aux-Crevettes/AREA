@@ -7,7 +7,6 @@ module.exports = (app: Express) => {
     app.post('/api/setArea', auth, async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         const area = req.body;
-        console.log(req.body);
         const email: any = jwt.verify(area.token, process.env.SECRET);
         const result = await setNewArea(
             email.email,

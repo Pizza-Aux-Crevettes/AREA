@@ -3,7 +3,7 @@ import { auth } from '../../middleware/auth';
 import { getAreaList } from './about.query';
 
 module.exports = (app: Express) => {
-    app.get('/about.json', auth, async (req: Request, res: Response) => {
+    app.get('/about.json', async (req: Request, res: Response) => {
         const currentTime = Math.floor(Date.now() / 1000);
         const clientIp = req.ip || req.headers['x-forwarded-for'];
 
