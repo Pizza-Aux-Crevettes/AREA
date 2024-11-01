@@ -17,7 +17,6 @@ module.exports = (app: Express) => {
         } else {
             origin = '';
         }
-        console.log(origin);
         const scope = 'identify email guilds guilds.members.read bot';
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
@@ -31,7 +30,6 @@ module.exports = (app: Express) => {
             origin = '';
         }
         if (req.params.email) origin += `_${req.params.email}`;
-        console.log(origin);
         const scope = 'identify email guilds guilds.members.read bot';
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent('https://area.leafs-studio.com/discord/callback')}&response_type=code&state=${encodeURIComponent(origin)}&scope=${encodeURIComponent(scope)}`;
         res.redirect(authUrl);
