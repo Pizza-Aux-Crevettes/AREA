@@ -33,6 +33,7 @@
             <ion-button (click)="openActionSheet(area)" [disabled]="!area.local" class="button-action-style">
               <ion-icon *ngIf="showIcon && selectedActionIcon" [src]="selectedActionIcon" slot="start" color="black"></ion-icon>
               {{ area.action || 'Select Action' }}
+
             </ion-button>
 
           <div id="hover-trigger-act-{{i}}" *ngIf="!area.local && area.inputAction !== 'Nothing'" class="input-div">
@@ -129,6 +130,7 @@
               <ion-button (click)="openReactionSheet(area)" class="button-reaction-style" [disabled]="!area.local">
                 <ion-icon *ngIf="showIcon && selectedReactionIcon" [src]="selectedReactionIcon" slot="start"></ion-icon>
                 <ion-text>{{ area.reaction || 'Select Reaction' }}</ion-text>
+
               </ion-button>
 
 

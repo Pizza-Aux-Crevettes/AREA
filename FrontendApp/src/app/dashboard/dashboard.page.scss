@@ -122,10 +122,17 @@
 }
 
 .dislexic-font {
-  font-family: 'OpenDyslexic', Arial, sans-serif;
+    ion-select, ion-action-sheet, ion-alert, ion-picker, ion-modal {
+        --ion-font-family: 'OpenDyslexic', Arial, sans-serif !important;
+    }
 }
 
+.dislexic-font, .dislexic-font * {
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+  }
+  
 .button-action-style {
+    text-transform: none !important;
     --background: #8cb3ff;
     margin-top: 15%;
     border-radius: 10px;
@@ -134,6 +141,7 @@
 }
 
 .button-reaction-style {
+    text-transform: none !important;
     --background: #8cb3ff;
     margin-top: 5%;
     border-radius: 10px;
