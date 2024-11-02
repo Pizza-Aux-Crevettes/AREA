@@ -46,8 +46,7 @@ const applyAcRea = async (
     }
     if (
         (reaction === 'Branch' || reaction === 'Issue') &&
-        orgfinal === '' &&
-        repfinal === ''
+        (orgfinal === '' || repfinal === '')
     ) {
         alert('Please complete all fields');
         return;
