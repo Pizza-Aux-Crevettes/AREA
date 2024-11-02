@@ -16,7 +16,7 @@ export async function setUserName(
             .select();
         return true;
     } catch (error) {
-        console.error('update Discord Username', error);
+        console.error('Create Discord Username :', error);
         return false;
     }
 }
@@ -29,7 +29,7 @@ export async function delUsername(email: string) {
             .match({ email: email });
         return true;
     } catch (error) {
-        console.error('update Discord Username', error);
+        console.error('Delete Discord Username :', error);
         return false;
     }
 }

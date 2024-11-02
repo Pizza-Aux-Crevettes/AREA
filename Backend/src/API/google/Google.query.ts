@@ -7,6 +7,6 @@ export async function delMailUser(email: string): Promise<void> {
             .delete()
             .eq('userEmail', email);
     } catch (error) {
-        console.error('update Discord Username', error);
+        console.error('Delete Discord username : ', error);
     }
 }

@@ -32,7 +32,7 @@ export class AreaService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when setting new area in db',
                 data: {},
             });
         }
@@ -62,7 +62,7 @@ export class AreaService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when deleting area in db',
                 data: {},
             });
         }
@@ -84,7 +84,7 @@ export class AreaService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting area from db',
                 data: {},
             });
         }
@@ -106,7 +106,7 @@ export class AreaService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when deleting user email from db',
                 data: {},
             });
         }

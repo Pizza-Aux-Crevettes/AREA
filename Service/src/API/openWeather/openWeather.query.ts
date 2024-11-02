@@ -35,7 +35,7 @@ export async function getWeather(userCity: string): Promise<any> {
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Erreur: ${response.status}`);
+                throw new Error(`Error : ${response.status}`);
             }
 
             const data = await response.json();
@@ -43,20 +43,15 @@ export async function getWeather(userCity: string): Promise<any> {
             for (let i = 0; i <= data.weather.length; i++) {
                 Word = data.weather[0].description.split(' ')[i];
                 if (Word === 'pluie') {
-                    console.log('pluie');
                     return true;
                 }
                 if (Word === 'bruine') {
-                    console.log('pluie');
                     return true;
                 }
             }
             return false;
         } catch (error) {
-            console.error(
-                'Erreur lors de la récupération des données météo : ',
-                error
-            );
+            console.error('Error retrieving weather data :', error);
             return null;
         }
     } else {
@@ -98,7 +93,7 @@ export async function getAlerts(userCity: string): Promise<any> {
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Erreur: ${response.status}`);
+                throw new Error(`Error : ${response.status}`);
             }
             const data = await response.json();
             if (data.alerts) {
@@ -107,7 +102,7 @@ export async function getAlerts(userCity: string): Promise<any> {
                 return false;
             }
         } catch (error) {
-            console.error('fetching data: ', error);
+            console.error('Fetching data :', error);
             return null;
         }
     } else {

@@ -32,7 +32,7 @@ export class LoginService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when login user',
                 data: {},
             });
         }

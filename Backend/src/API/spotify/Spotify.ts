@@ -85,7 +85,7 @@ module.exports = (app: Express) => {
                 );
             }
         } catch (error) {
-            console.error('Error retrieving access token:', error);
+            console.error('Error retrieving access token :', error);
             res.send('Error during token retrieval');
         }
     });

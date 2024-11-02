@@ -29,7 +29,7 @@ export class ApiService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when fetching github datas',
                 data: {},
             });
         }
@@ -47,7 +47,7 @@ export class ApiService {
                 return of(orgRepos.flat());
             }),
             catchError((error) => {
-                console.error('Error fetching repositories:', error);
+                console.error('Error fetching repositories :', error);
                 return of([]);
             })
         );
@@ -67,7 +67,7 @@ export class ApiService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting Discord user',
                 data: {},
             });
         }
@@ -100,7 +100,7 @@ export class ApiService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when set Discord user name in db',
                 data: {},
             });
         }
@@ -120,7 +120,7 @@ export class ApiService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when delete Discord user informations',
                 data: {},
             });
         }

@@ -50,8 +50,10 @@ export class UtilsService {
         console.log('Toggled dyslexic font:', newFontState);
 
         this.tokenService.setAdaptabilityUser(userToken).subscribe(
-            (response) => console.log('Updated adaptability response:', response),
-            (error) => console.error('Error updating adaptability:', error)
+            (response) => {},
+            (error) => {
+                console.error('Error updating adaptability:', error);
+            }
         );
     }
 
@@ -70,7 +72,7 @@ export class UtilsService {
         if (menu) {
             menu.open();
         } else {
-            console.log('Menu not found');
+            console.error('Menu not found');
         }
     }
 

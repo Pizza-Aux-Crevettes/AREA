@@ -18,16 +18,13 @@ module.exports = (app: Express) => {
          */
         const token = req.header('Authorization');
         res.header('Response-Type', 'application/json');
-        if (!token) {
-            res.status(401).json();
-            return;
-        } else {
+        if (token) {
             let webToken = token.toString().split(' ')[1];
             try {
                 const decoded: any = jwt.verify(webToken, process.env.SECRET);
                 res.status(200).json({ email: decoded.email });
             } catch (error) {
-                console.error('JWT verification failed:', error);
+                console.error('JWT verification failed :', error);
                 res.status(401).json({ msg: 'Invalid or expired token' });
             }
         }
@@ -49,10 +46,10 @@ module.exports = (app: Express) => {
             }
             const result = setAdaptability(decoded.email);
             if (!result) {
-                res.status(400).json({ msg: 'invalid email' });
+                res.status(400).json({ msg: 'Invalid email' });
                 return;
             }
-            res.status(200).json({ msg: 'the adadptibily is set' });
+            res.status(200).json({ msg: 'The adaptibily is set' });
         }
     );
 
@@ -63,24 +60,22 @@ module.exports = (app: Express) => {
             let decoded: any;
             res.setHeader('Content-Type', 'application/json');
             const userInfo = req.header('Authorization');
-            if (!userInfo) {
-                res.status(500).json();
-                return;
+            if (userInfo) {
+                try {
+                    let token = userInfo.toString().split(' ')[1];
+                    decoded = jwt.verify(token, process.env.SECRET);
+                } catch (error) {
+                    console.error('JWT verification failed:', error);
+                    res.status(401).json({ msg: 'Invalid or expired token' });
+                    return;
+                }
+                const result = await getAdaptability(decoded.email);
+                if (!result) {
+                    res.status(400).json({ msg: 'Invalid email' });
+                    return;
+                }
+                res.status(200).json(result);
             }
-            try {
-                let token = userInfo.toString().split(' ')[1];
-                decoded = jwt.verify(token, process.env.SECRET);
-            } catch (error) {
-                console.error('JWT verification failed:', error);
-                res.status(401).json({ msg: 'Invalid or expired token' });
-                return;
-            }
-            const result = await getAdaptability(decoded.email);
-            if (!result) {
-                res.status(400).json({ msg: 'invalid email' });
-                return;
-            }
-            res.status(200).json(result);
         }
     );
 };

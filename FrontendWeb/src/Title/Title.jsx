@@ -42,7 +42,7 @@ function Parameters(apiUrl) {
                 window.location.reload();
             })
             .catch((error) => {
-                console.error('Erreur lors de la requête POST:', error);
+                console.error('Error during POST request :', error);
             });
     };
 

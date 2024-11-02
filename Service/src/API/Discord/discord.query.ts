@@ -14,12 +14,11 @@ export async function sendDM(
         const user = await discordClient.users.fetch(userId);
         await user.send(message);
     } catch (error) {
-        throw new Error('cannot send the message');
+        throw new Error('Cannot send the message');
     }
 }
 
 export async function getRefreshDiscordToken(email: string): Promise<any> {
-    console.log(email);
     try {
         const { data, error } = await supabase
             .from('Service')
@@ -28,10 +27,9 @@ export async function getRefreshDiscordToken(email: string): Promise<any> {
         if (error) {
             return '';
         }
-        console.log(data);
         return data[0].discord_refresh;
     } catch (e) {
-        console.error('getRefreshDiscordToken', e);
+        console.error('Error when getting refresh Discord token :', e);
         return '';
     }
 }
@@ -52,7 +50,7 @@ export async function updateDiscordToken(
             .select();
         return !error;
     } catch (error) {
-        console.error('update Discord Token', e);
+        console.error('Error when update Discord Token :', e);
         return false;
     }
 }
@@ -71,7 +69,7 @@ export async function updateUserName(
             .select();
         return !error;
     } catch (error) {
-        console.error('update Discord Username', e);
+        console.error('Error when update Discord username :', e);
         return false;
     }
 }
@@ -85,7 +83,7 @@ export async function getUserName(email: string): Promise<any> {
             .select();
         return data;
     } catch (error) {
-        console.error('update Discord Username', e);
+        console.error('Error when get Discord username :', e);
         return false;
     }
 }
@@ -104,7 +102,7 @@ export async function discordUserMe(token: string) {
 
             return response.data;
         } catch (error) {
-            console.error('Error when get user informations', error);
+            console.error('Error when get user informations :', error);
         }
     }
 }
@@ -118,7 +116,7 @@ export async function getNbGuilds(email: string): Promise<any> {
             .select();
         return data;
     } catch (error) {
-        console.error('get user guilds', e);
+        console.error('Error when get user guilds :', e);
         return false;
     }
 }
@@ -135,7 +133,7 @@ export async function updateDBGuilds(email: string, nb: number): Promise<any> {
         return !error;
     } catch (error) {
         console.error(
-            'Error when update the actual number of discord guilds ',
+            'Error when update the actual number of discord guilds :',
             e
         );
         return false;
@@ -157,7 +155,7 @@ export async function getActualNbGuilds(token: string) {
             return response.data;
         } catch (error) {
             console.error(
-                'Error when get the actual number of discord guilds ',
+                'Error when get the actual number of discord guilds :',
                 error
             );
         }

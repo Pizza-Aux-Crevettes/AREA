@@ -10,9 +10,12 @@ const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 
 export async function createClipTwitch(
     username: string,
-    token: string
+    token: string,
+    email: string
 ): Promise<any> {
     const result = await clipTwitch(username, token);
+    if (result === undefined)
+        refreshTokenOfTwitch(email);
     if (result !== null) {
         return result;
     }
@@ -44,11 +47,8 @@ export async function refreshTokenOfTwitch(email: string) {
         const access_token = response.data.access_token;
         if (response.data) {
             const result = await updateTwitchToken(email, access_token);
-            if (result) {
-                console.log('Update twitch token OK');
-            }
         }
     } catch (error) {
-        console.error('Error refreshing access token:', error);
+        console.error('Error refreshing access token :', error);
     }
 }
