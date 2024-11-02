@@ -61,6 +61,18 @@
     font-style: italic;
 }
 
+:root {
+    --app-font-family: Arial, sans-serif;
+}
+
+body.dislexic-font {
+    --app-font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+ion-select, ion-action-sheet, ion-alert, ion-picker, ion-modal {
+    font-family: var(--app-font-family) !important;
+}
+
 ion-content {
     --background: #b5ceff
 }

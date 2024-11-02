@@ -43,17 +43,15 @@ export class UtilsService {
         );
     }
 
+
     toggleDislexicFont(userToken: string | null, componentInstance: any) {
-        const currentFontState = this.isDislexicFontSubject.value;
-        const newFontState = !currentFontState;
+        const newFontState = !this.isDislexicFontSubject.value;
         this.isDislexicFontSubject.next(newFontState);
+        console.log('Toggled dyslexic font:', newFontState);
+
         this.tokenService.setAdaptabilityUser(userToken).subscribe(
-            (response) => {
-                console.log('Updated adaptability response:', response);
-            },
-            (error) => {
-                console.error('Error updating adaptability:', error);
-            }
+            (response) => console.log('Updated adaptability response:', response),
+            (error) => console.error('Error updating adaptability:', error)
         );
     }
 
