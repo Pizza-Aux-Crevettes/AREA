@@ -32,7 +32,7 @@
         <div class="actionReaction-rect">
             <ion-button (click)="openActionSheet(area)" [disabled]="!area.local" class="button-action-style">
               <ion-icon *ngIf="showIcon && selectedActionIcon" [src]="selectedActionIcon" slot="start" color="black"></ion-icon>
-              {{ selectedActionLabel || 'Select Action' }}
+              {{ area.action || 'Select Action' }}
             </ion-button>
 
           <div id="hover-trigger-act-{{i}}" *ngIf="!area.local && area.inputAction !== 'Nothing'" class="input-div">
@@ -81,7 +81,7 @@
 
           <div *ngIf="area.action === 'News' && area.local" class="input-div">
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputAction" placeholder="Enter a text"
-              value="{{area.inputAction}}"></ion-input>
+              value="{{area.inputAction}}" ></ion-input>
           </div>
 
           <div *ngIf="(area.reaction === 'Issue' || area.reaction === 'Branch') && area.local" class="city-div">
@@ -126,9 +126,9 @@
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
               value="{{area.inputReaction}}"></ion-input>
           </div>
-              <ion-button (click)="openReactionSheet(area)" class="button-reaction-style">
+              <ion-button (click)="openReactionSheet(area)" class="button-reaction-style" [disabled]="!area.local">
                 <ion-icon *ngIf="showIcon && selectedReactionIcon" [src]="selectedReactionIcon" slot="start"></ion-icon>
-                <ion-text>{{ selectedReactionLabel || 'Select Reaction' }}</ion-text>
+                <ion-text>{{ area.reaction || 'Select Reaction' }}</ion-text>
               </ion-button>
 
 
