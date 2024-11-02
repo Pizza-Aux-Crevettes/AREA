@@ -99,7 +99,6 @@ function Service() {
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
-        'github_refresh',
     ];
 
     useEffect(() => {
@@ -273,7 +272,9 @@ function Service() {
                     })
                     .then((json) => {
                         const email = json.email;
-                        localStorage.removeItem(service + '_refresh');
+                        if (service !== 'github') {
+                            localStorage.removeItem(service + '_refresh');
+                        }
                         localStorage.removeItem(service + '_token');
                         if (service.toLowerCase() === 'discord') {
                             fetch(`${apiUrl}/discord/username`, {
@@ -296,20 +297,24 @@ function Service() {
                                 service: service + '_token',
                             }),
                         }).then(() => {
-                            fetch(`${apiUrl}/api/setNewToken`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    Authorization: `Bearer ${Cookies.get('token')}`,
-                                },
-                                body: JSON.stringify({
-                                    userEmail: email,
-                                    token: '',
-                                    service: service + '_refresh',
-                                }),
-                            }).then(() => {
+                            if (service !== 'github') {
+                                fetch(`${apiUrl}/api/setNewToken`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${Cookies.get('token')}`,
+                                    },
+                                    body: JSON.stringify({
+                                        userEmail: email,
+                                        token: '',
+                                        service: service + '_refresh',
+                                    }),
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
                                 window.location.reload();
-                            });
+                            }
                         });
                     });
             }

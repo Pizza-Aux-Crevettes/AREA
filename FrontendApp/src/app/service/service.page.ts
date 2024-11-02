@@ -127,10 +127,13 @@ export class ServicePage implements OnInit {
                     .subscribe((response) => {
                         const email = response.email;
                         this.localStorage.setItem(service + '_token', 'false');
-                        this.localStorage.setItem(
-                            service + '_refresh',
-                            'false'
-                        );
+                        if (service !== 'github') {
+                            this.localStorage.setItem(
+                                service + '_refresh',
+                                'false'
+                            );
+                        }
+
                         this.tokenService
                             .setTokenInDb('', email, service + '_token')
                             .subscribe((response) => {

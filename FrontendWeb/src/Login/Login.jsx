@@ -18,7 +18,6 @@ function Login() {
         'google_refresh',
         'twitch_refresh',
         'discord_refresh',
-        'github_refresh',
     ];
     const apiUrl = localStorage.getItem('userInputIP');
 

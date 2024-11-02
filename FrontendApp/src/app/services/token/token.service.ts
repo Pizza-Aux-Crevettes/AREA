@@ -71,6 +71,14 @@ export class TokenService {
         userEmail: string,
         service: string
     ): Observable<any> {
+        if (service === 'github_refresh') {
+            return of({
+                status: 200,
+                error: false,
+                message: 'No refresh_token for discord',
+                data: {},
+            });
+        }
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`,

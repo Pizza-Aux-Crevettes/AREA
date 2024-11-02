@@ -55,7 +55,6 @@ module.exports = (app: Express) => {
                 headers,
             });
             const access_token = response.data.access_token;
-            const refresh_token = response.data.refresh_token;
             let state: any = req.query.state;
             state = state.split('_');
             const origin = state[0];
@@ -66,9 +65,7 @@ module.exports = (app: Express) => {
                     '<body><h1>You are login you can close this page</h1><script>window.close();</script ></body>'
                 );
             } else {
-                res.redirect(
-                    `${origin}service?github_token=${access_token}&github_refresh=${refresh_token}`
-                );
+                res.redirect(`${origin}service?github_token=${access_token}`);
             }
         } catch (error) {
             console.error('Error retrieving access token :', error);
