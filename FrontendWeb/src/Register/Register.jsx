@@ -93,7 +93,7 @@ function Register() {
         } else {
             setTimeout(() => {
                 setLoading(false);
-                setAlreadyUse('Please enter your information.');
+                setAlreadyUse('Please complete all fields.');
             }, 300);
         }
     }
