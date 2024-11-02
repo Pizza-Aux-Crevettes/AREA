@@ -60,9 +60,9 @@ module.exports = defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    // command: './launch_docker.sh',
-    url: 'http://localhost:8081/',
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   // command: './launch_docker.sh',
+  //   url: 'http://localhost:8081/',
+  //   reuseExistingServer: !process.env.CI,
+  // },
 });
