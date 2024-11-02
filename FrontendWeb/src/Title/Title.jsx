@@ -6,7 +6,7 @@ import Cookies from 'cookies-js';
 import { browser } from 'globals';
 import { useEffect, useState } from 'react';
 
-function Parameters(apiUrl) {
+function Parameters({apiUrl}) {
     const navigate = useNavigate();
 
     function deleteCookies() {
