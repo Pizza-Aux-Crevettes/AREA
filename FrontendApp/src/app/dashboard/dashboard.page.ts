@@ -22,10 +22,7 @@ interface Area {
 })
 export class DashboardPage implements OnInit {
     isDislexicFontEnabled?: boolean;
-    hoverText: string = '';
-    selectedActionLabel = 'Action';
     selectedActionIcon = 'ellipse';
-    selectedReactionLabel = 'Reaction';
     selectedReactionIcon = 'ellipse';
     showIcon = false;
 
@@ -48,8 +45,6 @@ export class DashboardPage implements OnInit {
 
     idDiscordInput: string = '';
     idDiscordInputFinal: string = '';
-
-    formattedReaction: string = '';
 
     serviceList: string[] = [
         'spotify_token',
@@ -406,11 +401,8 @@ export class DashboardPage implements OnInit {
             icon: item.icon,
             cssClass: item.connected ? '' : 'disabled-button',
             handler: () => {
-                if (item.connected) {
-                    this.onSelectAction(item.action, area);
-                    this.selectedActionLabel = item.action;
-                    this.selectedActionIcon = item.icon;
-                }
+                this.onSelectAction(item.action, area);
+                this.selectedActionIcon = item.icon;
             },
             disabled: !item.connected,
         }));
@@ -429,11 +421,8 @@ export class DashboardPage implements OnInit {
             icon: item.icon,
             cssClass: item.connected ? '' : 'disabled-button',
             handler: () => {
-                if (item.connected) {
-                    this.onSelectReaction(item.reaction, area);
-                    this.selectedReactionLabel = item.reaction;
-                    this.selectedReactionIcon = item.icon;
-                }
+                this.onSelectReaction(item.reaction, area);
+                this.selectedReactionIcon = item.icon;
             },
             disabled: !item.connected,
         }));
@@ -444,59 +433,6 @@ export class DashboardPage implements OnInit {
         });
 
         await reactionSheet.present();
-    }
-
-    private async fetchGitHubData(url: string): Promise<any> {
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/vnd.github.v3+json',
-                    Authorization: `Bearer ${this.localStorage.getItem('github_token')}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(` HTTP error ! Status: ${response.status}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Error calling GitHub API :', error);
-            throw error;
-        }
-    }
-
-    private async getRep(githubOrgs: any[]) {
-        try {
-            const orgFetchPromises = githubOrgs.map((org) =>
-                fetch(`https://api.github.com/users/${org.login}/repos`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/vnd.github.v3+json',
-                        Authorization: `Bearer ${this.localStorage.getItem('github_token')}`,
-                    },
-                }).then((response) => {
-                    if (!response.ok) {
-                        throw new Error(
-                            `Error fetching repos for org ${org.login}: ${response.status}`
-                        );
-                    }
-                    return response.json();
-                })
-            );
-            const orgRepos = await Promise.all(orgFetchPromises);
-            const flatOrgRepos = orgRepos.reduce(
-                (acc, val) => acc.concat(val),
-                []
-            );
-            return flatOrgRepos;
-        } catch (error) {
-            console.error('Failed to fetch repositories:', error);
-            return null;
-        }
     }
 
     existingReaction(reactInput: string, reaction: string) {
