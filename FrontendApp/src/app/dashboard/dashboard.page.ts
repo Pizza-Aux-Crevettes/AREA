@@ -577,7 +577,11 @@ export class DashboardPage implements OnInit {
         inputAction?: string,
         inputReaction?: string
     ) {
-        if (action === 'DiscordUsername' || action === 'DiscordGuilds') {
+        if (
+            action === 'DiscordUsername' ||
+            action === 'DiscordGuilds' ||
+            action === 'Email'
+        ) {
             inputAction = 'Nothing';
         }
         if (reaction === 'Spotify') {
@@ -585,8 +589,7 @@ export class DashboardPage implements OnInit {
         }
         if (
             (reaction === 'Branch' || reaction === 'Issue') &&
-            this.orgfinal === '' &&
-            this.repfinal === ''
+            (this.orgfinal === '' || this.repfinal === '')
         ) {
             alert('Please complete all fields');
             return;
