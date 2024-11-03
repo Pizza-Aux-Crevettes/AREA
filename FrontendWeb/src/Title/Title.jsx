@@ -78,7 +78,7 @@ function NavigateMenu() {
     }
 
     function goToDownload() {
-        navigate('/client.apk');
+        navigate('/download');
         location.pathname === '/download';
     }
 

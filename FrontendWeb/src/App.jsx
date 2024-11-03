@@ -6,13 +6,13 @@ import Register from './Register/Register';
 import Dashboard from './Dashboard/Dashboard';
 import Download from './Download/Download';
 import Service from './ServiceConnection/ServiceConnection';
-import { Routes, Route, HashRouter as Router } from 'react-router-dom';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import '@mantine/core/styles.css';
 import Cookies from 'cookies-js';
 
 const App = () => {
     const [adaptability, setAdaptability] = useState(false);
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : "http://localhost:8080";
 
     useEffect(() => {
         const token = Cookies.get('token');
@@ -54,7 +54,7 @@ const App = () => {
                                 <Route path="/" element={<Dashboard />} />
                                 <Route path="/service" element={<Service />} />
                                 <Route
-                                    path="/client.apk"
+                                    path="/download"
                                     element={<Download />}
                                 />
                             </>
@@ -64,10 +64,6 @@ const App = () => {
                                 <Route
                                     path="/register"
                                     element={<Register />}
-                                />
-                                <Route
-                                    path="/client.apk"
-                                    element={<Download />}
                                 />
                             </>
                         )}
