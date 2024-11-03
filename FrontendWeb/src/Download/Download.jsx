@@ -10,8 +10,8 @@ function Download() {
     const apiUrl = localStorage.getItem('userInputIP');
     useEffect(() => {}, []);
     function move() {
-        const fileUrl = `${apiUrl}/output/area_app.apk`;
-        const fileName = 'area_app.apk';
+        const fileUrl = `${apiUrl}/output/client.apk`;
+        const fileName = 'client.apk';
         const link = document.createElement('a');
         link.href = fileUrl;
         link.download = fileName;
