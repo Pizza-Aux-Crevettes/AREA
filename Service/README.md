@@ -39,8 +39,6 @@ To install and run the service locally:
     npm run dev
     ```
 
-2. The server will run by default on port 8080.
-
 ---
 
 ## Environnement variables
@@ -74,6 +72,9 @@ The project requires certain environment variables to function correctly.
    
    GITHUB_CLIENT_ID="your-github-client-id"
    GITHUB_CLIENT_SECRET="your-github-client-secret"
+
+   TWITCH_CLIENT_ID="your-twitch-client-id"
+   TWITCH_CLIENT_SECRET="your-twitch-client-secret"
    
    SECRET="your-application-secret"
    ```
