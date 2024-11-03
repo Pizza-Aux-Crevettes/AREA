@@ -196,7 +196,25 @@ export class DashboardPage implements OnInit {
         this.utilsService.isDislexicFont$.subscribe((fontState) => {
             this.isDislexicFontEnabled = fontState;
         });
-        this.checkConnection();
+        this.loadServices();
+    }
+
+    loadServices() {
+        const token = this.localStorage.getItem('token');
+        this.tokenService.getUserData(`${token}`).subscribe((res) => {
+            let email = res.email;
+            this.tokenService.getServicesTokens(email).subscribe((res) => {
+                let tokenList = res[0];
+                for (let i = 0; i < this.serviceList.length; i++) {
+                    if (tokenList[`${this.serviceList[i]}`]) {
+                        this.localStorage.setItem(this.serviceList[i], 'true');
+                    } else {
+                        this.localStorage.setItem(this.serviceList[i], 'false');
+                    }
+                }
+                this.checkConnection();
+            });
+        });
     }
 
     checkServicesConnexion(area: string): boolean {
