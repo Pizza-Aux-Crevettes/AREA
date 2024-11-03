@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, forkJoin, concatMap } from 'rxjs';
 import { LocalStorageService } from '../localStorage/localStorage.service';
 import { catchError, mergeMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ApiService {
-    API_URL = this.localStorage.getItem('userInputIP');
+    API_URL = this.localStorage.getItem('userInputIP') ? `${this.localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(
         private localStorage: LocalStorageService,

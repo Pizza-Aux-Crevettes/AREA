@@ -1,32 +1,35 @@
 <ion-content class="login-div" [fullscreen]="true">
-    <div class="info-container">
-        <ion-input
-            type="email"
-            label="Email"
-            labelPlacement="floating"
-            errorText="Invalid email"
-            [(ngModel)]="inputEmail"
-        ></ion-input>
-        <ion-input
-            type="password"
-            label="Password"
-            labelPlacement="floating"
-            errorText="Incorrect password"
-            [(ngModel)]="inputPassword"
-        >
-        </ion-input>
-    </div>
+    <div class="container">
+        <div class="info-container">
+            <ion-input
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+                errorText="Invalid email"
+                [(ngModel)]="inputEmail"
+            ></ion-input>
+            <ion-input
+                type="password"
+                label="Password"
+                labelPlacement="floating"
+                errorText="Incorrect password"
+                [(ngModel)]="inputPassword"
+            >
+            </ion-input>
 
-    <div class="bad-entry" *ngIf="this.invalidField">
-        <p>Invalid email or password</p>
-    </div>
+            <div class="bad-entry" *ngIf="this.invalidField">
+                <p>Invalid email or password</p>
+            </div>
 
-    <div class="sign_in">
-        <p>New here?</p>
-        <a class="button-hover" routerLink="/register">Register</a>
-    </div>
+            <div class="sign_in">
+                <p>New here?</p>
+                <a class="button-hover" routerLink="/register">Register</a>
+            </div>
+            <ion-button (click)="changeURL()">Change api url</ion-button>
+        </div>
 
-    <div>
-        <ion-button expand="full" (click)="onLogin()">Login</ion-button>
+        <div class="api">
+            <ion-button class="login-btn" (click)="onLogin()">Login</ion-button>
+        </div>
     </div>
 </ion-content>
