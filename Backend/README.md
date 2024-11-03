@@ -74,6 +74,9 @@ The project requires certain environnement variables to function correctly.
    DISCORD_TOKEN="your-discord-bot-token"
    GUILD_ID="your-discord-guild-id"
    
+   TWITCH_CLIENT_ID="your-twitch-client-id"
+   TWITCH_CLIENT_SECRET="your-twitch-client-secret"
+   
    GITHUB_CLIENT_ID="your-github-client-id"
    GITHUB_CLIENT_SECRET="your-github-client-secret"
    

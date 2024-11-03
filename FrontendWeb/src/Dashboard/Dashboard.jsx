@@ -18,10 +18,10 @@ function AddRectangle({ addNewArea }) {
 
 function Dashboard() {
     const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }]);
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     useEffect(() => {
         const token = Cookies.get('token');
-        const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
         fetch(`${apiUrl}/api/getArea`, {
             method: 'POST',
             headers: {
@@ -41,7 +41,61 @@ function Dashboard() {
             .catch((error) => {
                 console.error(error);
             });
+
+        loadService();
     }, []);
+
+    const loadService = async () => {
+        const token = Cookies.get('token');
+        const serviceList = [
+            'spotify_token',
+            'twitch_token',
+            'google_token',
+            'discord_token',
+            'github_token',
+            'discord_refresh',
+            'spotify_refresh',
+            'google_refresh',
+            'twitch_refresh',
+        ];
+
+        fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                fetch(`${apiUrl}/api/getToken`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_email: json.email }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((tokenList) => {
+                        for (let i = 0; i < serviceList.length; i++) {
+                            if (tokenList[0][`${serviceList[i]}`] !== null) {
+                                console.debug(
+                                    serviceList[i],
+                                    tokenList[0][`${serviceList[i]}`]
+                                );
+                                localStorage.setItem(serviceList[i], 'true');
+                            } else {
+                                localStorage.setItem(serviceList[i], 'false');
+                            }
+                        }
+                    });
+            });
+    };
 
     const addNewArea = () => {
         const maxId =
