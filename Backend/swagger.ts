@@ -38,6 +38,9 @@ const swaggerOptions = {
             userMe: {
                 email: 'string',
             },
+            getAdaptabilityUser: {
+                adaptabilityText: 'boolean',
+            },
         },
     },
 };
