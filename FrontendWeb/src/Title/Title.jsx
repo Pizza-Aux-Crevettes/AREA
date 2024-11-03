@@ -78,8 +78,8 @@ function NavigateMenu() {
     }
 
     function goToDownload() {
-        navigate('/client.apk');
-        location.pathname === '/download';
+        navigate('/DownloadAPK');
+        location.pathname === '/DownloadAPK';
     }
 
     function ChangeIpAdress() {
