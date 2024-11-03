@@ -54,6 +54,17 @@ module.exports = (app: Express) => {
     );
 
     app.get(
+        /*
+        #swagger.responses[200] = {
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/getAdaptabilityUser"
+                    }
+                }
+            }
+        }
+         */
         '/api/getAdaptabilityUser',
         auth,
         async (req: Request, res: Response) => {
