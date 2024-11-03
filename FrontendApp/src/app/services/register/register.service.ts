@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 export class RegisterService {
-    private API_URL = environment.api;
+    API_URL = localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(private http: HttpClient) {}
     register(
@@ -40,7 +40,7 @@ export class RegisterService {
             )
             .pipe(
                 catchError((error: HttpErrorResponse) => {
-                    console.error('request error : ', error);
+                    console.error('Request error : ', error);
                     return throwError(error);
                 })
             );
@@ -66,7 +66,7 @@ export class RegisterService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when set new user in db',
                 data: {},
             });
         }

@@ -1,13 +1,12 @@
 require('dotenv').config();
-import { Express } from 'express';
-import { newsApi } from './API/News';
+import express, { Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJsDoc from 'swagger-jsdoc';
 
 const app: Express = require('express')();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const doc = require('../output.json');
+const path = require('path');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -32,13 +31,13 @@ require('./routes/services/services')(app);
 require('./routes/login/login')(app);
 require('./routes/register/register')(app);
 require('./routes/area/area')(app);
-require('./API/Spotify')(app);
+require('./API/spotify/Spotify')(app);
 require('./API/google/Google')(app);
-require('./API/Twitch/Twitch')(app);
+require('./API/twitch/Twitch')(app);
 require('./API/discord/Discord')(app);
+require('./API/github/Github')(app);
+require('./routes/about/about')(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
-
-//newsApi();
-
-app.listen(port, '0.0.0.0', () => {});
+app.use('/output', express.static('/output'));
+app.listen(port, () => {});

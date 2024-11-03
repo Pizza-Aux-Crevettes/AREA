@@ -5,6 +5,7 @@ import logo_discord from '../assets/discord.png';
 import logo_twitch from '../assets/twitch.png';
 import logo_spotify from '../assets/spotify.png';
 import logo_google from '../assets/google.png';
+import logo_github from '../assets/github.png';
 import './ServiceConnection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -25,9 +26,11 @@ function RectangleService({ text, logo, Click, color_status }) {
     );
 }
 
-const registerService = async (service) => {
+const registerService = async (service, service_token) => {
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
+
     try {
-        const response = await fetch('http://localhost:8080/api/user/me', {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
             method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + Cookies.get('token'),
@@ -40,31 +43,28 @@ const registerService = async (service) => {
         const json = await response.json();
 
         if (json && json.email) {
-            const token = Cookies.get(service);
             const userEmail = json.email;
             fetch('http://localhost:8080/api/setNewToken', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('token')}`,
                 },
                 body: JSON.stringify({
                     userEmail: userEmail,
-                    token: token,
+                    token: service_token,
                     service: service,
                 }),
             })
-                .then((response) => {
-                    console.log(response.json);
-                })
+                .then((response) => {})
                 .then(() => {});
         } else {
-            console.error('userEmail is empty');
+            console.error('UserEmail is empty');
         }
     } catch (error) {
-        console.error('An error occured', error);
+        console.error('An error occured :', error);
     }
 };
-
 
 function Service() {
     const navigate = useNavigate();
@@ -73,16 +73,34 @@ function Service() {
     const [googleText, setGoogleText] = useState('');
     const [twitchText, setTwitchText] = useState('');
     const [discordText, setDiscordText] = useState('');
+    const [githubText, setGithubText] = useState('');
 
     const [spotifyStatus, setSpotifyStatus] = useState('');
     const [googleStatus, setGoogleStatus] = useState('');
     const [twitchStatus, setTwitchStatus] = useState('');
     const [discordStatus, setDiscordStatus] = useState('');
+    const [githubStatus, setGithubStatus] = useState('');
 
     const [spotifyConnect, setSpotifyConnect] = useState(false);
     const [googleConnect, setGoogleConnect] = useState(false);
     const [twitchConnect, setTwitchConnect] = useState(false);
     const [discordConnect, setDiscordConnect] = useState(false);
+    const [githubConnect, setGithubConnect] = useState(false);
+
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
+
+    const serviceList = [
+        'spotify_token',
+        'twitch_token',
+        'google_token',
+        'discord_token',
+        'github_token',
+        'discord_refresh',
+        'spotify_refresh',
+        'google_refresh',
+        'twitch_refresh',
+    ];
+
     useEffect(() => {
         if (Cookies.get('token') === null) {
             navigate('/');
@@ -91,28 +109,20 @@ function Service() {
         const search = window.location.search;
         const params = new URLSearchParams(search);
         let token = '';
-        const serviceList = [
-            'spotify_token',
-            'twitch_token',
-            'google_token',
-            'discord_token',
-            'discord_refresh',
-            'spotify_refresh',
-            'google_refresh',
-            'twitch_refresh',
-        ];
+
+        loadService();
 
         for (let i = 0; i < serviceList.length; i++) {
             token = params.get(serviceList[i]);
             if (token) {
-                Cookies.set(serviceList[i], token);
-                if (Cookies.get(serviceList[i])) {
-                    registerService(serviceList[i]);
+                localStorage.setItem(serviceList[i], 'true');
+                if (localStorage.getItem(serviceList[i]) === 'true') {
+                    registerService(serviceList[i], token);
                     if (serviceList[i] === 'discord_token') {
-                        fetch('http://localhost:8080/discord/me', {
+                        fetch(`${apiUrl}/discord/me`, {
                             method: 'GET',
                             headers: {
-                                Authorization: 'Bearer ' + Cookies.get('discord_token'),
+                                Authorization: 'Bearer ' + token,
                                 'Content-Type': 'application/json',
                             },
                         })
@@ -120,18 +130,38 @@ function Service() {
                                 return response.json();
                             })
                             .then((json) => {
-                                setUsernameDiscordInDB(json.userData.username);
+                                setUsernameDiscordInDB(
+                                    json.userData.username,
+                                    json.guildCount
+                                );
                             });
-
-
                     }
                 }
             }
         }
+
         clearUrl();
         window.history.replaceState(null, '', window.location.pathname);
-        if (Cookies.get('spotify_token')) {
-            setSpotifyText('disconnection of Spotify');
+        defineStatusService();
+    }, [navigate, location]);
+
+    const setUsernameDiscordInDB = async (userName, nbGuilds) => {
+        fetch(`${apiUrl}/discord/setUsername`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: Cookies.get('token'),
+                username: userName,
+                nbGuilds: nbGuilds,
+            }),
+        });
+    };
+
+    const defineStatusService = async () => {
+        if (localStorage.getItem('spotify_token') === 'true') {
+            setSpotifyText('Disconnection of Spotify');
             setSpotifyStatus('#3AB700');
             setSpotifyConnect(true);
         } else {
@@ -140,8 +170,8 @@ function Service() {
             setSpotifyConnect(false);
         }
 
-        if (Cookies.get('twitch_token')) {
-            setTwitchText('disconnection of Twitch');
+        if (localStorage.getItem('twitch_token') === 'true') {
+            setTwitchText('Disconnection of Twitch');
             setTwitchStatus('#3AB700');
             setTwitchConnect(true);
         } else {
@@ -150,8 +180,8 @@ function Service() {
             setTwitchConnect(false);
         }
 
-        if (Cookies.get('google_token')) {
-            setGoogleText('disconnection of Google');
+        if (localStorage.getItem('google_token') === 'true') {
+            setGoogleText('Disconnection of Google');
             setGoogleStatus('#3AB700');
             setGoogleConnect(true);
         } else {
@@ -160,8 +190,8 @@ function Service() {
             setGoogleConnect(false);
         }
 
-        if (Cookies.get('discord_token')) {
-            setDiscordText('disconnection of Discord');
+        if (localStorage.getItem('discord_token') === 'true') {
+            setDiscordText('Disconnection of Discord');
             setDiscordStatus('#3AB700');
             setDiscordConnect(true);
         } else {
@@ -169,20 +199,56 @@ function Service() {
             setDiscordStatus('#33478f');
             setDiscordConnect(false);
         }
-    }, [navigate, location]);
+        if (localStorage.getItem('github_token') === 'true') {
+            setGithubText('Disconnection of Github');
+            setGithubStatus('#3AB700');
+            setGithubConnect(true);
+        } else {
+            setGithubText('Connect to Github');
+            setGithubStatus('#33478f');
+            setGithubConnect(false);
+        }
+    };
 
-
-    const setUsernameDiscordInDB = (userName) => {
-        fetch('http://localhost:8080/discord/setUsername', {
-            method: 'POST',
+    const loadService = async () => {
+        const token = Cookies.get('token');
+        fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
             headers: {
+                Authorization: 'Bearer ' + token,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                token: Cookies.get('token'),
-                username: userName,
-            }),
-        });
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                fetch(`${apiUrl}/api/getToken`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_email: json.email }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((tokenList) => {
+                        for (let i = 0; i < serviceList.length; i++) {
+                            if (tokenList[0][`${serviceList[i]}`] !== null) {
+                                console.debug(
+                                    serviceList[i],
+                                    tokenList[0][`${serviceList[i]}`]
+                                );
+                                localStorage.setItem(serviceList[i], 'true');
+                            } else {
+                                localStorage.setItem(serviceList[i], 'false');
+                            }
+                        }
+                        defineStatusService();
+                    });
+            });
     };
 
     const clearUrl = () => {
@@ -194,7 +260,7 @@ function Service() {
         if (isConnected) {
             let userToken = Cookies.get('token');
             if (userToken) {
-                fetch('http://localhost:8080/api/user/me', {
+                fetch(`${apiUrl}/api/user/me`, {
                     method: 'GET',
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('token'),
@@ -206,85 +272,37 @@ function Service() {
                     })
                     .then((json) => {
                         const email = json.email;
-                        const tokenService = Cookies.get(service + '_token');
-                        if (tokenService && service !== 'spotify') {
-                            fetch(`http://localhost:8080/${service}/revoke`, {
-                                method: 'POST',
+                        if (service !== 'github') {
+                            localStorage.removeItem(service + '_refresh');
+                        }
+                        localStorage.removeItem(service + '_token');
+                        if (service.toLowerCase() === 'discord') {
+                            fetch(`${apiUrl}/discord/username`, {
+                                method: 'DELETE',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${Cookies.get('token')}`,
                                 },
-                                body: JSON.stringify({
-                                    token: tokenService,
-                                }),
-                            }).then((response) => {
-                                if (response.ok) {
-                                    Cookies.set(service + '_token', '', {
-                                        expires: -1,
-                                    });
-                                    Cookies.set(service + '_refresh', '', {
-                                        expires: -1,
-                                    });
-                                    fetch(
-                                        'http://localhost:8080/api/setNewToken',
-                                        {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type':
-                                                    'application/json',
-                                            },
-                                            body: JSON.stringify({
-                                                userEmail: email,
-                                                token: '',
-                                                service: service + '_token',
-                                            }),
-                                        }
-                                    ).then((response) => {
-                                        if (response.ok) {
-                                            fetch(
-                                                'http://localhost:8080/api/setNewToken',
-                                                {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Content-Type':
-                                                            'application/json',
-                                                    },
-                                                    body: JSON.stringify({
-                                                        userEmail: email,
-                                                        token: '',
-                                                        service:
-                                                            service +
-                                                            '_refresh',
-                                                    }),
-                                                }
-                                            ).then(() => {
-                                                window.location.reload();
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        } else if (tokenService && service === 'spotify') {
-                            Cookies.set(service + '_token', '', {
-                                expires: -1,
-                            });
-                            Cookies.set(service + '_refresh', '', {
-                                expires: -1,
-                            });
-                            fetch('http://localhost:8080/api/setNewToken', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    userEmail: email,
-                                    token: '',
-                                    service: service + '_token',
-                                }),
-                            }).then(() => {
-                                fetch('http://localhost:8080/api/setNewToken', {
+                            }).then((res) => {});
+                        }
+                        fetch(`${apiUrl}/api/setNewToken`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${Cookies.get('token')}`,
+                            },
+                            body: JSON.stringify({
+                                userEmail: email,
+                                token: '',
+                                service: service + '_token',
+                            }),
+                        }).then(() => {
+                            if (service !== 'github') {
+                                fetch(`${apiUrl}/api/setNewToken`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${Cookies.get('token')}`,
                                     },
                                     body: JSON.stringify({
                                         userEmail: email,
@@ -294,13 +312,14 @@ function Service() {
                                 }).then(() => {
                                     window.location.reload();
                                 });
-                            });
-                        }
+                            } else {
+                                window.location.reload();
+                            }
+                        });
                     });
             }
         } else {
-            window.location.href =
-                'http://localhost:8080/' + service + '/login/';
+            window.location.href = `${apiUrl}/` + service + '/login/';
         }
     };
 
@@ -326,6 +345,16 @@ function Service() {
                                     handleClick('google', googleConnect)
                                 }
                                 color_status={googleStatus}
+                            />
+                        </div>
+                        <div className="column-container">
+                            <RectangleService
+                                text={githubText}
+                                logo={logo_github}
+                                Click={() =>
+                                    handleClick('github', githubConnect)
+                                }
+                                color_status={githubStatus}
                             />
                         </div>
                         <div className="column-container">

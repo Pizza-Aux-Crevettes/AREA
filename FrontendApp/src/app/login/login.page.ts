@@ -4,6 +4,9 @@ import { LocalStorageService } from '../services/localStorage/localStorage.servi
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TokenService } from '../services/token/token.service';
+import { AreaService } from '../services/area/area.service';
+import { UtilsService } from '../services/utils/utils.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -20,6 +23,7 @@ export class LoginPage implements OnInit {
         'google_token',
         'twitch_token',
         'discord_token',
+        'github_token',
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
@@ -32,11 +36,12 @@ export class LoginPage implements OnInit {
         private localStorage: LocalStorageService,
         private router: Router
     ) {
+    }
+
+    ngOnInit() {
         this.inputEmail = '';
         this.inputPassword = '';
     }
-
-    ngOnInit() {}
 
     onLogin() {
         this.loginService
@@ -60,6 +65,7 @@ export class LoginPage implements OnInit {
                         })
                     )
                     .subscribe((res) => {
+                        this.localStorage.setItem('email', res.email);
                         this.tokenService
                             .getServicesTokens(res.email)
                             .pipe(
@@ -71,14 +77,33 @@ export class LoginPage implements OnInit {
                             )
                             .subscribe((res) => {
                                 for (let i = 0; i < this.services.length; i++) {
-                                    this.localStorage.setItem(
-                                        this.services[i],
-                                        res[0][this.services[i]]
-                                    );
+                                    if (res[0][this.services[i]] !== null) {
+                                        this.localStorage.setItem(
+                                            this.services[i],
+                                            'true'
+                                        );
+                                    } else {
+                                        this.localStorage.setItem(
+                                            this.services[i],
+                                            'false'
+                                        );
+                                    }
                                 }
                                 this.router.navigate(['/dashboard']);
                             });
                     });
             });
+    }
+
+    changeURL() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+        }
+        this.loginService.API_URL = `${localStorage.getItem('userInputIP')}`;
+        this.tokenService.API_URL = `${localStorage.getItem('userInputIP')}`;
     }
 }

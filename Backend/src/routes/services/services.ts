@@ -1,8 +1,9 @@
 import { Express, Request, Response, Router } from 'express';
 import { createService, getService, updateService } from './services.query';
+import { auth } from '../../middleware/auth';
 
 module.exports = (app: Express) => {
-    app.post('/api/setNewToken', async (req: Request, res: Response) => {
+    app.post('/api/setNewToken', auth, async (req: Request, res: Response) => {
         res.setHeader('Content-Type', 'application/json');
         const service_infos = req.body;
         if (service_infos.token === '') {
@@ -39,7 +40,7 @@ module.exports = (app: Express) => {
         });
     });
 
-    app.post('/api/getToken', async (req: Request, res: Response) => {
+    app.post('/api/getToken', auth, async (req: Request, res: Response) => {
         /*
         #swagger.responses[200] = {
             content: {

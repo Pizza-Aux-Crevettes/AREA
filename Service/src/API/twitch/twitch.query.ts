@@ -22,10 +22,10 @@ async function getUserId(username: string, token: string) {
 
         response = await result.json();
     } catch (error) {
-        console.error('error', error);
+        console.error('Error when getting twitch user id :', error);
         return null;
     }
-    return response.data?.[0]?.id || null;;
+    return response.data?.[0]?.id || null;
 }
 
 export async function clipTwitch(username: string, token: string) {
@@ -49,9 +49,43 @@ export async function clipTwitch(username: string, token: string) {
 
         data = await result.json();
     } catch (error) {
-        console.error('error', error);
+        console.error('Error when getting twitch clip :', error);
         return null;
     }
-    console.log(data)
     return data;
+}
+
+export async function getRefreshTwitchToken(email: string): Promise<any> {
+    try {
+        const { data, error } = await supabase
+            .from('Service')
+            .select('twitch_refresh')
+            .eq('user_email', email);
+        if (error) {
+            return '';
+        }
+        return data[0].twitch_refresh;
+    } catch (e) {
+        console.error('Error when getting twitch refresh token :', e);
+        return '';
+    }
+}
+
+export async function updateTwitchToken(
+    email: string,
+    access_token: string
+): Promise<boolean> {
+    try {
+        const { error } = await supabase
+            .from('Service')
+            .update({
+                twitch_token: access_token,
+            })
+            .eq('user_email', email)
+            .select();
+        return !error;
+    } catch (error) {
+        console.error('Error when updating twitch refresh token :', e);
+        return false;
+    }
 }

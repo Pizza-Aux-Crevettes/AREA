@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import supabase from '../../config/db';
 import e from 'express';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ export async function sendDM(
         const user = await discordClient.users.fetch(userId);
         await user.send(message);
     } catch (error) {
-        throw new Error('cannot send the message');
+        throw new Error('Cannot send the message');
     }
 }
 
@@ -28,7 +29,7 @@ export async function getRefreshDiscordToken(email: string): Promise<any> {
         }
         return data[0].discord_refresh;
     } catch (e) {
-        console.error('getRefreshDiscordToken', e);
+        console.error('Error when getting refresh Discord token :', e);
         return '';
     }
 }
@@ -49,7 +50,7 @@ export async function updateDiscordToken(
             .select();
         return !error;
     } catch (error) {
-        console.error('update Discord Token', e);
+        console.error('Error when update Discord Token :', e);
         return false;
     }
 }
@@ -68,7 +69,7 @@ export async function updateUserName(
             .select();
         return !error;
     } catch (error) {
-        console.error('update Discord Username', e);
+        console.error('Error when update Discord username :', e);
         return false;
     }
 }
@@ -82,21 +83,83 @@ export async function getUserName(email: string): Promise<any> {
             .select();
         return data;
     } catch (error) {
-        console.error('update Discord Username', e);
+        console.error('Error when get Discord username :', e);
         return false;
     }
 }
 
-export async function getService(user_email: string): Promise<any> {
-    const { data: user_info, error } = await supabase
-        .from('Service')
-        .select('*')
-        .eq('user_email', user_email);
-    if (error) {
-        return null;
+export async function discordUserMe(token: string) {
+    if (token !== null) {
+        try {
+            const response = await axios.get(
+                'https://discord.com/api/users/@me',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error('Error when get user informations :', error);
+        }
     }
-    if (user_info.length === 0) {
-        return null;
+}
+
+export async function getNbGuilds(email: string): Promise<any> {
+    try {
+        const { data } = await supabase
+            .from('DiscordUserDatas')
+            .select('nbGuilds')
+            .eq('email', email)
+            .select();
+        return data;
+    } catch (error) {
+        console.error('Error when get user guilds :', e);
+        return false;
     }
-    return user_info;
+}
+
+export async function updateDBGuilds(email: string, nb: number): Promise<any> {
+    try {
+        const { error } = await supabase
+            .from('DiscordUserDatas')
+            .update({
+                nbGuilds: nb,
+            })
+            .eq('email', email)
+            .select();
+        return !error;
+    } catch (error) {
+        console.error(
+            'Error when update the actual number of discord guilds :',
+            e
+        );
+        return false;
+    }
+}
+
+export async function getActualNbGuilds(token: string) {
+    if (token !== null) {
+        try {
+            const response = await axios.get(
+                'https://discord.com/api/users/@me/guilds',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error(
+                'Error when get the actual number of discord guilds :',
+                error
+            );
+        }
+    } else {
+        console.error('Token is null or undefined');
+    }
 }

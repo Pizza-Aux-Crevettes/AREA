@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, LoadingOverlay } from '@mantine/core';
 import './Register.css';
+import Cookies from 'cookies-js';
 
 function Register() {
     const [email, setEmail] = useState('');
@@ -14,10 +15,22 @@ function Register() {
     const [alreadyUse, setAlreadyUse] = useState('');
     const [accountCreated, setAccountCreated] = useState(false);
     const [loading, setLoading] = useState(false);
+    let apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     function goToLogin() {
         navigate('/');
         location.pathname === '/';
+    }
+
+    function changeUrl() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            'http://localhost:8080'
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+            apiUrl = localStorage.getItem('userInputIP');
+        }
     }
 
     function CreationMsg({ correctMsg }) {
@@ -41,7 +54,7 @@ function Register() {
             surname !== '' &&
             username !== ''
         ) {
-            fetch('http://localhost:8080/api/register', {
+            fetch(`${apiUrl}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +70,7 @@ function Register() {
                 .then((response) => {
                     setLoading(false);
                     if (response.ok) {
-                        fetch('http://localhost:8080/api/setNewUSer', {
+                        fetch(`${apiUrl}/api/setNewUSer`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -77,7 +90,7 @@ function Register() {
         } else {
             setTimeout(() => {
                 setLoading(false);
-                setAlreadyUse('Please enter your information.');
+                setAlreadyUse('Please complete all fields.');
             }, 300);
         }
     }
@@ -134,7 +147,10 @@ function Register() {
                     }
                 />
                 <div className="button-create">
-                    <Button size="xl" onClick={registerDatas}>
+                    <Button size="md" onClick={changeUrl}>
+                        Change api url
+                    </Button>
+                    <Button size="md" onClick={registerDatas}>
                         Create account
                     </Button>
                 </div>

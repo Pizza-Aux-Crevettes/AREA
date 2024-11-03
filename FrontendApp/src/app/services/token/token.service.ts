@@ -7,13 +7,14 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 export class TokenService {
-    private API_URL = environment.api;
+    API_URL = localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(private http: HttpClient) {}
 
     getServicesTokens(email: any): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
 
         try {
@@ -33,7 +34,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting all services token',
                 data: {},
             });
         }
@@ -54,7 +55,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when getting connected user datas',
                 data: {},
             });
         }
@@ -70,8 +71,17 @@ export class TokenService {
         userEmail: string,
         service: string
     ): Observable<any> {
+        if (service === 'github_refresh') {
+            return of({
+                status: 200,
+                error: false,
+                message: 'No refresh_token for discord',
+                data: {},
+            });
+        }
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
 
         try {
@@ -93,7 +103,7 @@ export class TokenService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when set services token in db',
                 data: {},
             });
         }
@@ -102,8 +112,8 @@ export class TokenService {
     revokeToken(service: string, token: string): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         });
-        console.log('route =', `${this.API_URL}/${service}/revoke`);
         try {
             return this.http.post<any>(
                 `${this.API_URL}/${service}/revoke`,
@@ -125,5 +135,29 @@ export class TokenService {
                 data: {},
             });
         }
+    }
+    getAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        });
+
+        return this.http.get<any>(`${this.API_URL}/api/getAdaptabilityUser`, {
+            headers,
+        });
+    }
+
+    setAdaptabilityUser(token: string | null): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        });
+        const body = { token: token };
+
+        return this.http.post<any>(
+            `${this.API_URL}/api/setAdaptabilityUser`,
+            body,
+            { headers }
+        );
     }
 }

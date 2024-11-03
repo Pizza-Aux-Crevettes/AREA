@@ -11,7 +11,7 @@ export async function createService(user_email: string): Promise<any> {
         ])
         .select();
     if (error) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return data;
@@ -33,7 +33,7 @@ export async function updateService(
         .eq('user_email', user_email)
         .select();
     if (data === null || data.length === 0) {
-        console.log(error);
+        console.error(error);
         return null;
     } else {
         return data;

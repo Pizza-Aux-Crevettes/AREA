@@ -13,7 +13,8 @@
     padding: 10px;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 5px;
+    // margin-bottom: 5px;
+    align-items: center;
 }
 
 .Service-div .flex-rectangle {
@@ -51,7 +52,33 @@
     cursor: pointer;
 }
 
+.menu-button {
+    width: 35px;
+    height: 35px;
+    color: black;
+}
+
 .Service-div .icon-container {
     width: 40px;
     height: auto;
 }
+
+.Service-title-bar ion-list{
+    background-color: transparent;
+}
+
+.title {
+    color: black;
+    margin-bottom: 15px;
+    display: flex;
+    align-self: center;
+}
+
+.dislexic-font {
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+  }
+
+.connected {
+    background-color: #3AB700 !important;
+}
+  

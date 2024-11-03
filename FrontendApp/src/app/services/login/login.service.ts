@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class LoginService {
-    private API_URL = environment.api;
+    API_URL = localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(private http: HttpClient) {}
 
@@ -32,7 +32,7 @@ export class LoginService {
             return of({
                 status: 500,
                 error: true,
-                message: 'Error',
+                message: 'Error when login user',
                 data: {},
             });
         }

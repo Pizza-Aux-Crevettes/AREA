@@ -40,4 +40,4 @@ RUN zipalign -p 4 /app/android/app/build/outputs/apk/release/app-release-unsigne
 RUN apksigner sign --ks area.keystore --ks-pass pass:password --key-pass pass:password /app/android/app/build/outputs/apk/release/area_app.apk
 RUN apksigner verify /app/android/app/build/outputs/apk/release/area_app.apk
 
-CMD ["cp", "/app/android/app/build/outputs/apk/release/area_app.apk", "/output/area_app.apk"]
+CMD ["cp", "/app/android/app/build/outputs/apk/release/area_app.apk", "/output/client.apk"]

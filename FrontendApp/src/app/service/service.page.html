@@ -1,50 +1,60 @@
-<ion-content>
+<ion-content [ngClass]="{'dislexic-font': isDislexicFontEnabled}">
   <div class="Service-div">
     <div class="Service-title-bar">
       <div>
-        <img
-            src="assets/menu.png"
-            style="
-                width: 24px;
-                height: 24px;
-                margin-top: 100%;
-            "
-            (click)="moveToDashboard()"
-        />
+        <ion-list>
+          <ion-icon name="menu"
+            style="color: black;"
+            class="menu-button"
+            (click)="openMenu(menu1)">
+          </ion-icon>
+          <ion-select #menu1 interface="action-sheet" (ionChange)="onSelectNavigate($event)" style="display: none;">
+            <ion-select-option value="Dashboard">Dashboard</ion-select-option>
+            <ion-select-option value="Service">Service Connection</ion-select-option>
+              <ion-select-option value="ChangeIPAdress">Change IP adress</ion-select-option>
+          </ion-select>
+        </ion-list>
       </div>
-      <ion-text><h1>Service</h1> </ion-text>
+      <ion-text class="title"><h1>Service</h1> </ion-text>
       <div>
-        <img
-            src="assets/exit.png"
-            style="
-                width: 24px;
-                height: 24px;
-                margin-top: 100%;
-            "
-            (click)="deleteCookies()"
-        />
+        <ion-list>
+          <ion-icon
+            name="settings-outline"
+            (click)="openMenu(menu2)"
+            class="menu-button">
+          </ion-icon>
+          <ion-select #menu2 interface="action-sheet" (ionChange)="onSelectParam($event)" style="display: none;">
+            <ion-select-option value="Log out">Log out</ion-select-option>
+            <ion-select-option value="Dislexic font">Dislexic font</ion-select-option>
+          </ion-select>
+        </ion-list>
       </div>
     </div>
     <div class="flex-rectangle">
       <div class="main-rectangle">
           <img src="assets/discord.png" class="icon-container" />
-          <ion-text class="connection-rect"  [style.background-color]="discord_status"
-          (click)="ManageService('discord', discord_connect)"><h3>{{ discord_text }}</h3></ion-text>
+          <ion-text class="connection-rect {{discord_connect ? 'connected' : 'notConnected'}}"
+          (click)="ManageService('discord', discord_connect)"><h3>{{ discord_connect ? 'Disconnect of' : 'Connect to' }} discord</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/twitch.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="twitch_status"
-        (click)="ManageService('twitch', twitch_connect)"><h3>{{ twitch_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{twitch_connect ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('twitch', twitch_connect)"><h3>{{ twitch_connect ? 'Disconnect of' : 'Connect to' }} twitch</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/google.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="google_status"
-        (click)="ManageService('google', google_connect)"><h3>{{ google_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{google_connect ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('google', google_connect)"><h3>{{ google_connect ? 'Disconnect of' : 'Connect to' }} google</h3></ion-text>
       </div>
       <div class="main-rectangle">
         <img src="assets/spotify.png" class="icon-container" />
-        <ion-text class="connection-rect"  [style.background-color]="spotify_status"
-        (click)="ManageService('spotify', spotify_connect)"><h3>{{ spotify_text }}</h3></ion-text>
+        <ion-text class="connection-rect {{spotify_connect ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('spotify', spotify_connect)"><h3>{{ spotify_connect ? 'Disconnect of' : 'Connect to' }} spotify</h3></ion-text>
+      </div>
+      <div class="main-rectangle">
+        <img src="assets/github.png" class="icon-container" />
+        <ion-text class="connection-rect {{github_connect ? 'connected' : 'notConnected'}}"
+        (click)="ManageService('github', github_connect)"><h3>{{ github_connect ? 'Disconnect of' : 'Connect to' }} github</h3></ion-text>
       </div>
   </div>
   

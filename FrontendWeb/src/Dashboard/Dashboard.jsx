@@ -18,13 +18,15 @@ function AddRectangle({ addNewArea }) {
 
 function Dashboard() {
     const [areas, setAreas] = useState([{ id: 1 }, { id: 2 }]);
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     useEffect(() => {
         const token = Cookies.get('token');
-        fetch('http://localhost:8080/api/getArea', {
+        fetch(`${apiUrl}/api/getArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token,
@@ -39,12 +41,73 @@ function Dashboard() {
             .catch((error) => {
                 console.error(error);
             });
+
+        loadService();
     }, []);
+
+    const loadService = async () => {
+        const token = Cookies.get('token');
+        const serviceList = [
+            'spotify_token',
+            'twitch_token',
+            'google_token',
+            'discord_token',
+            'github_token',
+            'discord_refresh',
+            'spotify_refresh',
+            'google_refresh',
+            'twitch_refresh',
+        ];
+
+        fetch(`${apiUrl}/api/user/me`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                fetch(`${apiUrl}/api/getToken`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_email: json.email }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((tokenList) => {
+                        for (let i = 0; i < serviceList.length; i++) {
+                            if (tokenList[0][`${serviceList[i]}`] !== null) {
+                                console.debug(
+                                    serviceList[i],
+                                    tokenList[0][`${serviceList[i]}`]
+                                );
+                                localStorage.setItem(serviceList[i], 'true');
+                            } else {
+                                localStorage.setItem(serviceList[i], 'false');
+                            }
+                        }
+                    });
+            });
+    };
 
     const addNewArea = () => {
         const maxId =
             areas.length > 0 ? Math.max(...areas.map((area) => area.id)) : 0;
-        const newArea = { id: maxId + 1, action: "Select action", reaction: "Select reaction", inputAction: '', inputReaction: '' };
+        const newArea = {
+            id: maxId + 1,
+            action: 'Select action',
+            reaction: 'Select reaction',
+            inputAction: '',
+            inputReaction: '',
+        };
+        setAreas([...areas, newArea]);
         setAreas([...areas, newArea]);
     };
 
@@ -57,11 +120,13 @@ function Dashboard() {
     };
 
     const removeArea = (id, action, reaction, inputAction, inputReaction) => {
-        console.log(action, reaction, inputAction, inputReaction);
-        fetch('http://localhost:8080/api/delArea', {
+        const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
+
+        fetch(`${apiUrl}/api/delArea`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('token')}`,
             },
             body: JSON.stringify({
                 token: Cookies.get('token'),
@@ -72,7 +137,16 @@ function Dashboard() {
             }),
         })
             .then((response) => {
-                console.log(response);
+                fetch(`${apiUrl}/api/DelEmailUser`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('token')}`,
+                    },
+                    body: JSON.stringify({
+                        token: Cookies.get('token'),
+                    }),
+                });
             })
             .catch((error) => {
                 console.error(error);
@@ -82,25 +156,50 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
-        {/* <div className="dashboard" style={{fontFamily: adaptability ? 'OpenDyslexic, Arial, sans-serif' : 'Arial, sans-serif'}}> */}
             <div className="all-container">
                 <Title title="Dashboard" />
                 <div className="container">
                     <div className="back-rectangle">
                         <div className="column-container">
-                            {areas.map((area) => (
-                                <div key={area.id} className="row_container">
-                                    <RectangleDashboard
-                                        id={area.id}
-                                        onRemove={removeArea}
-                                        contentAct={area.action}
-                                        contentReact={area.reaction}
-                                        inputChange={inputChange}
-                                        inputContentAct={area.inputAction}
-                                        inputContentReact={area.inputReaction}
-                                    />
-                                </div>
-                            ))}
+                            {areas.map((area) =>
+                                area.action === 'Select action' ? (
+                                    <div
+                                        key={area.id}
+                                        className="row_container"
+                                    >
+                                        <RectangleDashboard
+                                            id={area.id}
+                                            onRemove={removeArea}
+                                            contentAct={area.action}
+                                            contentReact={area.reaction}
+                                            inputChange={inputChange}
+                                            inputContentAct={area.inputAction}
+                                            inputContentReact={
+                                                area.inputReaction
+                                            }
+                                            alreadyExist={false}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        key={area.id}
+                                        className="row_container"
+                                    >
+                                        <RectangleDashboard
+                                            id={area.id}
+                                            onRemove={removeArea}
+                                            contentAct={area.action}
+                                            contentReact={area.reaction}
+                                            inputChange={inputChange}
+                                            inputContentAct={area.inputAction}
+                                            inputContentReact={
+                                                area.inputReaction
+                                            }
+                                            alreadyExist={true}
+                                        />
+                                    </div>
+                                )
+                            )}
                             <AddRectangle addNewArea={addNewArea} />
                         </div>
                     </div>

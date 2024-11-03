@@ -29,6 +29,7 @@ const swaggerOptions = {
                 google_token: 'string',
                 discord_token: 'string',
                 twitch_token: 'string',
+                github_token: 'string',
                 discord_refresh: 'string',
                 twitch_refresh: 'string',
                 google_refresh: 'string',
@@ -36,6 +37,9 @@ const swaggerOptions = {
             },
             userMe: {
                 email: 'string',
+            },
+            getAdaptabilityUser: {
+                adaptabilityText: 'boolean',
             },
         },
     },

@@ -35,33 +35,23 @@ export async function getWeather(userCity: string): Promise<any> {
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Erreur: ${response.status}`);
+                throw new Error(`Error : ${response.status}`);
             }
 
             const data = await response.json();
-            console.log(`Description: ${data.weather[0].description}`);
-            // console.log(`Température: ${data.main.temp}°C`);
-            // console.log(`Humidité: ${data.main.humidity}%`);
-            // console.log(`Vent: ${data.wind.speed} m/s`);
-
             let Word;
             for (let i = 0; i <= data.weather.length; i++) {
                 Word = data.weather[0].description.split(' ')[i];
                 if (Word === 'pluie') {
-                    console.log('pluie');
                     return true;
                 }
                 if (Word === 'bruine') {
-                    console.log('pluie');
                     return true;
                 }
             }
             return false;
         } catch (error) {
-            console.error(
-                'Erreur lors de la récupération des données météo : ',
-                error
-            );
+            console.error('Error retrieving weather data :', error);
             return null;
         }
     } else {
@@ -103,16 +93,16 @@ export async function getAlerts(userCity: string): Promise<any> {
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Erreur: ${response.status}`);
+                throw new Error(`Error : ${response.status}`);
             }
             const data = await response.json();
             if (data.alerts) {
-                return data.alerts;
+                return true;
             } else {
-                return '';
+                return false;
             }
         } catch (error) {
-            console.error('fetching data: ', error);
+            console.error('Fetching data :', error);
             return null;
         }
     } else {

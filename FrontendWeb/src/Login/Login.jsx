@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Login.css';
 import Cookies from 'cookies-js';
 import { Button, LoadingOverlay } from '@mantine/core';
-import { resolvePath, useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -14,11 +13,24 @@ function Login() {
         'google_token',
         'twitch_token',
         'discord_token',
+        'github_token',
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
         'discord_refresh',
     ];
+    let apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
+
+    function changeUrl() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            'http://localhost:8080'
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+            apiUrl = localStorage.getItem('userInputIP')
+        }
+    }
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -34,7 +46,7 @@ function Login() {
 
     async function LoginUser() {
         setLoading(true);
-        const resultLogin = await fetch('http://localhost:8080/api/login', {
+        const resultLogin = await fetch(`${apiUrl}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,22 +61,22 @@ function Login() {
         if (resultLogin.ok) {
             const json = await resultLogin.json();
             Cookies.set('token', json.own_token);
-            const resultToken = await fetch(
-                'http://localhost:8080/api/getToken',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user_email: email,
-                    }),
-                }
-            );
+            const resultToken = await fetch(`${apiUrl}/api/getToken`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer${apiUrl} ${Cookies.get('token')}`,
+                },
+                body: JSON.stringify({
+                    user_email: email,
+                }),
+            });
             const data = await resultToken.json();
             for (let i = 0; i < services.length; i++) {
                 if (data[0][`${services[i]}`] !== null) {
-                    Cookies.set(services[i], data[0][`${services[i]}`]);
+                    localStorage.setItem(services[i], true);
+                } else {
+                    localStorage.setItem(services[i], false);
                 }
             }
             window.location.reload();
@@ -101,7 +113,10 @@ function Login() {
                     <CreationMsg></CreationMsg>
                     <div>
                         <div className="button-login">
-                            <Button size="xl" onClick={LoginUser}>
+                            <Button size="md" onClick={changeUrl}>
+                                Change api url
+                            </Button>
+                            <Button size="md" onClick={LoginUser}>
                                 Login
                             </Button>
                         </div>
@@ -118,4 +133,4 @@ function Login() {
     );
 }
 
-export default Login;
+            export default Login;

@@ -1,0 +1,27 @@
+name: Service
+
+on:
+    push:
+        branches-ignore:
+            - "ga-ignore-*"
+
+jobs:
+    backend-compile-test:
+        name: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/Checkout@v4
+            - name: NodeJS Setup
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Install node_modules
+              run: |
+                  cd Service/
+                  npm i
+            - name: Build
+              run: |
+                  cd Service/
+                  npm run build
+    
