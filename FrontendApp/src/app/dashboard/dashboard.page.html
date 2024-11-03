@@ -127,7 +127,7 @@
             <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
               value="{{area.inputReaction}}"></ion-input>
           </div>
-              <ion-button (click)="openReactionSheet(area)" class="button-reaction-style" [disabled]="!area.local">
+              <ion-button (click)="openReactionSheet(area)" class="button-reaction-style {{!area.local ? 'bottom-marge' : ''}}" [disabled]="!area.local">
                 <ion-icon *ngIf="showIcon && selectedReactionIcon" [src]="selectedReactionIcon" slot="start"></ion-icon>
                 <ion-text>{{ area.reaction || 'Select Reaction' }}</ion-text>
 
