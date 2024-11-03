@@ -26,23 +26,28 @@ async function registerUserNews(
     news_author: string,
     news_title: string
 ): Promise<any> {
-    const { error } = await supabase
-        .from('NewsArticle')
-        .insert([
-            {
-                Email: email,
-                Author: news_author,
-                Title: news_title,
-            },
-        ])
-        .select();
+   try {
+       const { error } = await supabase
+           .from('NewsArticle')
+           .insert([
+               {
+                   Email: email,
+                   Author: news_author,
+                   Title: news_title,
+               },
+           ])
+           .select();
 
-    if (error) {
-        console.error(error);
-        return null;
-    } else {
-        return true;
-    }
+       if (error) {
+           console.error(error);
+           return null;
+       } else {
+           return true;
+       }
+   } catch (e) {
+       console.error(e);
+       return null;
+   }
 }
 
 async function updateUserNews(
@@ -51,42 +56,52 @@ async function updateUserNews(
     news_author: string,
     news_title: string
 ): Promise<any> {
-    if (
-        user_data[0].Author === news_author &&
-        user_data[0].Title === news_title
-    ) {
-        return false;
-    } else {
-        const { error } = await supabase
-            .from('NewsArticle')
-            .update([
-                {
-                    Author: news_author,
-                    Title: news_title,
-                },
-            ])
-            .eq('Email', email)
-            .select();
-        if (error) {
-            console.error(error);
-            return null;
+    try {
+        if (
+            user_data[0].Author === news_author &&
+            user_data[0].Title === news_title
+        ) {
+            return false;
         } else {
-            return true;
+            const { error } = await supabase
+                .from('NewsArticle')
+                .update([
+                    {
+                        Author: news_author,
+                        Title: news_title,
+                    },
+                ])
+                .eq('Email', email)
+                .select();
+            if (error) {
+                console.error(error);
+                return null;
+            } else {
+                return true;
+            }
         }
+    } catch (e) {
+        console.error(e);
+        return null;
     }
 }
 
 async function getDataUser(email: string): Promise<any> {
-    const { data: user_data, error } = await supabase
-        .from('NewsArticle')
-        .select('*')
-        .eq('Email', email);
+    try {
+        const { data: user_data, error } = await supabase
+            .from('NewsArticle')
+            .select('*')
+            .eq('Email', email);
 
-    if (error) {
-        console.error(error);
+        if (error) {
+            console.error(error);
+            return null;
+        } else {
+            return user_data;
+        }
+    } catch (e) {
+        console.error(e);
         return null;
-    } else {
-        return user_data;
     }
 }
 

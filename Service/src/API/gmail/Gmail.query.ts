@@ -215,14 +215,19 @@ async function setMailInDB(IdEmail: string, email: string) {
 }
 
 async function UserAlreadyExist(email: string): Promise<boolean> {
-    const { data } = await supabase
-        .from('LastUserEmail')
-        .select('userEmail')
-        .eq('userEmail', email);
-    if (data === null || data.length === 0) {
+    try {
+        const { data } = await supabase
+            .from('LastUserEmail')
+            .select('userEmail')
+            .eq('userEmail', email);
+        if (data === null || data.length === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (e) {
+        console.error(e);
         return false;
-    } else {
-        return true;
     }
 }
 async function updateEmailId(IdEmail: string, email: string) {
