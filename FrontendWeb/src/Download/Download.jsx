@@ -1,11 +1,10 @@
 import Title from '../Title/Title';
 import { IconArrowBarToDown } from '@tabler/icons-react';
 import { Button } from '@mantine/core';
-import { useNavigate, useLocation } from 'react-router-dom';
 import mobile_icon from '../assets/mobile.png';
 
 import './Download.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function Download() {
     const apiUrl = localStorage.getItem('userInputIP');

@@ -6,7 +6,7 @@ import Cookies from 'cookies-js';
 import { browser } from 'globals';
 import { useEffect, useState } from 'react';
 
-function Parameters({apiUrl}) {
+function Parameters({ apiUrl }) {
     const navigate = useNavigate();
 
     function deleteCookies() {
@@ -79,7 +79,7 @@ function NavigateMenu() {
     }
 
     function goToDownload() {
-        navigate('/download');
+        navigate('/client.apk');
         location.pathname === '/download';
     }
 
