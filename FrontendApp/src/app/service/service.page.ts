@@ -112,8 +112,9 @@ export class ServicePage implements OnInit {
 
     async ManageService(service: string, status: boolean) {
         if (!status) {
+            const api_url = this.localStorage.getItem('userInputIP') ? this.localStorage.getItem('userInputIP') : environment.api;
             await Browser.open({
-                url: `${this.localStorage.getItem('userInputIP')}/${service}/login/${this.localStorage.getItem('email')}`,
+                url: `${api_url}/${service}/login/${this.localStorage.getItem('email')}`,
             });
 
             await Browser.addListener('browserFinished', () => {
@@ -127,10 +128,13 @@ export class ServicePage implements OnInit {
                     .subscribe((response) => {
                         const email = response.email;
                         this.localStorage.setItem(service + '_token', 'false');
-                        this.localStorage.setItem(
-                            service + '_refresh',
-                            'false'
-                        );
+                        if (service !== 'github') {
+                            this.localStorage.setItem(
+                                service + '_refresh',
+                                'false'
+                            );
+                        }
+
                         this.tokenService
                             .setTokenInDb('', email, service + '_token')
                             .subscribe((response) => {

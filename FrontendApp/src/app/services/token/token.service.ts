@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 export class TokenService {
-    API_URL = localStorage.getItem('userInputIP');
+    API_URL = localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(private http: HttpClient) {}
 
@@ -71,6 +71,14 @@ export class TokenService {
         userEmail: string,
         service: string
     ): Observable<any> {
+        if (service === 'github_refresh') {
+            return of({
+                status: 200,
+                error: false,
+                message: 'No refresh_token for discord',
+                data: {},
+            });
+        }
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`,

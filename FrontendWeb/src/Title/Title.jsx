@@ -6,7 +6,7 @@ import Cookies from 'cookies-js';
 import { browser } from 'globals';
 import { useEffect, useState } from 'react';
 
-function Parameters(apiUrl) {
+function Parameters({ apiUrl }) {
     const navigate = useNavigate();
 
     function deleteCookies() {
@@ -20,7 +20,6 @@ function Parameters(apiUrl) {
         localStorage.removeItem('spotify_refresh');
         localStorage.removeItem('google_refresh');
         localStorage.removeItem('discord_refresh');
-        localStorage.removeItem('userInputIP');
         navigate('/');
         setTimeout(() => {
             window.location.reload();
@@ -111,7 +110,7 @@ function NavigateMenu() {
                     <Menu.Item onClick={goToDownload}>Download apk</Menu.Item>
                     <MenuDivider />
                     <Menu.Item onClick={ChangeIpAdress}>
-                        Change IP adress
+                        Change IP address
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -120,7 +119,7 @@ function NavigateMenu() {
 }
 
 function Title({ title }) {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     useEffect(() => {});
     return (

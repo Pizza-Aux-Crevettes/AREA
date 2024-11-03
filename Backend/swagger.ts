@@ -34,10 +34,12 @@ const swaggerOptions = {
                 twitch_refresh: 'string',
                 google_refresh: 'string',
                 spotify_refresh: 'string',
-                github_refresh: 'string',
             },
             userMe: {
                 email: 'string',
+            },
+            getAdaptabilityUser: {
+                adaptabilityText: 'boolean',
             },
         },
     },

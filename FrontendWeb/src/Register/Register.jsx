@@ -15,25 +15,22 @@ function Register() {
     const [alreadyUse, setAlreadyUse] = useState('');
     const [accountCreated, setAccountCreated] = useState(false);
     const [loading, setLoading] = useState(false);
-    const apiUrl = localStorage.getItem('userInputIP');
-
-    useEffect(() => {
-        if (!localStorage.getItem('userInputIP')) {
-            const userInput = window.prompt(
-                'Please enter an IP address :',
-                'http://localhost:8080'
-            );
-            if (userInput) {
-                localStorage.setItem('userInputIP', userInput);
-            } else {
-                localStorage.setItem('userInputIP', 'http://localhost:8080');
-            }
-        }
-    }, []);
+    let apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     function goToLogin() {
         navigate('/');
         location.pathname === '/';
+    }
+
+    function changeUrl() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            'http://localhost:8080'
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+            apiUrl = localStorage.getItem('userInputIP');
+        }
     }
 
     function CreationMsg({ correctMsg }) {
@@ -93,7 +90,7 @@ function Register() {
         } else {
             setTimeout(() => {
                 setLoading(false);
-                setAlreadyUse('Please enter your information.');
+                setAlreadyUse('Please complete all fields.');
             }, 300);
         }
     }
@@ -150,7 +147,10 @@ function Register() {
                     }
                 />
                 <div className="button-create">
-                    <Button size="xl" onClick={registerDatas}>
+                    <Button size="md" onClick={changeUrl}>
+                        Change api url
+                    </Button>
+                    <Button size="md" onClick={registerDatas}>
                         Create account
                     </Button>
                 </div>

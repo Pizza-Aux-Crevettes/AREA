@@ -25,6 +25,14 @@
     margin: 6vh;
 }
 
+.button-login {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .button-login Button{
     margin-top: 2vh;
     background-color: #33478f;

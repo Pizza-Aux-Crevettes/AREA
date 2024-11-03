@@ -27,7 +27,7 @@ function RectangleService({ text, logo, Click, color_status }) {
 }
 
 const registerService = async (service, service_token) => {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     try {
         const response = await fetch(`${apiUrl}/api/user/me`, {
@@ -87,7 +87,7 @@ function Service() {
     const [discordConnect, setDiscordConnect] = useState(false);
     const [githubConnect, setGithubConnect] = useState(false);
 
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     const serviceList = [
         'spotify_token',
@@ -99,7 +99,6 @@ function Service() {
         'spotify_refresh',
         'google_refresh',
         'twitch_refresh',
-        'github_refresh',
     ];
 
     useEffect(() => {
@@ -273,7 +272,9 @@ function Service() {
                     })
                     .then((json) => {
                         const email = json.email;
-                        localStorage.removeItem(service + '_refresh');
+                        if (service !== 'github') {
+                            localStorage.removeItem(service + '_refresh');
+                        }
                         localStorage.removeItem(service + '_token');
                         if (service.toLowerCase() === 'discord') {
                             fetch(`${apiUrl}/discord/username`, {
@@ -296,20 +297,24 @@ function Service() {
                                 service: service + '_token',
                             }),
                         }).then(() => {
-                            fetch(`${apiUrl}/api/setNewToken`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    Authorization: `Bearer ${Cookies.get('token')}`,
-                                },
-                                body: JSON.stringify({
-                                    userEmail: email,
-                                    token: '',
-                                    service: service + '_refresh',
-                                }),
-                            }).then(() => {
+                            if (service !== 'github') {
+                                fetch(`${apiUrl}/api/setNewToken`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${Cookies.get('token')}`,
+                                    },
+                                    body: JSON.stringify({
+                                        userEmail: email,
+                                        token: '',
+                                        service: service + '_refresh',
+                                    }),
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
                                 window.location.reload();
-                            });
+                            }
                         });
                     });
             }

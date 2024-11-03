@@ -21,7 +21,7 @@ function Dashboard() {
 
     useEffect(() => {
         const token = Cookies.get('token');
-        const apiUrl = localStorage.getItem('userInputIP');
+        const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
         fetch(`${apiUrl}/api/getArea`, {
             method: 'POST',
             headers: {
@@ -66,7 +66,7 @@ function Dashboard() {
     };
 
     const removeArea = (id, action, reaction, inputAction, inputReaction) => {
-        const apiUrl = localStorage.getItem('userInputIP');
+        const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
         fetch(`${apiUrl}/api/delArea`, {
             method: 'POST',

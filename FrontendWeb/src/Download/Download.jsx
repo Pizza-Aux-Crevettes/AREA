@@ -1,18 +1,17 @@
 import Title from '../Title/Title';
 import { IconArrowBarToDown } from '@tabler/icons-react';
 import { Button } from '@mantine/core';
-import { useNavigate, useLocation } from 'react-router-dom';
 import mobile_icon from '../assets/mobile.png';
 
 import './Download.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function Download() {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
     useEffect(() => {}, []);
     function move() {
-        const fileUrl = `${apiUrl}/output/area_app.apk`;
-        const fileName = 'area_app.apk';
+        const fileUrl = `${apiUrl}/output/client.apk`;
+        const fileName = 'client.apk';
         const link = document.createElement('a');
         link.href = fileUrl;
         link.download = fileName;
