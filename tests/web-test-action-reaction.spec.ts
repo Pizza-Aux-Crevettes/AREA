@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
 
   await page.goto('http://localhost:8081/');
   page.on('dialog', async dialog => {
-    await dialog.accept(); // Accepts the dialog
+    await dialog.accept();
   });
   await page.getByPlaceholder('Email').click();
   await page.getByPlaceholder('Email').fill('enzodziewulski@gmail.com');

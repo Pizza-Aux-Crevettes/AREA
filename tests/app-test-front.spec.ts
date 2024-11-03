@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:4200/');
     page.on('dialog', async dialog => {
-      await dialog.accept(); // Accepts the dialog
+      await dialog.accept();
     });
     await page.getByLabel('Email').click();
     await page.getByLabel('Email').fill('enzodziewulski@gmail.com');
