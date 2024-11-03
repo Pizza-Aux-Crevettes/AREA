@@ -207,7 +207,7 @@ function RectangleDashboard({
     const [idDiscordInput, setIdDiscordInput] = useState('');
     const [idDiscordInputFinal, setIdDiscordInputFinal] = useState('');
 
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     useEffect(() => {
         const checkConnection = async () => {

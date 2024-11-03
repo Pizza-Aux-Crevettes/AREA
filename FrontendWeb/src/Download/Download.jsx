@@ -7,7 +7,7 @@ import './Download.css';
 import { useEffect } from 'react';
 
 function Download() {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
     useEffect(() => {}, []);
     function move() {
         const fileUrl = `${apiUrl}/output/client.apk`;

@@ -27,7 +27,7 @@ function RectangleService({ text, logo, Click, color_status }) {
 }
 
 const registerService = async (service, service_token) => {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     try {
         const response = await fetch(`${apiUrl}/api/user/me`, {
@@ -87,7 +87,7 @@ function Service() {
     const [discordConnect, setDiscordConnect] = useState(false);
     const [githubConnect, setGithubConnect] = useState(false);
 
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     const serviceList = [
         'spotify_token',

@@ -119,7 +119,7 @@ function NavigateMenu() {
 }
 
 function Title({ title }) {
-    const apiUrl = localStorage.getItem('userInputIP');
+    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
     useEffect(() => {});
     return (
