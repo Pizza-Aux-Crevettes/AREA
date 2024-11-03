@@ -19,21 +19,18 @@ function Login() {
         'twitch_refresh',
         'discord_refresh',
     ];
-    const apiUrl = localStorage.getItem('userInputIP');
+    let apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
 
-    useEffect(() => {
-        if (!localStorage.getItem('userInputIP')) {
-            const userInput = window.prompt(
-                'Please enter an IP address :',
-                'http://localhost:8080'
-            );
-            if (userInput) {
-                localStorage.setItem('userInputIP', userInput);
-            } else {
-                localStorage.setItem('userInputIP', 'http://localhost:8080');
-            }
+    function changeUrl() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            'http://localhost:8080'
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+            apiUrl = localStorage.getItem('userInputIP')
         }
-    }, []);
+    }
 
     function CreationMsg() {
         if (notLogin === true) {
@@ -116,7 +113,10 @@ function Login() {
                     <CreationMsg></CreationMsg>
                     <div>
                         <div className="button-login">
-                            <Button size="xl" onClick={LoginUser}>
+                            <Button size="md" onClick={changeUrl}>
+                                Change api url
+                            </Button>
+                            <Button size="md" onClick={LoginUser}>
                                 Login
                             </Button>
                         </div>
@@ -133,4 +133,4 @@ function Login() {
     );
 }
 
-export default Login;
+            export default Login;

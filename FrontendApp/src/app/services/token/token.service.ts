@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 export class TokenService {
-    API_URL = localStorage.getItem('userInputIP');
+    API_URL = localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api;
 
     constructor(private http: HttpClient) {}
 

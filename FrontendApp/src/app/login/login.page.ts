@@ -33,31 +33,14 @@ export class LoginPage implements OnInit {
     constructor(
         private loginService: LoginService,
         private tokenService: TokenService,
-        private areaService: AreaService,
-        private utilService: UtilsService,
         private localStorage: LocalStorageService,
         private router: Router
     ) {
-        this.inputEmail = '';
-        this.inputPassword = '';
     }
 
     ngOnInit() {
-        if (!localStorage.getItem('userInputIP')) {
-            const userInput = window.prompt(
-                'Please enter an IP address :',
-                environment.api
-            );
-            if (userInput) {
-                localStorage.setItem('userInputIP', userInput);
-            } else {
-                localStorage.setItem('userInputIP', environment.api);
-            }
-            this.loginService.API_URL = localStorage.getItem('userInputIP');
-            this.tokenService.API_URL = localStorage.getItem('userInputIP');
-            this.areaService.API_URL = localStorage.getItem('userInputIP');
-            this.utilService.API_URL = localStorage.getItem('userInputIP');
-        }
+        this.inputEmail = '';
+        this.inputPassword = '';
     }
 
     onLogin() {
@@ -110,5 +93,17 @@ export class LoginPage implements OnInit {
                             });
                     });
             });
+    }
+
+    changeURL() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+        }
+        this.loginService.API_URL = `${localStorage.getItem('userInputIP')}`;
+        this.tokenService.API_URL = `${localStorage.getItem('userInputIP')}`;
     }
 }

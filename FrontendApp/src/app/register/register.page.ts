@@ -8,6 +8,7 @@ import { TokenService } from '../services/token/token.service';
 import { AreaService } from '../services/area/area.service';
 import { UtilsService } from '../services/utils/utils.service';
 import { LocalStorageService } from '../services/localStorage/localStorage.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-register',
@@ -26,31 +27,10 @@ export class RegisterPage implements OnInit {
 
     constructor(
         private registerService: RegisterService,
-        private router: Router,
-        private loginService: LoginService,
-        private tokenService: TokenService,
-        private areaService: AreaService,
-        private utilService: UtilsService,
-        private localStorage: LocalStorageService
+        private router: Router
     ) {}
 
     ngOnInit() {
-        if (!localStorage.getItem('userInputIP')) {
-            const userInput = window.prompt(
-                'Please enter an IP address :',
-                'http://localhost:8080'
-            );
-            if (userInput) {
-                localStorage.setItem('userInputIP', userInput);
-            } else {
-                localStorage.setItem('userInputIP', 'http://localhost:8080');
-            }
-            this.loginService.API_URL = localStorage.getItem('userInputIP');
-            this.tokenService.API_URL = localStorage.getItem('userInputIP');
-            this.areaService.API_URL = localStorage.getItem('userInputIP');
-            this.utilService.API_URL = localStorage.getItem('userInputIP');
-            this.registerService.API_URL = localStorage.getItem('userInputIP');
-        }
     }
 
     onRegister() {
@@ -94,5 +74,16 @@ export class RegisterPage implements OnInit {
         } else {
             this.emptyField = true;
         }
+    }
+
+    changeURL() {
+        const userInput = window.prompt(
+            'Please enter an IP address :',
+            localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api
+        );
+        if (userInput) {
+            localStorage.setItem('userInputIP', userInput);
+        }
+        this.registerService.API_URL = `${localStorage.getItem('userInputIP')}`;
     }
 }
