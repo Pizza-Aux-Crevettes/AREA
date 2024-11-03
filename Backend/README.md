@@ -12,8 +12,7 @@ This project is the Frontend part of the AREA project. It manages users, makes c
 -   [Starting the Project](#starting-the-project)
 -   [Environment Variables](#environnement-variables)
 -   [API Documentation](#api-documentation)
--   [Project Structure](#project-structure)
--   [Useful Commands](#useful-commands)
+-   [Swagger Generation](#swagger-generation)
 
 ---
 
@@ -53,33 +52,32 @@ The project requires certain environnement variables to function correctly.
 1. Create a .env file at the root of the project with the following content:
 
     ```bash
-    REACT_APP_SUPABASE_URL="https://qkqqhtvrxplbxmvikcdy.supabase.co"
-    REACT_APP_SUPABASE_ANON_KEY="your-supabase-anon-key"
-    
-    GOOGLE_API_KEY="your-google-api-key"
-    
-    NEWSAPI_API_KEY="your-newsapi-api-key"
-    
-    OPENWEATHER_KEY="your-openweather-api-key"
-    
-    GOOGLE_CLIENT_ID="your-google-client-id"
-    GOOGLE_CLIENT_SECRET="your-google-client-secret"
-    
-    SPOTIFY_CLIENT_ID="your-spotify-client-id"
-    SPOTIFY_CLIENT_SECRET="your-spotify-client-secret"
-    
-    DISCORD_CLIENT_ID="your-discord-client-id"
-    DISCORD_CLIENT_SECRET="your-discord-client-secret"
-    DISCORD_TOKEN="your-discord-token"
-    GUILD_ID="1288150792301183007"
-    
-    TWITCH_CLIENT_ID="your-twitch-client-id"
-    TWITCH_CLIENT_SECRET="your-twitch-client-secret"
-    
-    GITHUB_CLIENT_ID="your-github-client-id"
-    GITHUB_CLIENT_SECRET="your-github-client-secret"
-    
-    SECRET=AREA
+   REACT_APP_SUPABASE_URL="your-supabase-url"
+   REACT_APP_SUPABASE_ANON_KEY="your-supabase-anon-key"
+   
+   GOOGLE_API_KEY="your-google-api-key"
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+   
+   NEWSAPI_API_KEY="your-newsapi-api-key"
+   
+   OPENWEATHER_KEY="your-openweather-api-key"
+   
+   SPOTIFY_CLIENT_ID="your-spotify-client-id"
+   SPOTIFY_CLIENT_SECRET="your-spotify-client-secret"
+   
+   X_CLIENT_ID="your-x-client-id"
+   X_CLIENT_SECRET="your-x-client-secret"
+   
+   DISCORD_CLIENT_ID="your-discord-client-id"
+   DISCORD_CLIENT_SECRET="your-discord-client-secret"
+   DISCORD_TOKEN="your-discord-bot-token"
+   GUILD_ID="your-discord-guild-id"
+   
+   GITHUB_CLIENT_ID="your-github-client-id"
+   GITHUB_CLIENT_SECRET="your-github-client-secret"
+   
+   SECRET="your-application-secret"
     ```
 
 ---
@@ -90,37 +88,6 @@ The complete API documentation can be accessed via Swagger. Once the server is r
 
 ---
 
-## Project structure
+## Swagger Generation
 
-Here is the structure of the project:
-
-    src
-    ├── API
-    │   ├── News.ts
-    │   ├── Spotify.ts
-    │   ├── google
-    │   │   ├── Google.ts
-    │   │   └── googleTranslate.ts
-    │   └── openWeather
-    │       ├── openWeather.query.ts
-    │       └── openWeather.ts
-    ├── config
-    │   └── db.ts
-    ├── index.ts
-    └── routes
-        ├── services
-        │   ├── services.query.ts
-        │   └── services.ts
-        └── users
-            ├── users.query.ts
-            └── users.ts
-
----
-
-## Useful Commands
-
--   Build the project: `npm run build`
--   Start the server: `npm run start`
--   Run the project in development mode: `npm run dev`
--   Lint the code: `npm run lint`
--   Generate Swagger Documentation: Swagger documentation will be updated automatically if you follow the right format in your route comments.
+Swagger documentation will be updated automatically if you follow the right format in your route comments.
