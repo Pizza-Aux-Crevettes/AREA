@@ -5,6 +5,9 @@ import { TokenService } from 'src/app/services/token/token.service';
 import { LocalStorageService } from '../localStorage/localStorage.service';
 import { IonSelect } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { ApiService } from '../api/api.service';
+import { AreaService } from '../area/area.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -22,13 +25,13 @@ export class UtilsService {
         'twitch_refresh',
         'discord_refresh',
     ];
-    API_URL = this.localStorage.getItem('userInputIP');
 
     constructor(
-        private http: HttpClient,
         private localStorage: LocalStorageService,
         private router: Router,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private apiService: ApiService,
+        private areaService: AreaService,
     ) {}
 
     fetchAdaptability(userToken: string | null) {
@@ -64,7 +67,7 @@ export class UtilsService {
                 this.localStorage.removeItem(serviceList[i]);
             }
         }
-        this.localStorage.removeItem('userInputIP');
+        this.localStorage.removeItem('email');
         this.router.navigate(['/']);
     }
 
@@ -85,11 +88,14 @@ export class UtilsService {
         } else if (selectedValue === 'ChangeIPAdress') {
             const userInput = window.prompt(
                 'Please enter an IP address :',
-                `${this.localStorage.getItem('userInputIP')}`
+                this.localStorage.getItem('userInputIP') ? `${localStorage.getItem('userInputIP')}` : environment.api
             );
             if (userInput) {
                 this.localStorage.setItem('userInputIP', userInput);
             }
+            this.tokenService.API_URL = `${this.localStorage.getItem('userInputIP')}`;
+            this.areaService.API_URL = `${this.localStorage.getItem('userInputIP')}`;
+            this.apiService.API_URL = `${this.localStorage.getItem('userInputIP')}`;
         }
     }
 

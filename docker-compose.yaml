@@ -2,21 +2,24 @@ volumes:
     area_volume:
 
 services:
-    frontend-web:
+    client_web:
         build: FrontendWeb
         ports:
             - "8081:8081"
         volumes:
             - area_volume:/app/public/
+        depends_on:
+            - server
+            - client_mobile
 
-    backend:
+    server:
         build: Backend
         ports:
             - "8080:8080"
         volumes:
             - area_volume:/output
 
-    mobile_app:
+    client_mobile:
         build: FrontendApp
         volumes:
             - area_volume:/output
