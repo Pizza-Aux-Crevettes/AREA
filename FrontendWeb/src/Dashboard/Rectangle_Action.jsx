@@ -207,7 +207,7 @@ function RectangleDashboard({
     const [idDiscordInput, setIdDiscordInput] = useState('');
     const [idDiscordInputFinal, setIdDiscordInputFinal] = useState('');
 
-    const apiUrl = localStorage.getItem('userInputIP') ? localStorage.getItem('userInputIP') : 'http://localhost:8080';
+    const apiUrl = localStorage.getItem('userInputIP');
 
     useEffect(() => {
         const checkConnection = async () => {
@@ -530,17 +530,74 @@ function RectangleDashboard({
         setHoverText('');
     };
 
-    const handleInput = (field, fieldName) => {
+    const handleInput = (field, fieldName, reaction) => {
         return (
             <>
-                <TextInput
-                    disabled={alreadyExist}
-                    radius="md"
-                    size="lg"
-                    placeholder="Enter your input"
-                    value={field}
-                    onChange={(e) => inputChange(id, fieldName, e.target.value)}
-                />
+                {
+                    reaction === "MP" ? 
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter your mp"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                    : reaction === "Clip" ?
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter username twitch"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    /> 
+                    : reaction === "Event" ?
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter event name"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                    : reaction === "Issue" ?
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter issue name"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                    : reaction === "Branch" ?
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter branch name"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                    : reaction === "sendEmail" ?
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter email message"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                    :
+                    <TextInput
+                        disabled={alreadyExist}
+                        radius="md"
+                        size="lg"
+                        placeholder="Enter username twitch"
+                        value={field}
+                        onChange={(e) => inputChange(id, fieldName, e.target.value)}
+                    />
+                }
             </>
         );
     };
@@ -812,7 +869,7 @@ function RectangleDashboard({
                         reaction === 'Branch' ||
                         reaction === 'sendEmail') &&
                     !alreadyExist
-                        ? handleInput(inputContentReact, 'inputReaction')
+                        ? handleInput(inputContentReact, 'inputReaction', reaction)
                         : null}
 
                     <Menu width={220} shadow="md">

@@ -124,7 +124,7 @@
           <div *ngIf="(area.reaction === 'MP' || area.reaction === 'Clip' || area.reaction === 'Issue' || 
           area.reaction === 'Event' || area.reaction === 'Branch' || area.reaction === 'sendEmail') && area.local"
             class="input-div">
-            <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a text"
+            <ion-input class="input-balise" size="small" [(ngModel)]="area.inputReaction" placeholder="Enter a {{area.reaction === 'MP' ? 'Mp' : area.reaction === 'Clip' ? 'twitch username' : area.reaction === 'Issue' ? 'issue name' : area.reaction === 'Event' ? 'event name' : area.reaction === 'Branch' ? 'branch name' : area.reaction === 'sendEmail' ? 'email message' : 'text'}}"
               value="{{area.inputReaction}}"></ion-input>
           </div>
               <ion-button (click)="openReactionSheet(area)" class="button-reaction-style {{!area.local ? 'bottom-marge' : ''}}" [disabled]="!area.local">
